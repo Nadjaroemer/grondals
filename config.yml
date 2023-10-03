@@ -1,0 +1,17 @@
+production:
+  password: shptka_536e3677159d9ca7007ce15378dac8e5
+  theme_id: 133055643835
+  store: sommer33.myshopify.com
+  ignore_files:
+    - locales/*.json
+    - config/settings_data.json
+    - templates/*.json
+
+development:
+  password: shptka_536e3677159d9ca7007ce15378dac8e5
+  theme_id: 153873613135
+  store: sommer33.myshopify.com
+  ignore_files:
+    - locales/*.json
+    - config/settings_data.json
+    - templates/*.json

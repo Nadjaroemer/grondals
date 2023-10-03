@@ -1,0 +1,477 @@
+{%- assign config = section.settings -%}
+{%- assign collection = config.collection -%}
+
+{% liquid
+  
+     assign config = section.settings
+     
+     assign padding_top = 'pt-' | append: config.pt
+  
+     assign bg_color = " bg:" | append: config.bg_color
+  
+     capture text_props
+       render 'general_settings_text_props', config: section.settings
+     endcapture
+  
+     capture pc_width
+        render 'general_settings_pc_width', config: section.settings  
+     endcapture
+  
+     capture outer
+        render 'general_settings_outer', config: section.settings 
+     endcapture
+  
+     capture inner
+        render 'general_settings_inner', config: section.settings 
+     endcapture
+  
+  %}
+
+{%- assign config = section.settings -%}
+{%- assign title = config.title -%}
+
+{%- assign title = title | default: collection.title -%}
+{%- assign amount = config.amount -%}
+
+<div class="{{ outer }}" data-name="section-products">
+  <div class="section-bg {% unless section.settings.bg_inner %} {{ bg_color }} {% endunless %} ">
+    <div class="container {{ pc_width }}">
+
+      <div class="section-inner {{ inner }} {{ text_props }} {% if section.settings.bg_inner %} {{ bg_color }} {% endif %} ">
+
+        <div class="section-content">
+
+          <div class="pw">
+            <div class="collection__header tx:center">
+
+              {% if config.fish_image %}
+                <div class="base:tn">
+                  <div class="mb:md base:xs pw:tn m:auto featured_product-head-image">
+                    <a href="{{ collection.url }}">
+                      {%- render 'image', image: config.fish_image -%}
+                    </a>
+                  </div>
+                </div>
+              {% endif %}
+
+              <p class="hd hd:xl">
+                {{ title }}
+              </p>
+              <div class="tx:center pt:xs overflow--hidden">
+                {%- render 'svg-wave' -%}
+              </div>
+            </div>
+
+            <div class="collection__products-main pt:md md-up:pt:md jc:center">
+              {%- render 'products', collection: collection, amount: amount, justify: 'center', SwiperOnPhone: config.mobile_carousel, quickshop_modal: false, prefix_id: section.id  -%}
+            </div>
+
+            {%- for product in collection.products limit: amount -%}
+              {%- render 'quickshop-modal', product: product, prefix_id: section.id -%}
+            {%- endfor -%}
+
+            {%- if config.view_all -%}
+              <div class="tx:center my">
+                <a class="button button--secondary" href="{{ collection.url }}">
+                  {{ 'section.products.view_all' | t }}
+                </a>
+              </div>
+            {%- endif -%}
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "Featured products",
+    "settings": [
+      {
+        "type": "collection",
+        "id": "collection",
+        "label": "Collection"
+      },
+      {
+        "type": "checkbox",
+        "id": "mobile_carousel",
+        "label": "Carousel on phone"
+      },
+      {
+        "type": "image_picker",
+        "id": "fish_image",
+        "label": "Add Small image"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "info": "If not given, collection title is used"
+      }, {
+        "type": "range",
+        "id": "amount",
+        "label": "Amount of products",
+        "default": 4,
+        "min": 1,
+        "max": 48
+      }, {
+        "type": "checkbox",
+        "id": "view_all",
+        "label": "Vis flere knap"
+      }, {
+        "type": "header",
+        "content": "------- General setting -------"
+      }, {
+        "type": "header",
+        "content": "🔴🟠🔵 Colors"
+      }, {
+        "type": "checkbox",
+        "id": "bg_inner",
+        "label": "Apply background to inner"
+      }, {
+        "type": "select",
+        "id": "bg_color",
+        "label": "Background color",
+        "default": "bg-none",
+        "options": [
+          {
+            "value": "bg-none",
+            "label": "None"
+          },
+          {
+            "value": "blue",
+            "label": "Blue"
+          },
+          {
+            "value": "lightblue",
+            "label": "Light blue"
+          },
+          {
+            "value": "softblue",
+            "label": "Soft blue"
+          }, {
+            "value": "lightgrey",
+            "label": "Light grey"
+          }, {
+            "value": "softgreen",
+            "label": "Soft green"
+          }, {
+            "value": "lightgreen",
+            "label": "Light green"
+          }, {
+            "value": "flashy",
+            "label": "Flashy"
+          }
+        ]
+      }, {
+        "type": "select",
+        "id": "text_color",
+        "label": "Text color",
+        "options": [
+          {
+            "value": "text-dark",
+            "label": "Dark"
+          }, {
+            "value": "text-dark--lighter",
+            "label": "Dark light"
+          }, {
+            "value": "text-light",
+            "label": "Light"
+          }, {
+            "value": "text--very-light",
+            "label": "Very light"
+          }
+        ]
+      }, {
+        "type": "header",
+        "content": "🔤 🔠 Base size",
+        "info": "Text size for pc & mobile"
+      }, {
+        "type": "select",
+        "id": "base_pc",
+        "label": "Pc",
+        "default": "DEFAULT",
+        "options": [
+          {
+            "value": "tn",
+            "label": "Tiny"
+          },
+          {
+            "value": "xs",
+            "label": "Extra small"
+          },
+          {
+            "value": "sm",
+            "label": "Small"
+          },
+          {
+            "value": "DEFAULT",
+            "label": "Normal"
+          }, {
+            "value": "lg",
+            "label": "Large"
+          }, {
+            "value": "xl",
+            "label": "Extra large"
+          }, {
+            "value": "hg",
+            "label": "Huge"
+          }, {
+            "value": "mg",
+            "label": "Mega"
+          }
+        ]
+      }, {
+        "type": "select",
+        "id": "base_mobile",
+        "label": "Mobile",
+        "default": "DEFAULT",
+        "options": [
+          {
+            "value": "tn",
+            "label": "Tiny"
+          },
+          {
+            "value": "xs",
+            "label": "Extra small"
+          },
+          {
+            "value": "sm",
+            "label": "Small"
+          },
+          {
+            "value": "DEFAULT",
+            "label": "Normal"
+          }, {
+            "value": "lg",
+            "label": "Large"
+          }, {
+            "value": "xl",
+            "label": "Extra large"
+          }, {
+            "value": "hg",
+            "label": "Huge"
+          }, {
+            "value": "mg",
+            "label": "Mega"
+          }
+        ]
+      }, {
+        "type": "header",
+        "content": "📱💻 Content width",
+        "info": "Content width for pc & mobile"
+      }, {
+        "type": "checkbox",
+        "id": "full_w_mobile",
+        "label": "Full width Mobile"
+      }, {
+        "type": "select",
+        "id": "width_pc",
+        "label": "Pc",
+        "default": "DEFAULT",
+        "options": [
+          {
+            "value": "tn",
+            "label": "Tiny"
+          },
+          {
+            "value": "xs",
+            "label": "Extra small"
+          },
+          {
+            "value": "sm",
+            "label": "Small"
+          },
+          {
+            "value": "DEFAULT",
+            "label": "Normal"
+          }, {
+            "value": "lg",
+            "label": "Large"
+          }, {
+            "value": "xl",
+            "label": "Extra large"
+          }, {
+            "value": "hg",
+            "label": "Huge"
+          }, {
+            "value": "mg",
+            "label": "Mega"
+          }, {
+            "value": "fl",
+            "label": "Full"
+          }
+        ]
+      }, {
+        "type": "header",
+        "content": "⬆️ ⬇️ Content padding",
+        "info": "Content padding for pc & mobile"
+      }, {
+        "type": "select",
+        "id": "c_pad_pc",
+        "label": "Pc",
+        "default": "DEFAULT",
+        "options": [
+          {
+            "value": "cl",
+            "label": "None"
+          },
+          {
+            "value": "tn",
+            "label": "Tiny"
+          },
+          {
+            "value": "xs",
+            "label": "Extra small"
+          },
+          {
+            "value": "sm",
+            "label": "Small"
+          }, {
+            "value": "DEFAULT",
+            "label": "Normal"
+          }, {
+            "value": "lg",
+            "label": "Large"
+          }, {
+            "value": "xl",
+            "label": "Extra large"
+          }, {
+            "value": "hg",
+            "label": "Huge"
+          }, {
+            "value": "mg",
+            "label": "Mega"
+          }
+        ]
+      }, {
+        "type": "select",
+        "id": "c_pad_mobile",
+        "label": "Mobile",
+        "default": "DEFAULT",
+        "options": [
+          {
+            "value": "cl",
+            "label": "None"
+          },
+          {
+            "value": "tn",
+            "label": "Tiny"
+          },
+          {
+            "value": "xs",
+            "label": "Extra small"
+          },
+          {
+            "value": "sm",
+            "label": "Small"
+          }, {
+            "value": "DEFAULT",
+            "label": "Normal"
+          }, {
+            "value": "lg",
+            "label": "Large"
+          }, {
+            "value": "xl",
+            "label": "Extra large"
+          }, {
+            "value": "hg",
+            "label": "Huge"
+          }, {
+            "value": "mg",
+            "label": "Mega"
+          }
+        ]
+      }, {
+        "type": "header",
+        "content": "⏫ Section padding",
+        "info": "Content padding for pc & mobile"
+      }, {
+        "type": "select",
+        "id": "sec_pad_pc",
+        "label": "Pc",
+        "default": "DEFAULT",
+        "options": [
+          {
+            "value": "cl",
+            "label": "None"
+          },
+          {
+            "value": "tn",
+            "label": "Tiny"
+          },
+          {
+            "value": "xs",
+            "label": "Extra small"
+          },
+          {
+            "value": "sm",
+            "label": "Small"
+          }, {
+            "value": "DEFAULT",
+            "label": "Normal"
+          }, {
+            "value": "lg",
+            "label": "Large"
+          }, {
+            "value": "xl",
+            "label": "Extra large"
+          }, {
+            "value": "hg",
+            "label": "Huge"
+          }, {
+            "value": "mg",
+            "label": "Mega"
+          }
+        ]
+      }, {
+        "type": "select",
+        "id": "sec_pad_mobile",
+        "label": "Mobile",
+        "default": "DEFAULT",
+        "options": [
+          {
+            "value": "cl",
+            "label": "None"
+          },
+          {
+            "value": "tn",
+            "label": "Tiny"
+          },
+          {
+            "value": "xs",
+            "label": "Extra small"
+          },
+          {
+            "value": "sm",
+            "label": "Small"
+          }, {
+            "value": "DEFAULT",
+            "label": "Normal"
+          }, {
+            "value": "lg",
+            "label": "Large"
+          }, {
+            "value": "xl",
+            "label": "Extra large"
+          }, {
+            "value": "hg",
+            "label": "Huge"
+          }, {
+            "value": "mg",
+            "label": "Mega"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Featured products",
+        "settings": {}
+      }
+    ]
+  }
+{% endschema %}

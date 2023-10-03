@@ -1,0 +1,86 @@
+{{ 'template-collection.css' | asset_url | stylesheet_tag }}
+
+{% liquid 
+   capture headings
+      render 'replace_headings', text_to_parse: collection.description 
+   endcapture
+   
+   
+   assign collection_image = collection.metafields.wdn.featured_image.value
+%}
+
+{%- assign title = title | default: collection.title -%}
+
+<div class="collection__page pt:cl">
+
+  <div class="collection__page-inner">
+    <div class="pw container hide md-up:block">
+      <div class="breadcrumbs-wrapper py">
+        {%- render "breadcrumbs" -%}
+      </div>
+    </div>
+    
+    <div class="collection__header bg:lightblue py:lg pos:re{% if collection_image %} pb:xl sm-up:pb:lg{% endif %}">
+      <div class="pw container">
+        
+        {%- if collection_image -%}
+        <div class="fx ai:center jc:space-between">
+          <div class="pw pw:xs ml:left  fi">
+            <h1 class="hd hd:hg">
+              {{ title }}
+            </h1>
+
+            <div class="rte base:sm rte:slimmer pt:tn">
+              {{ headings }}
+            </div>
+          </div>
+          <div class="collection__header-image pb:sm m:auto fi gp:lg">
+            {%- render 'image', image: collection_image -%}
+          </div>
+        </div>
+        {%- else -%}
+        <div class="pw pw:xs m:auto base:sm tx:center">
+          <h1 class="hd hd:xl">
+            {{ title }}
+          </h1>
+
+          <div class="rte rte:slimmer pt:tn">
+            {{ headings }}
+          </div>
+        </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- if collection -%}
+    <div class="pw container">
+      <div class="collection__products-main pt:md">
+        {%- render 'products', collection: collection, pr_row: 4, no_title: true -%}
+      </div>
+    </div>
+    {%- endif -%}
+
+    {%- if collection.metafields.wdn.collection_footer_description -%}
+    <div class="collection__footer mt:hg">
+      <div class="pw container">
+        <div class="collection__footer-inner mb:md bg:lightblue p:sm md-up:p:lg">
+          {%- assign customHeadline = collection.metafields.wdn.collection_footer_des_heading -%}
+          
+          {%- if customHeadline.size > 0 -%}
+          <span class="hd hd:lg fx jc:center pb:tn">{{ customHeadline }}</span>
+          {%- endif -%}
+          
+          <div class="fx fx:wr md-up:gp:md{% if customHeadline.size > 0 %} mt:sm{% endif %}">
+            <div class="rte base:sm  pw:sm ml:cl fi fi:1/1 md-up:fi:1/2 ">
+              {{ collection.metafields.wdn.collection_footer_description }}
+            </div>
+            <div class="rte base:sm  pw:sm ml:cl fi fi:1/1 md-up:fi:1/2 ">
+              {{ collection.metafields.wdn.collection_footer_des_col_2 }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {%- endif -%}
+  </div>
+</div>

@@ -1,0 +1,15 @@
+{%- comment -%}
+
+Rendering example:
+{%- render "cart-drawer" -%}
+{%- endcomment -%}
+
+
+{%- capture Content -%}
+<div class="height--full" data-cart-layout>
+{%- render "cart-layout" -%}
+</div>
+{%- endcapture -%}
+
+
+{%- render "drawer", Id: "cart_drawer", Content: Content -%}

@@ -1,0 +1,48 @@
+{%- comment -%}
+Params:
+@Article - [REQUIRED]
+
+Rendering example:
+
+{%- render "article-card", Article: article -%}
+{%- endcomment -%}
+
+{%- assign Article = Article | default: article -%}
+
+{%- assign ImageBadge = Article.metafields.image.badge.value -%}
+
+
+{%- if Article -%}
+
+  {%- capture CardContent -%}
+
+    <div class="article__cardcontent pt:sm pb">
+      {%- if ImageBadge -%}
+        <div class="product__badges base:sm md-up:base:xs">
+          {%- render "badge", value: ImageBadge -%}
+        </div>
+      {%- endif -%}
+      <div class="article__cardcontent-inner rte{% if template.suffix == 'producers' %} tx:center{% endif %}">
+        <p class="hd hd:sm md-up:base:xl mt:cl">
+          <a href="{{ Article.url }}">{{ Article.title }}</a>
+        </p>
+
+        {%- unless template.suffix == 'producers' -%}
+          {%- if Article.excerpt -%}
+            <div class="article__card-excerpt pb:sm hide md-up:show">
+              <p class="clr:light">
+                {{ Article.excerpt | strip_html }}
+              </p>
+            </div>
+          {%- endif -%}
+        {%- endunless -%}
+      </div>
+    </div>
+  {%- endcapture -%}
+
+  {%- render "card",  Image: Article.image, Content: CardContent, Modifier: "article", ImageLink: Article.url, ImageRatio: 140 -%}
+{%- else -%}
+  <script>
+  WDN.MissingParams("article-card");
+</script>
+{%- endif -%}

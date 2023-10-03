@@ -1,0 +1,38 @@
+{% comment%}
+Params:
+@Content - [REQUIRED]
+@Id - [REQUIRED]
+@Class - [OPTIONAL]
+@CloseColor - [OPTIONAL]
+@Animation - [OPTIONAL]
+
+Rendering example:
+
+{%- render "modal", Id: "modal", Animation: "left",  Content: Content -%}
+{% endcomment%}
+
+
+{%- if Content and Id -%}
+
+    {%- capture Close -%}
+        <wdn-modal-close class="overlay__close Overlay__close--abs" data-id="{{ Id }}">
+            {%- render "icons", icon: "close", CustomClass: "overlay__close-icon", color: CloseColor -%}
+        </wdn-modal-close>
+    {%- endcapture -%}
+
+    {%- capture OverlayContent -%}
+        <div class="overlay__content">
+            {{ Content | replace: '[Close]', Close }}
+        </div>
+    {%- endcapture -%}
+
+    <wdn-modal class="overlay{% if Class %} {{ Class }}{% endif %}" data-animate="{{ Animation | default: 'right' }}" data-id="{{ Id }}">
+        <div class="overlay-inner">
+            {{ OverlayContent }}
+        </div>
+    </wdn-modal>
+{%- else -%}
+    <script>
+  WDN.MissingParams("modal")
+</script>
+{%- endif -%}

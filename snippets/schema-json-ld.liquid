@@ -1,0 +1,165 @@
+{%- comment -%}
+
+	- Copyright WDN ApS, All rights reserved
+
+{%- endcomment -%}
+
+{% case type %}
+
+{%- when 'Product' -%}
+  {%- if product.title.size > 0 -%}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org/", 
+    "@type": "{{ type }}", 
+    "name": "{{ product.title }}",
+    "image": "{{ product.featured_image | img_url: '1200x' }}",
+    "description": "{{ product.content | strip_html | escape }}",
+    "brand": {
+      "@type": "Brand",
+      "name": "{{ product.vendor }}"
+    },
+    {% if product.variants.first.sku %}"sku": "{{ product.variants.first.sku }}",{% endif %}
+    "offers": {
+      "@type": "Offer",
+      "url": "{{ product.url }}",
+      "priceCurrency": "{{ shop.currency }}",
+      "price": "{{ product.price | divided_by: 100.0 | round }}",
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/NewCondition"
+    }
+  }
+  </script> 
+  {%- endif -%}
+{%- break -%}
+
+{%- when 'Organization' -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "{{ type }}",
+  "name": "Grøndals",
+  "url": "{{ shop.url }}",
+  "logo": "https://cdn.shopify.com/s/files/1/1583/3197/files/Grondals-logo-blue_RGB_2021_410x.png?v=1618000560",
+  "alternateName": "Grondals.dk",
+  "sameAs": ["https://www.facebook.com/groendals"],
+  "contactPoint": [
+    {
+      "@type": "ContactPoint",
+      "telephone": "{{ shop.phone }}",
+      "contactType": "customer service",
+      "email": "{{ shop.email }}",
+      "areaServed": ["DK"],
+      "availableLanguage": "DA"
+    }
+  ]
+}
+</script> 
+<script type="application/ld+json">
+{
+ 	"@context": "https://schema.org",
+ 	"@type": "WebSite",
+ 	"url": "https://grondals.dk",
+ 	"potentialAction": {
+ 	 	"@type": "SearchAction",
+ 	 	 "target": "https://grondals.dk/search?q={search_term}",
+ 	 	"query-input": "required name=search_term"
+ 	}
+}
+</script>
+{%- break -%}
+
+{%- when 'CollectionPage' -%}
+  {%- if collection.products_count > 0 -%}
+  <script type="application/ld+json">
+      {
+          "@context" : "http://schema.org",
+          "@type": "{{ type }}",
+          "name": "{{ collection.title }}",
+          "mainEntity" : {
+              "@type":"ItemList",
+              "itemListElement": [
+              {%- paginate collection.products by 100 -%}
+                  {%- for product in collection.products -%}
+                  {
+                    "@type":"ListItem",
+                    "position":{{ forloop.index }},
+                    "url":"{{ shop.url }}{{ product.url }}",
+                    "name":"{{ product.title }}"
+                  }{%- unless forloop.last -%},{%- endunless -%}
+                {%- endfor -%}
+              {%- endpaginate -%}
+              ]
+          }
+      }
+  </script> 
+  {%- endif -%}
+{%- break -%}
+
+{% when 'WebPage' -%}
+<script type="application/ld+json">
+[{
+    "@context": "https://schema.org",
+    "@type": "{{ type }}",
+    "name": "{{ page_title }}",
+    "description": "{{ page_description | escape }}"
+},
+{
+    "@context": "https://schema.org",
+    "@type": "WPHeader",
+    "url": "{{ shop.url }}{{ request.path }}",
+    "headline": "Grøndals",
+    "description": "{{ page_description | escape }}"
+},
+{
+    "@context": "https://schema.org",
+    "@type": "WPFooter",
+    "url": "{{ shop.url }}{{ request.path }}",
+    "headline": "Grøndals",
+    "description": "{{ page_description | escape }}",
+    "copyrightYear": "2021"
+}]
+</script> 
+{%- break -%}
+
+
+{%- when 'Contact' or 'About' -%}
+<script type="application/ld+json">
+{
+	"@context": "http://schema.org/",
+	"@type": "{{ type }}Page",
+    "description":"{{ page.content | strip_html }}",
+    "name":"{{ page.title }}", 
+    "url":"{{ shop.url }}{{ page.url }}"
+}
+</script>
+{%- break -%}
+
+
+{%- when 'SiteNavigationElement' -%}
+<script type="application/ld+json"> {
+        "@context": "https://schema.org",
+        "type": "SiteNavigationElement",
+        "@graph": [
+        	{%- for link in linklists.main-menu.links -%}
+            {
+			"@context": "https://schema.org/",
+            "@type": "SiteNavigationElement",
+            "@id": "#",
+            "name": "{{ link.title }}",
+            "url": "{{ link.url }}"
+        }{%- unless forloop.last -%},{%- endunless -%}
+        {%- endfor -%}
+        ]
+    }
+</script> 
+{%- break -%}
+
+{%- endcase -%}
+
+{%- comment -%}
+
+    END
+	- Copyright WDN ApS, All rights reserved
+
+{%- endcomment -%}

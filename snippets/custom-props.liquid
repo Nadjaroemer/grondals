@@ -1,0 +1,123 @@
+{%- comment -%}
+- Used to create a sticky header effect 
+{%- endcomment -%}
+
+<style>
+  :root {
+    --header-height-no-announcement:78px;
+  }
+  
+  [data-has-sticky-header] main {
+    margin-top:var(--header-height-no-announcement);
+  }
+    
+  [data-header-sticky] {
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    z-index:987;
+    background-color:#fff;
+    box-shadow:0 0 5px 2px rgba(0,0,0,0.125);
+  }
+    
+</style>
+
+<script>
+  var WDN = WDN || {};
+
+if (typeof WDN.Debounce === "undefined") {
+  WDN.Debounce = (function () {
+    var Debounce = function (Function, WaitTime) {
+      // Named function to start / clear timer
+      var Timer;
+      return function () {
+        var This = this,
+          args = arguments;
+        var later = function () {
+          Timer = null;
+          Function.apply(This, args);
+        };
+        clearTimeout(Timer);
+        Timer = setTimeout(later, WaitTime);
+      };
+    };
+    return Debounce;
+  })();
+}
+  
+ (function () {
+
+  if (typeof window.CustomEvent === "function") 
+   return false;
+
+
+  function CustomEvent(event, params) {
+   params = params || {
+    bubbles: false,
+    cancelable: false,
+    detail: null
+   };
+   var evt = document.createEvent("CustomEvent");
+   evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
+   return evt;
+  }
+
+  window.CustomEvent = CustomEvent;
+ })();
+
+
+  (function () {
+
+    var root = document.querySelector(":root");
+    var header = document.querySelector("header");
+
+    var _updateHeaderProp = function () {
+      header = document.querySelector("header");
+      var headerHeight = header.offsetHeight;
+
+      root.style.setProperty("--header-height-no-announcement", headerHeight + 'px');
+    }
+
+    var init = function () {
+      _updateHeaderProp();
+    };
+
+
+    var handleWindowResize = function () {
+      _updateHeaderProp();
+    }
+
+
+    header.addEventListener("header:change", function (r) {
+
+    });
+
+    window.addEventListener("resize", _updateHeaderProp, 25);
+
+
+    init();
+
+    return {updateHeaderProp: _updateHeaderProp};
+
+  })();
+
+
+  (function() {
+    
+    var header = document.querySelector('header');
+    var headerOffset = header.offsetTop;
+
+    function stickHeader() {
+      if (window.pageYOffset > headerOffset) {
+        header.setAttribute('data-header-sticky','');
+        document.body.setAttribute('data-has-sticky-header','');
+      } else {
+        header.removeAttribute('data-header-sticky');
+        document.body.removeAttribute('data-has-sticky-header');
+      }
+    }
+
+    window.addEventListener('scroll', stickHeader, 25);
+  })();
+</script>

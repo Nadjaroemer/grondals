@@ -1,0 +1,53 @@
+{% liquid 
+
+	assign show = false
+	
+    assign trigger_tag = config.message_tag
+    assign activated_global = config.message_activate_global
+    
+    if activated_global
+    	assign show = true
+    endif
+    
+    unless show
+    	if trigger_tag.size > 0
+          if product.tags contains trigger_tag
+			assign show = true
+          endif
+        endif
+    endunless
+
+    assign title = config.message_title
+    assign content = config.message_content
+    
+    assign bg_color = config.message_bg_color
+    assign tx_color = config.message_tx_color
+    
+%}
+
+{%- if show -%}
+  {%- if title.size > 0 and content.size > 0 -%}
+  <div class="product__announcement product__block mt:tn">
+    <div class="product__announcement-inner bg:lightblue p:sm">
+      <div class="base:tn">
+        <p class="hd">{{ title }}</p>
+        <div class="rte">
+          {{ content }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% style %}
+    .product__announcement-inner {
+      background-color: {{ bg_color }};
+      color: {{ tx_color }};
+    }
+    
+    .product__announcement-inner .hd {
+      color: {{ tx_color }};
+    }
+
+{% endstyle %}
+  {%- endif -%}
+{%- endif -%}

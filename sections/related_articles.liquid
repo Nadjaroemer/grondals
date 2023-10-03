@@ -1,0 +1,61 @@
+{%- assign Config = section.settings -%}
+{%- assign HandleList = article.metafields.related.articles.value -%}
+{%- assign SwiperOnPhone = Config.mobile_carousel -%}
+{%- unless HandleList == blank -%}
+
+  <div class="py:lg pw">
+    <div class="container">
+      <div class="section-header">
+        <div class="tx:center md-up:tx:center ">
+          <p class="hd hd:xl pb:md">{{ 'recipe.related_articles.title' | t }}</p>
+        </div>
+      </div>
+
+      <div class="grid fx fx:wr gp md-up:gp{% if SwiperOnPhone %} hide md-up:fx{% endif %}">
+        {%- for handle in HandleList -%}
+          {%- assign Article = articles[handle] -%}
+          <div class="grid-item fi fi:1/2 md-up:fi:1/3">
+            {%- render "article-card", Article: Article -%}
+          </div>
+
+          {%- if SwiperOnPhone -%}
+            {%- capture SwiperSlides -%}
+              {{ SwiperSlides }}
+              <div class="swiper-slide">
+                {%- render 'article-card', Article: Article -%}
+              </div>
+            {%- endcapture -%}
+          {%- endif -%}
+
+
+        {%- endfor -%}
+      </div>
+
+      {%- if SwiperOnPhone -%}
+        <div class="md-up:hide">
+          {%- render "swiper", Id: section.id, Slides: SwiperSlides, PerView: "2-2-1", HasControls: true -%}
+        </div>
+      {%- endif -%}
+
+    </div>
+  </div>
+
+{%- endunless -%}
+
+
+{% schema %}
+{
+"name": "Related articles",
+"settings": [
+{
+ "type": "header",
+ "content": "Mobile settings"
+},
+{
+"type": "checkbox",
+"id": "mobile_carousel",
+"label": "Carousel on phone"
+}
+]
+}
+{% endschema %}

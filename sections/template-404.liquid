@@ -1,0 +1,31 @@
+{{ 'template-404.css' | asset_url | stylesheet_tag }}
+
+<div class="error py:mg">
+    <div class="error-inner pw">
+        <div class="container tx:center">
+          <div style="width: 10em; margin: auto; padding: 1.5em 0;" >
+                {%- render 'image', image: section.settings.image, Sizes: '240,360,480,600,720,1020,1220,1440,1600,1800' -%}
+            </div>
+            <h1 class="hd hd:xl">{{ '404.title' | t  }}</h1>
+            <div class="py:lg">
+                <a class="button" href="{{ routes.root_url }}">{{ '404.button' | t }}</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% schema %}
+
+{
+   "name": "template-404",
+   "settings": [
+     {
+       "type": "image_picker",
+       "id": "image",
+       "label": "Image Mobile"
+    }
+  ] 
+}
+
+{% endschema %}

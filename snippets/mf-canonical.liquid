@@ -1,0 +1,86 @@
+{%- comment -%}
+
+## Option to apply a custom canonical URL.
+  If not given, Shopifys default canonical URL is used.
+
+## Custom canonical can be set on:
+
+-- article(s)
+-- blog(s)
+-- collection(s)
+-- page(s)
+-- product(s)
+
+
+## Step #1 
+## Creating a metafield definition
+
+** This needs to be done once per store, pr. resource **
+
+- Settings > Metafields > Select a resource > Create metafield
+
+
+- Fields to setup:
+
+#Name => Any name you pick. Will be visible when setting up the metafield
+#Namespace and key => canonical.url
+#Description => Any text you pick. Will be visible when setting up the metafield
+#Content Type => "Single Line Text"
+
+
+## Step 2
+## Usage on specific resource
+
+- Go to the desired resource (page, article [...]).
+Navigate to the bottom of the page, where you will find the metafield definition you created in step #1.
+
+In the value field, you set the !!!**RELATIVE URL **!!! you wish to define as the canonical for the resource.
+Click "Save" - and the new custom canonical is now set.
+
+!! REMEMBER that it might take a few minutes, before you can see the change reflect on the live page.
+
+ENJOY.
+
+**COPYRIGHT**
+
+- WDN.DK - MKA, MBN
+- Permission for usage is given to all of Marketingsfabrikken customers.
+
+** END **
+
+{%- endcomment -%}
+{%- liquid
+
+	assign relative_root = request.origin
+
+      unless request.locale.root_url == '/'
+      	assign relative_root = relative_root | append: request.locale.root_url
+      endunless
+
+      assign resource  = false 
+      assign default_canonical_url = canonical_url
+
+      case request.page_type 
+     	when "article"
+      	  assign resource = article
+
+        when "blog"
+          assign resource = blog
+
+		when "collection"
+          assign resource = collection
+
+        when "page"
+          assign resource = page
+
+        when "product"
+          assign resource = product
+
+      endcase
+
+      if resource and resource.metafields.canonical.url.value.size > 0
+        assign default_canonical_url = relative_root | append: resource.metafields.canonical.url.value
+      endif
+-%}
+
+<link rel="canonical" href="{{- default_canonical_url -}}">

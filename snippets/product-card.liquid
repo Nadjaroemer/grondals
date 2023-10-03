@@ -1,0 +1,176 @@
+{%- comment -%}
+Params:
+@Product - [REQUIRED]
+
+Rendering example:
+
+{%- render "product-card", Product: product -%}
+
+{%- endcomment -%}
+
+{%- assign Product = Product | default: product -%}
+
+{%- assign CardBadge = Product.metafields.card.badge -%}
+
+{%- unless CardBadge -%}
+  {%- assign CardBadge = Product.type -%}
+{%- endunless -%}
+
+
+{%- if Product -%}
+
+  {%- capture CardContent -%}
+
+    <div class="product__badges base:sm md-up:base:xs">
+    {%- if Product.available -%}
+      {%- render 'badge', value: CardBadge -%}
+    {%- else -%}
+        {%- assign SoldOutLabel = 'product.sold_out' | t -%}
+        {%- render 'badge', value: SoldOutLabel -%}
+    {%- endif -%}
+    </div>
+
+    <div class="card-content--product pos:re" data-quantity-content>
+
+      <div class="product__cardcontent py:xs mb:xs">
+        <div class="product__cardcontent-inner pos:re">
+
+          <div class="product__cardcontent-grid fx jc:between ai:center ">
+            <p class="product__card-title hd hd:sm md-up:base:md tx:bold">
+              {%- if Product.type.size > 0 -%}
+                {{ Product.type }}
+              {%- else -%}
+                {% if Product.title contains '-' -%}
+                  {{ Product.title | split: '-' | last | strip | capitalize }}
+                {%- else -%}
+                  {{ Product.title }}
+                {%- endif -%}
+              {%- endif -%}
+            </p>
+          </div>
+
+          <p class="product__card-type lh:md">
+            {%- if Product.type.size > 0 -%}
+              {{ Product.title | remove: Product.type }}
+            {% else -%}
+              {%- if Product.title contains '-' -%}
+                {{ Product.title | split: '-' | first }}
+              {%- else -%}
+                {{ Product.vendor }}
+              {%- endif -%}
+            {%- endif -%}
+          </p>
+
+          <div class="product__card-pricing base:md py:xs md-up:py:cl">
+            <div class="product__card-pricing-inner fx ai:center gp:tn jc:between">
+              <div class="fi">
+                <span class="price tx:bold tx:color-blue">
+                  {{ Product.price | money_without_trailing_zeros }}
+                </span>
+                {%- if Product.compare_at_price > Product.price -%}
+                  <span class="price price:compare base:sm">
+                    {{ Product.compare_at_price | money_without_trailing_zeros }}
+                  </span>
+                {%- endif -%}
+              </div>
+
+              {% liquid
+                assign prefix_id = prefix_id | default: ''
+                assign drawer_id = prefix_id | append: "drawer_" | append: Product.id
+		  %}
+
+              {%- if Product.available -%}
+                {%- unless hide_quickshop -%}
+                  <div class="fi">
+                    <div class="productcard__quickadd">
+
+                      <div class="hide md-up:show">
+                        <wdn-quickadd-button data-id="{{ Product.id }}" class="productcard__quickadd-button button ai:center jc:center base:md md-up:base:sm" name="add" type="submit">
+                          <svg class="icon quickadd-icon--open" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                          </svg>
+                          <svg class="icon quickadd-icon--close" fill="none" stroke="#000" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                          </svg>
+                        </wdn-quickadd-button>
+                      </div>
+
+                      <wdn-drawer-open data-id="{{ drawer_id }}" class="show sm-up:hide">
+                        <button class="productcard__quickadd-button button ai:center jc:center base:md md-up:base:sm">
+                          <svg class="icon quickadd-icon--open" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                          </svg>
+                          <svg class="icon quickadd-icon--close" fill="none" stroke="#000" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                          </svg>
+                        </button>
+                      </wdn-drawer-open>
+                    </div>
+                  </div>
+                {%- endunless -%}
+              {%- endif -%}
+            </div>
+
+            {%- if Product.available -%}
+              <div class="quickadd-popup base:xs">
+                <div class="border"></div>
+                <p class="tx:bold my:sm">{{ 'product.quantity.label' | t  }}</p>
+                <div class="pos:re">
+                  <wdn-product-form {% if context %} data-form-callback="{{ context }}" {% endif %}>
+                    <form method="post" action="{{ routes.cart_add_url }}" data-product-form>
+                      <input name="id" value="{{ Product.variants.first.id }}" data-ghost-select type="hidden"/>
+                      <div class="quickadd__grid fx fx:wr ai:stretch jc:between md-up:gp  md-up:fx:no-wr">
+                        <div class="fi quickadd__grid-item quantity-wrapper fx  mb:sm md-up:mb:cl">
+                          <wdn-quantity class="quantity" id="quickadd-{{ Product.id }}">
+                            <button class="btn btn:qty" data-quantity-control="decrease" type="button">-</button>
+                            <input class="input input:qty px:clear" data-ghost-quantity="" data-product-quantity="" data-quantity-input="" min="1" name="quantity" type="number" value="1">
+                            <button class="btn btn:qty" data-quantity-control="increase" type="button">+</button>
+                          </wdn-quantity>
+                        </div>
+                        <div class="fi quickadd__grid-item base:xs">
+                          <button class="button button--full height--full py:sm md-up:py:cl base:md" data-label-show="default" data-product-add name="add" type="submit">
+                            <span data-show-on="default">{{ 'product.add_to_cart.label' | t  }}</span>
+                            <span data-show-on="success">{{ 'product.add_to_cart.success' | t  }}</span>
+                            <span data-show-on="loading">{{ 'product.add_to_cart.loading' | t  }}</span>
+                            <span data-show-on="error">{{ 'product.add_to_cart.error' | t  }}</span>
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </wdn-product-form>
+                </div>
+              </div>
+
+
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {%- if quickshop_modal != false -%}
+      {%- unless hide_quickshop -%}
+        {%- render 'quickshop-modal', product: Product, prefix_id: prefix_id -%}
+      {%- endunless -%}
+    {%- endif -%}
+
+  {%- endcapture -%}
+
+  {% assign collectionUrl = Product.url | within: collection %}
+  {%- unless Product.available -%}
+    {%- assign Class = "product--soldout" -%}
+  {%- endunless -%}
+
+  <div class="overflow--hide" data-product-card="{{ Product.id }}">
+    {%- render "card",
+Product: Product,
+Image: Product.featured_image,
+SecondaryImage: Product.media[1],
+Content: CardContent,
+Modifier: "product",
+UseImageAsBg: true,
+ImageLink: collectionUrl,
+Class: Class
+-%}
+  </div>
+{%- endif -%}

@@ -1,0 +1,76 @@
+{% liquid
+  assign config = block.settings
+  assign drawer_title = config.drawer_title
+
+  assign image = config.image
+
+  assign hide_close_btn = config.hide_close_btn
+
+  if drawer_title.size == 0
+    assign drawer_title = config.title
+  endif
+
+  assign close_label = 'product.drawer.close' | t
+%}
+
+{%- capture Content -%}
+  <div class="product__details base:xs lh:lg fx dir:col height-full">
+
+  <div class="product__related-variants-inner px py:sm bg:lightblue">
+      <div class="fx ai:center jc:space-between">
+        <div class="fi grow-1">
+            <h6 class="hd hd:md">{{ 'product.details.desc_heading' | t }}</h6>
+        </div>
+
+        <div class="fi">
+          [Close]
+        </div>
+      </div>
+    </div>
+
+    {%- if image -%}
+    	{%- render "image", image: image -%}
+    {%- endif -%}
+
+    
+    <div class="product__details-content grow-1 of:scroll base:md">
+      <div class="description-inner base:sm p:md rte lh:lg rte">
+
+        <div class="pw pw:xs ml:cl">
+          {{ product.description }}
+        </div>
+      </div>
+
+      {%- if product.metafields.wdn.product_ingredients -%}
+      <div class="ingredients mt:sm">
+        <div class="ingredients-inner p:md bg:lightblue rte lh:lg">
+          <h6 class="hd hd:md">{{ 'product.details.ingredients' | t }}</h6>
+          <div class="mt:tn base:sm rte lh:xl">
+            {{ product.metafields.wdn.product_ingredients }}
+          </div>
+        </div>
+      </div>
+      {%- endif -%}
+
+      {%- if product.metafields.wdn.facts -%}
+      <div class="nutrition-inner base:sm p:md rte lh:lg">
+        <h6 class="hd hd:md">{{ 'product.details.facts' | t }}</h6>
+        <div class="mt:tn base:sm rte lh:xl">
+          {{ product.metafields.wdn.facts }}
+        </div>
+      </div>
+      {%- endif -%} 
+      
+    </div>
+
+    {%- unless hide_close_btn -%}
+    <div class="p:md">
+      <wdn-drawer-close data-id="details" class="button button--outline">
+        {{ close_label }}
+      </wdn-drawer-close>
+    </div>
+    {%- endunless -%}
+  </div>
+{%- endcapture -%}
+
+{%- render 'drawer', Id: 'details', Content: Content, controls_no_abs: true, Class: 'drawer-fix-scroll' -%}

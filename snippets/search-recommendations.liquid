@@ -1,0 +1,14 @@
+{%- assign Recommendations = linklists["search-recommendations"] -%}
+
+{%- if Recommendations.links.size > 0 -%}
+<div class="search__suggestions base:sm pt:md">
+  <p class="hd hd:md">{{ 'search.popular_searches' | t }}</p>
+  <div class="search-suggestions fx fx:wr gp:tn pt:sm">
+    {%- for link in Recommendations.links -%}
+    <div class="suggestion-item fi" data-search-suggestion="{{ link.title }}">
+      {%- render 'badge', value: link.title -%}
+    </div>
+    {%- endfor -%}
+  </div>
+</div>
+{%- endif -%}

@@ -1,0 +1,41 @@
+.variant-select-wrapper {
+  margin-top: 16px;
+}
+.variant-option-name {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.variant-options {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -10px;
+}
+
+.variant-option-item {
+  padding-left: 10px;
+  margin-bottom: 10px;
+}
+
+.variant-option-item:last-child {
+  margin-bottom: 0;
+}
+
+.variant-options .variant-option {
+  border: 1px solid rgb(9 101 105);
+  cursor: pointer;
+  padding: 0.5em;
+  border-radius: 0.2em;
+}
+
+.variant-options .variant-option[data-selected] {
+  background-color: rgb(9 101 105);
+  color: #fff;
+}
+
+/* MD-UP */
+@media only screen and (min-width: 880px) {
+  .variant-option-item {
+    margin-bottom: 10px;
+  }
+}

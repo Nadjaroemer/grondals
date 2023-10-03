@@ -1,0 +1,82 @@
+
+  {% liquid
+  assign config = block.settings
+  assign bundle_product = config.product
+  assign title = config.title
+
+  if title.size == 0
+  assign title = 'product.bundle.title' | t
+  endif
+
+    assign hasBundleProduct = false
+
+    if bundle_product and bundle_product.title.size > 0
+     assign hasBundleProduct = true
+    endif
+
+  assign CollectionReference = product.metafields.bundle.collection.value
+    
+%}
+
+
+{%- if CollectionReference or hasBundleProduct -%}
+  <div class="product__bundle pos:re base:xs mt:xs">
+    <div class="product__bundle-inner bg:lightblue p">
+      <p class="hd">{{ title }}
+      </p>
+
+      {%- if CollectionReference -%}
+      <div class="product__bundle-product mt:xs bg:white pos:re">
+        <a class="link absolute--fill" href="{{ CollectionReference.url }}"></a>
+        <div class="fx ai:center gp:sm">
+          <div class="product__bundle-product-image fi" style="flex-basis:8.25em;">
+            <div class="image-wrapper image-fit--contain">
+            <img class="product__bundle-image" src="{{ CollectionReference.featured_image | img_url: 'medium' }}">
+            </div>
+          </div>
+
+          <div class="product__bundle-product-content fi">
+            <p class="hd hd:xs">{{ CollectionReference.title }}</p>
+            <p>{{ CollectionReference.description | strip_html | truncate: 35 }}</p>
+           
+            <div class="product__bundle-product-action mt:tn fx ai:center">
+
+              <span class="hd hd:xs">{{ 'product.bundle.collection_view' | t  }}</span>
+              <svg class="icon icon:xs" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+     </div>
+    {%- endif -%}
+
+          {%- if hasBundleProduct -%}
+        <div class="product__bundle-product mt:xs bg:white pos:re">
+        <a class="link absolute--fill" href="{{ bundle_product.url }}"></a>
+          <div class="fx ai:center gp:sm">
+          <div class="product__bundle-product-image fi" style="flex-basis:8.25em;">
+          <img src="{{ bundle_product.featured_image | img_url: '125x125', crop: 'center' }}">
+          </div>
+        
+          <div class="product__bundle-product-content fi">
+          <p class="hd hd:xs">{{ bundle_product.title }}</p>
+          <p>{{ bundle_product.price | money_without_trailing_zeros }}</p>
+        
+          <div class="product__bundle-product-action mt:tn fx ai:center">
+        
+          <span class="hd hd:xs">{{ 'product.bundle.product_view' | t  }}</span>
+          <svg class="icon icon:xs" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+          </svg>
+          </div>
+          </div>
+          </div>
+        </div>
+  {%- endif -%}
+
+
+      
+  </div>
+  </div>
+{%- endif -%}

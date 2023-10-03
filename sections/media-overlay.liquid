@@ -1,0 +1,929 @@
+{{ 'media-overlay.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+  assign config = section.settings
+
+  assign padding_top = 'pt-' | append: config.pt
+
+  assign bg_color = ' bg:' | append: config.bg_color
+
+  capture text_props
+    render 'general_settings_text_props', config: section.settings
+  endcapture
+
+  capture pc_width
+    render 'general_settings_pc_width', config: section.settings
+  endcapture
+
+  capture outer
+    render 'general_settings_outer', config: section.settings
+  endcapture
+
+  capture inner
+    render 'general_settings_inner', config: section.settings
+  endcapture
+%}
+
+<!-- unique liquid -->
+
+{% liquid
+  capture color_overlay
+    if config.add_overlay
+      echo ' background-color:' | append: config.overlay_color
+      echo ';'
+      echo ' opacity:' | append: config.overlay_op
+      echo '%'
+    endif
+  endcapture
+
+  capture color_overlay_mobile_only
+    if config.overlay_only_mobile
+      echo 'overlay_mobile'
+    endif
+  endcapture
+
+  capture block_set
+    echo ' block_overlay'
+
+    echo ' fx dir:col'
+    echo ' cw:' | append: config.block_width
+    echo ' md-up:p:' | append: config.block_pad
+    echo ' p:xs'
+
+    echo ' tx:' | append: config.text_pos
+    echo ' md-up:tx:' | append: config.text_pos_desktop
+  endcapture
+
+  capture overlay_pos
+    echo ' ai:' | append: config.block_place_x
+    echo ' jc:' | append: config.block_place_y
+  endcapture
+
+  capture fixed_height
+    if config.fixed_height
+      echo ' image-nest'
+      echo ' fh:' | append: config.image_height
+      echo ' md-up:fh:' | append: config.image_height_pc
+    endif
+  endcapture
+%}
+
+{%- assign MobileImage = config.image | default: config.image_pc -%}
+
+<div class="{{ outer }}" data-name="single-header">
+  <div class="section-bg {% unless section.settings.bg_inner %} {{ bg_color }} {% endunless %} ">
+    <div class="container {{ pc_width }}">
+      <div class="section-inner {{ inner }} {{ text_props }} {% if section.settings.bg_inner %} {{ bg_color }} {% endif %} ">
+        <div class="section-header"></div>
+
+        <div class="section-content pos:re">
+          <div class="pos:re {{ fixed_height }}">
+            {% if section.settings.video %}
+              <div>
+                {%- render 'video_v2', Src: section.settings.video, background: true -%}
+              </div>
+            {% else %}
+              <div class="md-up:hide">
+                {%- render 'image', image: MobileImage, Sizes: '240,360,480,600,720,1020,1220,1440,1600,1800' -%}
+              </div>
+
+              <div class="hide md-up:show">
+                {%- render 'image', image: config.image_pc, Sizes: '240,360,480,600,720,1020,1220,1440,1600,1800' -%}
+              </div>
+            {% endif %}
+
+            <div class="media-overlay z-dex-10 fx dir:col {{ overlay_pos }} ">
+              <div class=" {{ block_set }} ">
+                {% for block in section.blocks %}
+                  {% case block.type %}
+                    {% when 'heading' %}
+                      {% if block.settings.block_head %}
+                        <h2 class="hd hd:xl">
+                          {{ block.settings.block_head }}
+                        </h2>
+                      {% endif %}
+
+                      {% if block.settings.block_sub_head %}
+                        <h4>
+                          {{ block.settings.block_sub_head }}
+                        </h4>
+                      {% endif %}
+
+                    {% when 'text' %}
+                      {% if block.settings.block_text %}
+                        <span class="rte base:sm">
+                          {{ block.settings.block_text }}
+                        </span>
+                      {% endif %}
+
+                    {% when 'btn' %}
+                      {% liquid
+                        capture button_style
+                          echo 'button'
+
+                          echo ' button--' | append: block.settings.button_style
+
+                          echo ' button--' | append: block.settings.button_sizing
+                        endcapture
+                      %}
+
+                      {%- if block.settings.btn_label != blank -%}
+                        <div class="textmedia__action pt:xs base:sm">
+                          <a href="{{ block.settings.btn_url }}" class="{{ button_style }}">
+                            {{ block.settings.btn_label }}
+                          </a>
+                        </div>
+                      {%- endif -%}
+                  {% endcase %}
+                {% endfor %}
+              </div>
+            </div>
+
+            <div class="media-overlay z-dex-5 {{ color_overlay_mobile_only }}" style=" {{ color_overlay }} "></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  @media (max-width: 880px) {
+     .overlay_mobile {
+        background-color:{{ config.overlay_color }};
+        opacity: {{ config.overlay_op }}%;
+     }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Media overlay",
+  "settings": [
+    {
+      "type": "video_url",
+      "id": "video",
+      "accept": ["youtube", "vimeo"],
+      "label": "Video"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image Mobile"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_pc",
+      "label": "Image Pc"
+    },
+    {
+      "type": "checkbox",
+      "id": "fixed_height",
+      "label": "Add fixed height"
+    },
+    {
+      "type": "select",
+      "id": "image_height",
+      "label": "Mobile",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "image_height_pc",
+      "label": "Pc",
+      "options": [
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        },
+        {
+          "value": "xl",
+          "label": "XL"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Overlay"
+    },
+    {
+      "type": "checkbox",
+      "id": "add_overlay",
+      "label": "Add overlay"
+    },
+    {
+      "type": "checkbox",
+      "id": "overlay_only_mobile",
+      "label": "Overlay mobile only"
+    },
+    {
+      "type": "color",
+      "id": "overlay_color",
+      "label": "Overlay Color"
+    },
+    {
+      "type": "range",
+      "id": "overlay_op",
+      "label": "Opacity",
+      "unit": "%",
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "🔷 Blocks settings"
+    },
+    {
+      "type": "select",
+      "id": "block_width",
+      "label": "Block width",
+      "default": "lg",
+      "options": [
+        {
+          "value": "tn",
+          "label": "Tiny"
+        },
+        {
+          "value": "xs",
+          "label": "Extra small"
+        },
+        {
+          "value": "sm",
+          "label": "Small"
+        },
+        {
+          "value": "DEFAULT",
+          "label": "Normal"
+        },
+        {
+          "value": "lg",
+          "label": "Large"
+        },
+        {
+          "value": "xl",
+          "label": "Extra large"
+        },
+        {
+          "value": "hg",
+          "label": "Huge"
+        },
+        {
+          "value": "mg",
+          "label": "Mega"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "block_pad",
+      "label": "Block padding",
+      "default": "lg",
+      "options": [
+        {
+          "value": "tn",
+          "label": "Tiny"
+        },
+        {
+          "value": "xs",
+          "label": "Extra small"
+        },
+        {
+          "value": "sm",
+          "label": "Small"
+        },
+        {
+          "value": "DEFAULT",
+          "label": "Normal"
+        },
+        {
+          "value": "lg",
+          "label": "Large"
+        },
+        {
+          "value": "xl",
+          "label": "Extra large"
+        },
+        {
+          "value": "hg",
+          "label": "Huge"
+        },
+        {
+          "value": "mg",
+          "label": "Mega"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_pos",
+      "label": "Text position Mobile",
+      "default": "center",
+      "options": [
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_pos_desktop",
+      "label": "Text position Desktop",
+      "default": "center",
+      "options": [
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "Block placement"
+    },
+    {
+      "type": "select",
+      "id": "block_place_x",
+      "label": "Placement horizontal",
+      "default": "center",
+      "options": [
+        {
+          "value": "start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "end",
+          "label": "Right"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "block_place_y",
+      "label": "Placement vertical",
+      "default": "center",
+      "options": [
+        {
+          "value": "start",
+          "label": "Top"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "end",
+          "label": "Bottom"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "------- General setting -------"
+    },
+    {
+      "type": "header",
+      "content": "🔴🟠🔵 Colors"
+    },
+    {
+      "type": "checkbox",
+      "id": "bg_inner",
+      "label": "Apply background to inner"
+    },
+    {
+      "type": "select",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "bg-none",
+      "options": [
+        {
+          "value": "bg-none",
+          "label": "None"
+        },
+        {
+          "value": "blue",
+          "label": "Blue"
+        },
+        {
+          "value": "lightblue",
+          "label": "Light blue"
+        },
+        {
+          "value": "softblue",
+          "label": "Soft blue"
+        },
+        {
+          "value": "lightgrey",
+          "label": "Light grey"
+        },
+        {
+          "value": "softgreen",
+          "label": "Soft green"
+        },
+        {
+          "value": "lightgreen",
+          "label": "Light green"
+        },
+        {
+          "value": "flashy",
+          "label": "Flashy"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "text_color",
+      "label": "Text color",
+      "options": [
+        {
+          "value": "text-dark",
+          "label": "Dark"
+        },
+        {
+          "value": "text-dark--lighter",
+          "label": "Dark light"
+        },
+        {
+          "value": "text-light",
+          "label": "Light"
+        },
+        {
+          "value": "text--very-light",
+          "label": "Very light"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "🔤 🔠 Base size",
+      "info": "Text size for pc & mobile"
+    },
+    {
+      "type": "select",
+      "id": "base_pc",
+      "label": "Pc",
+      "default": "DEFAULT",
+      "options": [
+        {
+          "value": "tn",
+          "label": "Tiny"
+        },
+        {
+          "value": "xs",
+          "label": "Extra small"
+        },
+        {
+          "value": "sm",
+          "label": "Small"
+        },
+        {
+          "value": "DEFAULT",
+          "label": "Normal"
+        },
+        {
+          "value": "lg",
+          "label": "Large"
+        },
+        {
+          "value": "xl",
+          "label": "Extra large"
+        },
+        {
+          "value": "hg",
+          "label": "Huge"
+        },
+        {
+          "value": "mg",
+          "label": "Mega"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "base_mobile",
+      "label": "Mobile",
+      "default": "DEFAULT",
+      "options": [
+        {
+          "value": "tn",
+          "label": "Tiny"
+        },
+        {
+          "value": "xs",
+          "label": "Extra small"
+        },
+        {
+          "value": "sm",
+          "label": "Small"
+        },
+        {
+          "value": "DEFAULT",
+          "label": "Normal"
+        },
+        {
+          "value": "lg",
+          "label": "Large"
+        },
+        {
+          "value": "xl",
+          "label": "Extra large"
+        },
+        {
+          "value": "hg",
+          "label": "Huge"
+        },
+        {
+          "value": "mg",
+          "label": "Mega"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "📱💻 Content width",
+      "info": "Content width for pc & mobile"
+    },
+    {
+      "type": "checkbox",
+      "id": "full_w_mobile",
+      "label": "Full width Mobile"
+    },
+    {
+      "type": "select",
+      "id": "width_pc",
+      "label": "Pc",
+      "default": "DEFAULT",
+      "options": [
+        {
+          "value": "tn",
+          "label": "Tiny"
+        },
+        {
+          "value": "xs",
+          "label": "Extra small"
+        },
+        {
+          "value": "sm",
+          "label": "Small"
+        },
+        {
+          "value": "DEFAULT",
+          "label": "Normal"
+        },
+        {
+          "value": "lg",
+          "label": "Large"
+        },
+        {
+          "value": "xl",
+          "label": "Extra large"
+        },
+        {
+          "value": "hg",
+          "label": "Huge"
+        },
+        {
+          "value": "mg",
+          "label": "Mega"
+        },
+        {
+          "value": "fl",
+          "label": "Full"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "⬆️ ⬇️ Content padding",
+      "info": "Content padding for pc & mobile"
+    },
+    {
+      "type": "select",
+      "id": "c_pad_pc",
+      "label": "Pc",
+      "default": "DEFAULT",
+      "options": [
+        {
+          "value": "cl",
+          "label": "None"
+        },
+        {
+          "value": "tn",
+          "label": "Tiny"
+        },
+        {
+          "value": "xs",
+          "label": "Extra small"
+        },
+        {
+          "value": "sm",
+          "label": "Small"
+        },
+        {
+          "value": "DEFAULT",
+          "label": "Normal"
+        },
+        {
+          "value": "lg",
+          "label": "Large"
+        },
+        {
+          "value": "xl",
+          "label": "Extra large"
+        },
+        {
+          "value": "hg",
+          "label": "Huge"
+        },
+        {
+          "value": "mg",
+          "label": "Mega"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "c_pad_mobile",
+      "label": "Mobile",
+      "default": "DEFAULT",
+      "options": [
+        {
+          "value": "cl",
+          "label": "None"
+        },
+        {
+          "value": "tn",
+          "label": "Tiny"
+        },
+        {
+          "value": "xs",
+          "label": "Extra small"
+        },
+        {
+          "value": "sm",
+          "label": "Small"
+        },
+        {
+          "value": "DEFAULT",
+          "label": "Normal"
+        },
+        {
+          "value": "lg",
+          "label": "Large"
+        },
+        {
+          "value": "xl",
+          "label": "Extra large"
+        },
+        {
+          "value": "hg",
+          "label": "Huge"
+        },
+        {
+          "value": "mg",
+          "label": "Mega"
+        }
+      ]
+    },
+    {
+      "type": "header",
+      "content": "⏫ Section padding",
+      "info": "Content padding for pc & mobile"
+    },
+    {
+      "type": "select",
+      "id": "sec_pad_pc",
+      "label": "Pc",
+      "default": "DEFAULT",
+      "options": [
+        {
+          "value": "cl",
+          "label": "None"
+        },
+        {
+          "value": "tn",
+          "label": "Tiny"
+        },
+        {
+          "value": "xs",
+          "label": "Extra small"
+        },
+        {
+          "value": "sm",
+          "label": "Small"
+        },
+        {
+          "value": "DEFAULT",
+          "label": "Normal"
+        },
+        {
+          "value": "lg",
+          "label": "Large"
+        },
+        {
+          "value": "xl",
+          "label": "Extra large"
+        },
+        {
+          "value": "hg",
+          "label": "Huge"
+        },
+        {
+          "value": "mg",
+          "label": "Mega"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "id": "sec_pad_mobile",
+      "label": "Mobile",
+      "default": "DEFAULT",
+      "options": [
+        {
+          "value": "cl",
+          "label": "None"
+        },
+        {
+          "value": "tn",
+          "label": "Tiny"
+        },
+        {
+          "value": "xs",
+          "label": "Extra small"
+        },
+        {
+          "value": "sm",
+          "label": "Small"
+        },
+        {
+          "value": "DEFAULT",
+          "label": "Normal"
+        },
+        {
+          "value": "lg",
+          "label": "Large"
+        },
+        {
+          "value": "xl",
+          "label": "Extra large"
+        },
+        {
+          "value": "hg",
+          "label": "Huge"
+        },
+        {
+          "value": "mg",
+          "label": "Mega"
+        }
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "Heading",
+      "settings": [
+        {
+          "type": "text",
+          "id": "block_head",
+          "label": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "block_sub_head",
+          "label": "Sub Heading"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "block_text",
+          "label": "Richtext"
+        }
+      ]
+    },
+    {
+      "type": "btn",
+      "name": "Button",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Button"
+        },
+        {
+          "type": "select",
+          "id": "button_style",
+          "label": "Button style",
+          "default": "default",
+          "options": [
+            {
+              "value": "default",
+              "label": "Default"
+            },
+            {
+              "value": "round",
+              "label": "Round"
+            },
+            {
+              "value": "round-slim",
+              "label": "Round slim"
+            },
+            {
+              "value": "outline",
+              "label": "Outline"
+            },
+            {
+              "value": "tall",
+              "label": "Tall"
+            }
+          ]
+        },
+        {
+          "type": "select",
+          "id": "button_sizing",
+          "label": "Sizing",
+          "default": "default",
+          "options": [
+            {
+              "value": "small",
+              "label": "Smaller"
+            },
+            {
+              "value": "default",
+              "label": "Default"
+            },
+            {
+              "value": "larger",
+              "label": "Larger"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "id": "btn_label",
+          "label": "Label"
+        },
+        {
+          "type": "url",
+          "id": "btn_url",
+          "label": "Url"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Media overlay",
+      "settings": {}
+    }
+  ]
+}
+{% endschema %}

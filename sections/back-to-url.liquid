@@ -1,0 +1,40 @@
+{% if section.settings.url.size > 0 %}
+
+  <div class="pw">
+    <div class="container md-up:pt pt md-up:pt:mg pt:xl">
+
+      <div class="tx:center my">
+        <a href="{{section.settings.url}}" class="button button--secondary">
+          {{section.settings.url_text}}
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+{% endif %}
+
+{% schema %}
+
+{
+  "name": "Back to custom url",
+  "settings": [
+    {
+      "type": "url",
+      "id": "url",
+      "label": "Vælg selv url"
+    }, {
+      "type": "text",
+      "id": "url_text",
+      "label": "Knap tekst"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Back to custom url",
+      "settings": {}
+    }
+  ]
+}
+
+{% endschema %}

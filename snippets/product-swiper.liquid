@@ -1,0 +1,35 @@
+{%- capture SwiperSlides -%}
+{{ SwiperSlides }}
+{%- for media in Product.media -%}
+<div class="swiper-slide">
+{%- case media.media_type -%}
+{%- when "video" -%}
+{%- render "video", Video: media -%}
+{%- when "external_video" -%}
+
+{%- render "iframe", Video: media -%}
+{% else %}
+
+{%- render "image", Image: media -%}
+{%- endcase -%}
+
+</div>
+{%- endfor -%}
+{%- endcapture -%}
+
+
+
+
+
+<div class="product-swiper">
+{%- render "swiper",
+Id: "product_gallery",
+Slides: SwiperSlides,
+MobileOnly: true,
+HasPagination: true,
+HasControls: true,
+PerView: "1-1-1"
+-%}
+</div> 
+
+

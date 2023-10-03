@@ -1,0 +1,11 @@
+.page-width {
+ max-width: 1420px;
+ margin-left: auto;
+ margin-right: auto;
+ padding-left: 22px;
+ padding-right: 22px;
+}
+
+.page-width--slim {
+ max-width: 1120px;
+}

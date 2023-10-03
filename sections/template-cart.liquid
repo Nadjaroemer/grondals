@@ -1,0 +1,20 @@
+{{ 'template-cart.css' | asset_url | stylesheet_tag }}
+
+<div class="cart p:mg cart__hide-header">
+  <div class="cart-inner">
+    <div class="pw pw:tn">
+      <div data-cart-layout>
+        {%- render "cart-layout", hide_header: true -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<style>
+  .cart__hide-header .cart-header {
+    display:none;
+  }
+</style>
+    
+    

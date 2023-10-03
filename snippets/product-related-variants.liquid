@@ -1,0 +1,82 @@
+{%- assign Product_list = product.metafields.related.variants.value -%}
+
+
+{%- if Product_list -%}
+    <wdn-drawer-open class="ds:block pt:sm" data-id="variant_products">
+      <div class="py:tn base:sm" style="border:1px solid #ccc; border-radius:0.5em;">
+        <div class="fx ai:center jc:between px:tn">
+          <span class="fi grow-1 fx ai:center gp:sm">
+            <div class="fi" style="width:4.25em;">
+              <div class="card-image pos:re">
+                <div class="card-image_bg">
+                  <img class="lazyload" data-src="{{ product.featured_image | img_url: '2x2', crop: 'center' }}"/>
+                </div>
+
+                {%- render "image", Image: product.featured_image, Sizes: ImageSizes, NoRatio: NoRatio -%}
+              </div>
+            </div>
+            <span class="fi">
+              <span class="tx:thin">{{ block.settings.label }}</span>
+              {% comment %}
+              <span class="hd hd:xs">{{ product.title }} </span>
+              {% endcomment %}
+              <span class="hd hd:xs">{{ 'product.details.more_variants' | t }} </span>
+            </span>
+          </span>
+          <span class="fx ai:center ">
+           
+            <svg class="icon icon:sm" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+            </svg>
+          </span>
+        </div>
+      </div>
+    </wdn-drawer-open>
+
+{%- endif -%}
+
+
+{%- comment -%}
+  
+{%- assign collection_handle = block.settings.related_collection_products -%}
+
+
+{%- if collection_handle.size > 0  -%}
+
+  {%- assign related_collection = collections[collection_handle] -%}
+  {%- assign related_products = related_collection.products -%}
+
+  {%- if related_products.size > 0 -%}
+    <wdn-drawer-open class="ds:block pt:sm" data-id="variant_products">
+      <div class="py:tn base:sm" style="border:1px solid #ccc; border-radius:0.5em;">
+        <div class="fx ai:center jc:between px:tn">
+          <span class="fi grow-1 fx ai:center gp:sm">
+            <div class="fi" style="width:4.25em;">
+              <div class="card-image pos:re">
+                <div class="card-image_bg">
+                  <img class="lazyload" data-src="{{ product.featured_image | img_url: '2x2', crop: 'center' }}"/>
+                </div>
+
+                {%- render "image", Image: product.featured_image, Sizes: ImageSizes, NoRatio: NoRatio -%}
+              </div>
+            </div>
+            <span class="fi">
+              <span class="tx:thin">{{ block.settings.label }}</span>
+              <span class="hd hd:xs">{{ product.title }}</span>
+            </span>
+          </span>
+          <span class="fx ai:center ">
+           
+            <svg class="icon icon:sm" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+            </svg>
+          </span>
+        </div>
+      </div>
+    </wdn-drawer-open>
+  {%- endif -%}
+{%- endif -%}
+
+{%- endcomment -%}
+
+

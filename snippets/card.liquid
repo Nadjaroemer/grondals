@@ -1,0 +1,61 @@
+{%- comment -%}
+Params:
+@Image - [REQUIRED]
+@Content - [REQUIRED]
+@Modifier - [OPTIONAL]
+@ImageLink - [OPTIONAL]
+@ImageRatio - [OPTIONAL]
+@NoRatio - [OPTIONAL]
+@SecondaryImage - [OPTIONAL]
+
+Rendering example:
+{%- capture content -%}
+<div>...Content</div>
+{%- endcapture -%}
+
+{%- render "card", Image: section.settings.image, Content: content -%}
+{%- endcomment -%}
+
+{%- if Image and Content -%}
+
+  {%- if Product.metafields.wdn.grid_image -%}
+    {%- assign Image = Product.metafields.wdn.grid_image.value -%}
+  {%- endif -%}
+
+  {%- if Product.metafields.wdn.grid_secondary_image -%}
+    {%- assign SecondaryImage = Product.metafields.wdn.grid_secondary_image.value -%}
+  {%- endif -%}
+
+  {%- assign ImageSizes = "150,240,300,480,600,720,900,1080" -%}
+
+  <div class="card pos:re{% if Modifier %} card--{{ Modifier }}{% endif %}{% if Class %} {{ Class }}{% endif %}" {% if Anim %} data-aos="fade-up" data-aos-delay="350" {% endif %}>
+    <div class="card-inner">
+      <div class="card-image{% if ImageLink or SecondaryImage %} pos:re{% endif %}" {% if SecondaryImage %} data-onhover-secondary {% endif %}>
+
+        {% if UseImageAsBg %}
+          <div class="card-image_bg">
+            <img class="lazyload" data-src="{{ Image | img_url: '2x2', crop: 'center' }}">
+          </div>
+        {% endif %}
+        <div data-primary-image>
+          {%- render "image", Image: Image, Sizes: ImageSizes, ImageRatio:ImageRatio, NoRatio: NoRatio -%}
+        </div>
+        {%- if SecondaryImage -%}
+          <div class="absolute--fill" data-secondary-image>
+            {%- render "image", Image: SecondaryImage, Sizes: ImageSizes, NoRatio: true -%}
+          </div>
+        {%- endif -%}
+        {%- if ImageLink -%}
+          <a href="{{ ImageLink }}" class="link absolute--fill"></a>
+        {%- endif -%}
+      </div>
+      <div class="card-content">
+        {{ Content }}
+      </div>
+    </div>
+  </div>
+{%- else -%}
+  <script>
+    WDN.MissingParams("card")
+</script>
+{%- endif -%}

@@ -1,0 +1,66 @@
+{%- comment -%}
+{
+			"type": "media",
+			"name": "Media",
+			"settings": [
+              {
+				"type": "checkbox",
+				"id": "grow",
+				"label": "Let block grow and take up any available space",
+				"info": "NOTE: Block width config is ignored"
+			  }, {
+				"type": "number",
+				"id": "width",
+				"label": "Block width",
+				"default": 50,
+				"info": "Applies only to larger screens"
+			  }, {
+                "type": "select",
+                "id": "media_rounding",
+                "label": "Media rounding",
+                "default": "soft",
+                "options": [
+                    { "value": "none", "label": "None" },
+                    { "value": "soft", "label": "Soft" },
+                    { "value": "full", "label": "Full" }
+                ]
+              }, {
+				"type": "header",
+				"content": "Image"
+			  }, {
+                "type": "image_picker",
+                "id": "image",
+                "label": "Image"
+              }, {
+				"type": "header",
+				"content": "Video embed"
+			  },{
+				"type": "header",
+				"content": "Custom HTML"
+			  }, {
+                "type": "html",
+                "id": "html",
+                "label": "HTML",
+				"info": "Can also be used to paste Vimeo embed"
+              }, {
+				"type": "header",
+				"content": "Video src"
+			  }, {
+                "type": "url",
+                "id": "video_src",
+                "label": "Video src",
+				"info": "Upload video to files, and paste URL to file here"
+              }
+			]
+		}
+{%- endcomment -%}
+
+<div class="media-container media--round:{{ block.settings.media_rounding }} pb:md sm-up:pb:cl">
+  {%- render 'image', Image: block.settings.image -%}
+</div>
+
+{% if block.settings.html != blank %}
+<div class="media-container media--round:{{ block.settings.media_rounding }}">
+  {{ block.settings.html }}
+</div>
+{% endif %}

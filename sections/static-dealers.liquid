@@ -1,0 +1,214 @@
+{{ 'static-dealers.css' | asset_url | stylesheet_tag }}
+
+<style>
+  [data-when-error],
+  [data-when-success] {
+    display:none;
+  }
+
+  [data-zipsearch="error"] [data-when-error],
+  [data-zipsearch="success"] [data-when-success] {
+    display:block;
+  }
+  
+  [data-zipsearch] [data-zipmessage-placeholder] {
+    display:none;
+  }
+  
+  .fl\:1 {
+    flex-basis:100%; 
+  }
+  
+  .fl\:1\/4 {
+    flex-basis:25%; 
+  }
+  
+  .bg\:light-blue {
+    background-color: #f1f9fb;
+  }
+  
+  .dealer-block-inner {
+    background-color: #fff;
+    border-radius:0.25em;
+    padding:1.25em;
+    border:1px solid #ccc;
+    transition: color ease 0.4s;
+  }
+
+  .dealer-block-inner:hover{
+      color: #9d8661;
+  }
+
+  .input--form{
+      background-color: var(--color-bg-white) !important;
+      border-top-right-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+      border-color: #dcdcdc !important;
+  }
+  .button--form{
+    border-top-left-radius: 0 ;
+      border-bottom-left-radius: 0 ;    
+  }
+</style>
+
+{%- assign config = section.settings -%}
+
+<div class="page page__dealers">
+  <div class="page-inner bg:light-blue py:xl">
+  <div class="pw container">
+
+    {% if config.header-image-top != blank %}
+    {%- render 'image', image: config.header-image-top -%}
+    {% endif %}
+
+
+    <div class="dealer-search__header">
+      <div class="pw pw:xs tx:center lh:lg">
+        <h1 class="hd hd:xl">{{ page.title }}</h1>
+
+        <p data-zip-error>
+          <span data-zipmessage-placeholder>{{ config.tit }}</span>
+          <span data-when-error>{{ config.fejlbesked }}</span>
+          <span data-when-success>{{ config.succesbesked }}</span>
+        </p>
+
+        <form action="" data-zip-search-form class="pt:md fx jc:center">
+          <input class="pw:tn input--form" type="number" name="query" placeholder="{{ config.prefill }}">
+
+          <button type="submit" class="button button--form button--secondary button--round">
+            {{ config.search }}
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="dealer-grid fx fx:wr gp pt:lg">
+      {% for block in section.blocks %}
+
+      {%- assign item_config = block.settings -%}
+
+      {% liquid 
+
+      capture block_grid
+
+      	echo " fi fi:1/1 md-up:fi:"
+
+        case block.type 
+
+        when "item"
+         echo "1/4"
+
+        when "headline"
+         echo "1/1"
+
+        endcase
+
+      endcapture
+
+      %}
+
+      <div class="block dealer-block zip-block-{{ block.type }}{{ block_grid }}" {% if block.type == 'item' %}data-dealer-item="{{ item_config.city | slice: 0,4  | default: "online" }}"{% endif %}>
+
+        {%- case block.type -%}
+        {% when 'item' %}
+        <div class="dealer-block-inner mt:xs lh:md pos:re">
+          <a href="{{ item_config.url }}" target="_blank" class="absolute--fill"></a>
+          <p class="hd lh:lg">{{ item_config.name }}</p>
+          <p class="">{{ item_config.add }}</p>
+          <p class="">{{ item_config.city }}</p>
+        </div>
+        {% when 'headline' %}
+        <div class="py pb:tn mt">
+          <p class="hd hd:xl">{{ item_config.headliner }}</p>
+        </div>
+        {%- endcase -%}
+      </div>
+
+      {% endfor %}
+    </div>
+  </div>
+</div>
+</div>
+
+{{ 'static_dealers.js' | asset_url | script_tag }}
+
+{% schema %}
+{
+  "name": "Find forhandler - WDN.DK",
+  "settings": [
+      {
+        "type": "image_picker",
+        "id": "header-image-top",
+        "label": "Vælg billede som skal vises i toppen"
+      }, {
+        "type": "text",
+        "id": "tit",
+        "label": "Titel",
+        "default": "Find en forhandler i nærheden af dig"
+      }, {
+        "type": "text",
+        "id": "prefill",
+        "label": "Tekst i felt, inden indtastning",
+        "default": "Indtast postnummer..."
+      }, {
+        "type": "text",
+        "id": "search",
+        "label": "Søg knap",
+        "default": "Søg"
+      }, {
+        "type": "textarea",
+        "id": "fejlbesked",
+        "label": "Fejl besked",
+        "default": "Vi fandt ingen forhandlere i nærheden af dit postnummer"
+      }, {
+        "type": "textarea",
+        "id": "succesbesked",
+        "label": "Succes besked",
+        "default": "Følgende forhandlere er i nærheden af dit postnummer"
+      }
+  ],
+  "blocks" : [
+    {
+    "name": "Butik",
+    "type": "item",
+    "settings": [
+      {
+        "type": "text",
+        "id": "name",
+        "label": "Navn",
+        "default": "Butiksnavn"
+      }, {
+        "type": "text",
+        "id": "title",
+        "label": "Titel",
+        "default": "Titel"
+      }, {
+        "type": "text",
+        "id": "add",
+        "label": "Adresse"
+      }, {
+        "type": "text",
+        "id": "city",
+        "label": "By"
+      }, {
+        "type": "url",
+        "id": "url",
+        "label": "Link til Google maps, eller lign",
+        "info": "Stå tom for at deaktivere link"
+      }
+     ]
+  },
+  {
+    "name": "Overskrift",
+    "type": "headline",
+    "settings": [
+      {
+      "type": "text",
+      "id": "headliner",
+      "label": "Overskrift"
+      }
+    ]
+  }
+ ]
+}
+{% endschema %}

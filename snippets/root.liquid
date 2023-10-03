@@ -1,0 +1,61 @@
+{%- assign title_font = settings.font_title -%}
+{%- assign base_font = settings.font_text -%}
+{%- assign title_font_stack = title_font.family | append: ' , ' | append:  title_font.fallback_families -%}
+{%- assign base_font_stack = base_font.family | append: ' , ' | append:  base_font.fallback_families -%}
+<style>
+{{ title_font | font_face }}
+{{ base_font | font_face }}
+
+:root {
+  --color-primary: {{ settings.color_primary }};
+  --color-secondary: {{ settings.color_secondary }};
+  --color-tertiary: {{ settings.color_tertiary }};
+  --color-title: {{ settings.color_title }};
+  --color-text: {{ settings.color_text }};
+  --color-link: {{ settings.color_link }};
+  --color-button: {{ settings.color_button }};
+  --font-family-title: {{ title_font.family }};
+  --font-family-text: {{ base_font.family }};
+  --font-style-title: {{ title_font.style }};
+  --font-style-text: {{ base_font.style }};
+
+  --padding-section: 2em;
+}
+
+
+body {
+  font-family: {{ base_font_stack }};
+}
+
+::-webkit-input-placeholder {
+  font-family: {{ base_font_stack }};
+}
+:-moz-placeholder {
+  font-family: {{ base_font_stack }};
+}
+::-moz-placeholder {
+  font-family: {{ base_font_stack }};
+}
+:-ms-input-placeholder {
+  font-family: {{ base_font_stack }};
+}
+
+.title {
+  font-family: {{ title_font_stack }};
+}
+
+@media screen and (min-width: 660px) {
+  :root {
+    --padding-section: 3em;
+    --page-padding:1em;
+  }
+}
+
+</style>
+
+<script>
+    var WDN = WDN || {};
+    WDN.MissingParams = function (componentName) {
+        console.warn("Required parameter(s) missing in snippets/" + componentName + ".liquid");
+    }
+</script>

@@ -1,0 +1,15 @@
+{% liquid
+
+	assign config = section.settings
+
+%}
+
+<div class="pw container pt:xl">
+  <div class="blog__header tx:center">
+    <p class="hd hd:xl">
+      {{ blog.title }}
+    </p>
+  </div>
+  
+  {%- render 'blog', blog: blog -%}
+</div>

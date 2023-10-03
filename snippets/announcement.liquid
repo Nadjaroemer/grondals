@@ -1,0 +1,33 @@
+{%- comment -%}
+Params:
+@Content - [REQUIRED]
+@Config - [REQUIRED] 
+@Modifier - [OPTIONAL] 
+
+Rendering example:
+
+{% render "announcement", Content: block.settings.content, Config: section.settings %}
+{%- endcomment -%}
+
+{%- if Content -%}
+    {%- assign IsFixed = Config.fixed -%}
+    {%- assign BgColor = Config.background_color -%}
+    {%- assign FontColor = Config.font_color -%}
+    {%- assign FontSize = Config.font_size -%}
+
+    {%- capture Style -%}
+        {%- if BgColor %}background-color:{{ BgColor }};{%- endif -%}
+        {%- if FontColor %}color:{{ FontColor }};{%- endif -%}
+    {%- endcapture -%}
+
+    <div class="announcement">
+        <div class="announcement-inner" style="{{ Style }}">
+            <div class="announcement-content base:tn">
+              <div style="fill: {{ FontColor }} ;"> {{ icon }} </div>
+               {{ Content }}
+            </div>
+        </div>
+    </div>
+{% else %}
+    <script>WDN.MissingParams("annonuncement")</script>
+{% endif %}

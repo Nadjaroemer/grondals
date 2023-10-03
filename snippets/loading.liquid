@@ -1,0 +1,13 @@
+{%- comment -%}
+Params:
+@Modifier - [OPTIONAL]
+
+
+Rendering example:
+{%- render "loading" -%} // Appears when parent has [data-loading] attribute
+{%- endcomment -%}
+
+
+<div class="loading-wrapper{% if Modifier %} loading--{{ Modifier }}{% endif %}">
+    <div class="loading-icon"></div>
+</div>

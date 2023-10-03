@@ -1,0 +1,117 @@
+{%- comment -%}
+Params:
+@Product - [REQUIRED]
+@MediaPerRow - [OPTIONAL]
+
+Rendering example:
+
+{%- render "product_page-gallery", Product: product -%}
+
+{%- endcomment -%}
+
+{%- unless MediaPerRow -%}
+	{%- assign MediaPerRow = 1 -%}
+{%- endunless -%}
+
+{%- assign manyImages = false -%}
+
+{%- if Product.images.size <= 3 -%}
+	{%- assign manyImages = false -%}
+{%- endif -%}
+
+{%- if Product -%}
+<div class="fx fx:wr gp:tn product__gallery scrollbar--hide" data-product-gallery="{{ MediaPerRow }}">
+  {%- for media in Product.media -%}
+    {% if media == CustomImage  %}
+      {% continue %}
+    {% endif %}   
+  <div class="product__gallery-item py:tn fi fi:1/1 md-up:fi:1/{% if manyImages %}1{% else %}2{% endif %}{% if media.aspect_ratio > 1.2 %} md-up:fi:1/1{% endif %}">
+    {%- case media.media_type -%}
+    {%- when "video" -%}
+    	{%- render "video", Video: media -%}
+    {%- when "external_video" -%}
+    	{%- render "iframe", Video: media -%}
+    {% else %}
+    	    {%- render "image", Image: media -%}
+    {%- endcase -%}
+  </div>
+
+
+  {%- endfor -%}
+</div>
+
+
+{%- else -%}
+<script>
+  WDN.MissingParams("product-gallery")
+</script>
+{%- endif -%}
+
+<style>
+  [data-product-info] {
+    position:sticky;
+    top:2em;
+  }
+
+  [data-product-add] [data-label] {
+    display: none;
+  }
+  [data-product-add][data-unavailable] [data-label] {
+    display: none;
+  }
+  [data-product-add][data-loading] [data-label] {
+    display: none;
+  }
+
+  [data-product-add] [data-label="add"] {
+    display: inline-block;
+  }
+  [data-product-add][data-loading] {
+    pointer-events: none;
+  }
+
+  [data-product-add][data-loading] [data-label="loading"] {
+    display: inline-block;
+  }
+
+  [data-product-add][data-unavailable] [data-label="soldout"] {
+    display: inline-block;
+  }
+
+  [data-product-stock] {
+    display: flex;
+    align-items: center;
+  }
+
+  [data-product-stock] [data-label] {
+    display: none;
+  }
+  [data-product-stock="high"] [data-label="high"] {
+    display: block;
+  }
+
+  [data-product-stock="low"] [data-label="low"] {
+    display: block;
+  }
+  [data-product-stock="unavailable"] [data-label="unavailable"] {
+    display: block;
+  }
+
+  [data-product-stock="high"] [data-stock-indicator] {
+    background-color: green;
+  }
+
+  [data-product-stock="low"] [data-stock-indicator] {
+    background-color: yellow;
+  }
+  [data-product-stock="unavailable"] [data-stock-indicator] {
+    background-color: red;
+  }
+
+  [data-stock-indicator] {
+    width: 0.8em;
+    height: 0.8em;
+    border-radius: 5em;
+    display: block;
+  }
+</style>

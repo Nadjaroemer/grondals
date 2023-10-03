@@ -1,0 +1,66 @@
+{% liquid
+
+
+	assign config = block.settings
+    assign drawer_title = config.drawer_title 
+    
+    assign image = config.image
+    
+    assign page_ref = config.page
+    
+    assign close_label = config.close_label
+    
+    assign hide_close_btn = config.hide_close_btn
+    
+    if drawer_title.size == 0
+      assign drawer_title = config.title
+    endif
+    
+    if close_label.size == 0
+    	assign close_label = 'product.drawer.close' | t 
+    endif
+    
+    assign drawer_id = block.id
+
+%}
+
+{%- capture Content -%}
+  <div class="product__related-variants base:xs lh:lg fx dir:col height-full">
+    
+    <div class="product__related-variants-inner px py:sm bg:lightblue">
+      <div class="fx ai:center jc:space-between">
+        <div class="fi grow-1">
+          <h6 class="hd hd:md">{{ drawer_title }}</h6>
+        </div>
+
+        <div class="fi">
+          [Close]
+        </div>
+      </div>
+    </div>
+
+    {%- if image -%}
+    {%- render "image", image: image -%}
+    {%- endif -%}
+
+    <div class="product__related-variants-products  grow-1 of:scroll base:md">
+      {%- if page_ref.size > 0 -%}
+      <div class="p:md">
+        <div class="rte">
+          {{ page_ref.content }}
+        </div>
+      </div>
+      {%- endif -%}
+      
+      {%- unless hide_close_btn -%}
+      <div class="p:md">
+          <wdn-drawer-close data-id="{{ drawer_id }}" class="button button--outline">
+            {{ close_label }}
+          </wdn-drawer-close>
+      </div>
+      {%- endunless -%}
+    </div>
+  </div>
+{%- endcapture -%}
+
+{%- render "drawer", Id: drawer_id, Content: Content, controls_no_abs: true, Class: 'drawer-fix-scroll' -%}

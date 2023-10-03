@@ -1,0 +1,47 @@
+{%- comment -%}del{%- endcomment -%}
+<style>
+   
+    wdn-modal[data-id="success_popup"] {
+        align-items: flex-end;
+    }
+ 
+    wdn-modal[data-id="success_popup"] .overlay-inner{
+        max-width: unset;
+        width: 100%;
+        padding: 2em;
+        margin: 0;
+    }
+
+    .popup-image{
+        width: 5em;
+    }
+</style>
+
+{% assign Collection = collections["santa-catarina"]  %}
+{% assign Product = Collection.products[0] %}
+{%- capture ModalContent -%}
+<div class="popup popup--success">
+    <div class="popup-inner">
+        <div class="fx gp">
+            <div class="fi">
+                <div class="popup-image">
+                    <img data-src="" data-popup-img class="lazyload">
+                </div>
+            </div>
+            <div class="fi">
+                <div class="py:tn">
+                    <p data-popup-title>{{ Product.title }}</p>
+                </div>
+                <div class="pb:tn">
+                    <p data-popup-price>{{ Product.price | money }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{%- endcapture -%}
+
+
+{%- render "modal", Id: "success_popup", Animation: "bottom",  Content: ModalContent -%}
+

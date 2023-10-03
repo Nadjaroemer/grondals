@@ -1,0 +1,27 @@
+{{ 'template-blog.css' | asset_url | stylesheet_tag }}
+
+
+{% liquid
+	assign config = section.settings
+%}
+
+
+<div class="pw container">
+  <div class="pw pt:md">
+    <div class="blog__header tx:center pb:md">
+      <p class="hd hd:xl">
+        {{ blog.title }}
+      </p>
+    </div>
+
+    
+    {%- render "blog-filters" -%}
+
+    <div data-blog-content>
+      {%- render 'blog', blog: blog, Paginate: settings.blog_pagination -%}
+    </div>
+    
+  </div>
+</div>
+
+

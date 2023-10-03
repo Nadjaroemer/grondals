@@ -1,0 +1,389 @@
+{% liquid
+
+        assign config = section.settings
+
+        capture sectionClasses
+          echo "section-content fx fx:wr md-up:fx:nowrap"
+
+          echo " ai:" | append: config.align
+
+          echo " jc:" | append: config.justify
+
+          echo " gp:" | append: config.gap
+
+          if config.reverse_on_large
+            echo " md-up:dir-row--rev"
+          endif
+
+        endcapture -%}
+
+<div class="section{% unless config.boxed_layout %} {% if config.only_bg_large %}lg:{% endif %}section-normal-bg{% endunless %}" data-name="text-media-{{ section.id }}">
+
+   <div class="container">
+      <div class="section-inner">
+
+         <div class="section-bg-inner {% if config.boxed_layout %} lg:section-boxed-bg{% endif %}">
+            <div class="section-header"></div>
+
+            <div class="{{ sectionClasses }}">
+
+               {%- for block in section.blocks -%}
+
+                  {% liquid
+           
+           capture blockClasses
+           
+             echo "fi fi:1/1 block block-" | append: block.type
+             
+             if block.settings.grow
+               echo " grow-1"
+             endif
+             
+           endcapture
+           
+           capture blockWidth
+           
+             echo "style='flex-basis:" | append: block.settings.width | append: "%'"
+           
+           endcapture
+           
+           %}
+
+                  <div class="{{ blockClasses }}" data-block-id="{{ block.id }}" {{ blockWidth }} {{ block.shopify_attributes }}>
+                     {%- case block.type -%}
+
+                        {% when 'text' %}
+                           {%- render 'block-rte', block: block -%}
+
+                        {% when 'media' %}
+                           {%- render 'block-media', block: block -%}
+
+                     {%- endcase -%}
+                  </div>
+
+               {%- endfor -%}
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+{% schema %}
+
+{
+   "name": "Text / media",
+   "max_blocks": 3,
+   "settings": [
+      {
+         "type": "header",
+         "content": "Content behavior"
+      }, {
+         "type": "select",
+         "id": "align",
+         "label": "Vertical alignment of content",
+         "default": "center",
+         "options": [
+            {
+               "value": "start",
+               "label": "Start"
+            }, {
+               "value": "center",
+               "label": "Center"
+            }, {
+               "value": "end",
+               "label": "End"
+            }
+         ]
+      }, {
+         "type": "select",
+         "id": "justify",
+         "label": "Horizontal alignment of content",
+         "default": "center",
+         "options": [
+            {
+               "value": "start",
+               "label": "Start"
+            }, {
+               "value": "center",
+               "label": "Center"
+            }, {
+               "value": "end",
+               "label": "End"
+            }, {
+               "value": "between",
+               "label": "Spread"
+            }
+         ]
+      }, {
+         "type": "checkbox",
+         "id": "reverse_on_large",
+         "label": "Reverse order on large screen"
+      }, {
+         "type": "header",
+         "content": "Styling"
+      }, {
+         "type": "select",
+         "id": "gap",
+         "label": "Gutters",
+         "default": "md",
+         "options": [
+            {
+               "value": "none",
+               "label": "None"
+            }, {
+               "value": "sm",
+               "label": "Small"
+            }, {
+               "value": "md",
+               "label": "Medium"
+            }, {
+               "value": "la",
+               "label": "Large"
+            }, {
+               "value": "xl",
+               "label": "XLarge"
+            }, {
+               "value": "mg",
+               "label": "XXLarge"
+            }
+         ]
+      }, {
+         "type": "color",
+         "id": "bg_color",
+         "label": "Background color",
+         "default": "#fff"
+      }, {
+         "type": "checkbox",
+         "id": "only_bg_large",
+         "label": "Apply only background on large screens"
+      }, {
+         "type": "checkbox",
+         "id": "boxed_layout",
+         "label": "Boxed layout",
+         "info": "Background color to be applied as a box. Applies only to PC"
+      }
+   ],
+   "blocks": [
+      {
+         "type": "text",
+         "name": "Text",
+         "settings": [
+            {
+               "type": "checkbox",
+               "id": "grow",
+               "label": "Let block grow and take up any available space",
+               "info": "NOTE: Block width config is ignored"
+            }, {
+               "type": "number",
+               "id": "width",
+               "label": "Block width",
+               "default": 50,
+               "info": "Applies only to larger screens"
+            }, {
+               "type": "header",
+               "content": "Content behavior"
+            }, {
+               "type": "select",
+               "id": "text-align",
+               "label": "Mobile - text alignment",
+               "default": "center",
+               "options": [
+                  {
+                     "value": "left",
+                     "label": "Start"
+                  }, {
+                     "value": "center",
+                     "label": "Center"
+                  }, {
+                     "value": "right",
+                     "label": "End"
+                  }
+               ]
+            }, {
+               "type": "select",
+               "id": "lg-text-align",
+               "label": "PC - text alignment",
+               "default": "left",
+               "options": [
+                  {
+                     "value": "left",
+                     "label": "Start"
+                  }, {
+                     "value": "center",
+                     "label": "Center"
+                  }, {
+                     "value": "right",
+                     "label": "End"
+                  }
+               ]
+            }, {
+               "type": "select",
+               "id": "base-size",
+               "label": "Base size",
+               "info": "Applies only to larger screens",
+               "default": "md",
+               "options": [
+                  {
+                     "value": "sm",
+                     "label": "Small"
+                  }, {
+                     "value": "sd",
+                     "label": "Default"
+                  }, {
+                     "value": "md",
+                     "label": "Medium"
+                  }, {
+                     "value": "la",
+                     "label": "Large"
+                  }, {
+                     "value": "xl",
+                     "label": "Xlarge"
+                  }, {
+                     "value": "mg",
+                     "label": "XXlarge"
+                  }
+               ]
+            }, {
+               "type": "header",
+               "content": "Content"
+            }, {
+               "type": "richtext",
+               "id": "heading",
+               "label": "Heading"
+            }, {
+               "type": "richtext",
+               "id": "text",
+               "label": "Text"
+            }, {
+               "type": "richtext",
+               "id": "dropdown_text",
+               "label": "Dropdown Text"
+            }, {
+               "type": "header",
+               "content": "Button"
+            }, {
+               "type": "select",
+               "id": "button_style",
+               "label": "Button style",
+               "default": "default",
+               "options": [
+                  {
+                     "value": "default",
+                     "label": "Default"
+                  }, {
+                     "value": "round",
+                     "label": "Round"
+                  }, {
+                     "value": "round-slim",
+                     "label": "Round slim"
+                  }, {
+                     "value": "outline",
+                     "label": "Outline"
+                  }, {
+                     "value": "tall",
+                     "label": "Tall"
+                  }
+               ]
+            }, {
+               "type": "select",
+               "id": "button_sizing",
+               "label": "Sizing",
+               "default": "default",
+               "options": [
+                  {
+                     "value": "small",
+                     "label": "Smaller"
+                  }, {
+                     "value": "default",
+                     "label": "Default"
+                  }, {
+                     "value": "larger",
+                     "label": "Larger"
+                  }
+               ]
+            }, {
+               "type": "text",
+               "id": "btn_label",
+               "label": "Label"
+            }, {
+               "type": "url",
+               "id": "btn_url",
+               "label": "Url"
+            }
+         ]
+      }, {
+         "type": "media",
+         "name": "Media",
+         "settings": [
+            {
+               "type": "checkbox",
+               "id": "grow",
+               "label": "Let block grow and take up any available space",
+               "info": "NOTE: Block width config is ignored"
+            }, {
+               "type": "number",
+               "id": "width",
+               "label": "Block width",
+               "default": 50,
+               "info": "Applies only to larger screens"
+            }, {
+               "type": "select",
+               "id": "media_rounding",
+               "label": "Media rounding",
+               "default": "soft",
+               "options": [
+                  {
+                     "value": "none",
+                     "label": "None"
+                  }, {
+                     "value": "soft",
+                     "label": "Soft"
+                  }, {
+                     "value": "full",
+                     "label": "Full"
+                  }
+               ]
+            }, {
+               "type": "header",
+               "content": "Image"
+            }, {
+               "type": "image_picker",
+               "id": "image",
+               "label": "Image"
+            }, {
+               "type": "header",
+               "content": "Video embed"
+            }, {
+               "type": "header",
+               "content": "Custom HTML"
+            }, {
+               "type": "html",
+               "id": "html",
+               "label": "HTML",
+               "info": "Can also be used to paste Vimeo embed"
+            }
+         ]
+      }
+   ]
+}
+
+{% endschema %}
+
+<style>
+   [data-name="text-media-{{ section.id }}"].section-normal-bg {
+      background-color: {{config.bg_color}};
+   }
+
+   @media(min-width:768px) {
+      [data-name="text-media-{{ section.id }}"].lg\:section-normal-bg {
+         background-color: {{config.bg_color}};
+      }
+
+      [data-name="text-media-{{ section.id }}"] .lg\:section-boxed-bg {
+         background-color: {{config.bg_color}};
+         padding: 3.65em;
+         border-radius: 1.5em;
+      }
+   }
+</style>

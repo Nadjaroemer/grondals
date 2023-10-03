@@ -1,0 +1,22 @@
+{% liquid
+   
+    capture pc_width
+   
+      echo " pw"
+
+      if config.full_w_mobile 
+         echo " container-no-pad"
+      endif 
+
+      if config.width_pc == "fl"
+         echo " px:cl"
+      endif
+
+      unless config.width_pc == "DEFAULT"  
+          echo " md-up:pw:" | append: config.width_pc         
+      endunless 
+ 
+   endcapture
+
+%}
+{{ pc_width }}

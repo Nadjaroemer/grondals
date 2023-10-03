@@ -1,0 +1,27 @@
+{%- assign Query = search.terms | escape -%}
+
+{%- capture QueryHiglighted -%}
+<strong class="underline">{{ Query }}</strong>
+{%- endcapture -%}
+
+<div class="search__empty p:lg bg:white">
+  <div class="search__empty-inner">
+    <p class="hd hd:sm">
+      <strong>{{ 'search.no_result.title' | t }}</strong>
+    </p>
+
+    <p class="pt:sm">
+      {{ 'search.no_result.body_html' | t: query: QueryHiglighted }}
+    </p>
+    
+    <div class="search__empty-action pt:md base:xs">
+      <button type="button" class="button" data-search-clear>
+        {{ 'search.clear' | t }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="search__empty-recommendations pt:lg">
+  {%- render 'search-recommendations' -%}
+</div>

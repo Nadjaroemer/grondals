@@ -1,0 +1,37 @@
+{%- assign Product_list = product.metafields.related.variants.value -%}
+
+
+{%- if Product_list -%}
+  {%- capture Content -%}
+    <div class="product__related-variants base:xs lh:lg fx dir:col height-full">
+      <div class="product__related-variants-inner container py:sm bg:lightblue">
+        <div class="fx ai:center jc:space-between">
+          <div class="fi grow-1">
+            <h6 class="hd hd:md">{{ 'product.other_variants.title' | t }}
+            </h6>
+          </div>
+
+          <div class="fi">
+            [Close]
+          </div>
+        </div>
+      </div>
+
+      <div class="product__related-variants-products py:md container grow-1 of:scroll">
+        <div class="fx gp:sm fx:wr">
+          {%- for Product in Product_list -%}
+            {%- if Product == product -%}
+              {%- continue -%}
+            {%- endif -%}
+
+            <div class="fi fi:1/2">
+              {%- render 'product-card', Product: Product, quickshop_modal: quickshop_modal, prefix_id: prefix_id, context: context -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  {%- endcapture -%}
+
+  {%- render "drawer", Id: "variant_products", Content: Content, controls_no_abs: true, Class: 'drawer-fix-scroll' -%}
+{%- endif -%}

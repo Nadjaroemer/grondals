@@ -1,0 +1,34 @@
+<div class="message-product-added base:sm">
+  <div class="message-product-added-inner p:sm bg:flashy tx:center">
+    <p class="hd hd:md">
+      {{ 'cart.add_success_message' | t }}
+    </p>
+  </div>    
+</div>
+
+<style>
+  .message-product-added {
+    transform:translate(0, -100%);
+    transition: transform ease 0.5s;
+    top: 0;
+    position:fixed;
+    left:0;
+    width:100%;
+    z-index:9999999;
+  }
+
+  .message-product-added-inner {
+    padding-top:1.6em;
+    padding-bottom:1.6em;
+  }
+  
+  [data-product-added-recently] .message-product-added {
+    transform:translate(0, 0);
+  }
+
+  .overlay--open[data-product-added-recently-variants] .message-product-added {
+    width:500px;
+    right:0;
+    left:auto;
+  }
+</style>

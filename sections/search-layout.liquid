@@ -1,0 +1,13 @@
+{%- layout none -%}
+
+{%- if search.performed -%}
+    {%- if search.results_count > 0 -%}
+        {%- render "search-results" -%}
+    {%- else -%}
+        {%- render "search-no_results" -%}
+    {%- endif -%}
+{%- else -%}
+    {%- render "search-recommendations" -%}
+{%- endif -%}
+
+{%- render "loading" -%}

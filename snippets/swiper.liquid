@@ -1,0 +1,62 @@
+{%- comment -%}
+Params:
+
+[REQUIRED] @Id
+[REQUIRED] @PerView (eg. 3-2-1) 3 desktop, 2 tablet, 1 phone 
+[REQUIRED] @Slides
+[OPTIONAL] @SpaceBetween
+[OPTIONAL] @HasPagination
+[OPTIONAL] @IsLooped
+[OPTIONAL] @HasControls
+[OPTIONAL] @MobileOnly
+[OPTIONAL] @IsCentered
+[OPTIONAL] @MobileCentered
+[OPTIONAL] @GroupSwipe (eg. 3)
+[OPTIONAL] @Autoplay 
+[OPTIONAL] @AllowOverflow
+
+RenderExample:
+
+{%- capture Slides -%}
+{%- for product in collection.products -%}
+<div class="swiper-slide">
+    [CARD GOES HERE]
+</div>
+{%- endfor -%}
+{%- endcapture -%}
+
+{%- render "swiper", Id: "myId", Slides: Slides -%}
+{%- endcomment -%}
+
+{%- if Id and PerView and Slides -%}
+
+<wdn-swiper class="swiper wdn-swiper{% if Class %} {{ Class }}{%- endif -%}{% if AllowOverflow %} overflow--visible{% endif %}"
+ data-id="{{ Id }}"
+ data-perview="{{ PerView }}"
+ data-space-between="{% if SpaceBetween %}{{ SpaceBetween }}{% endif %}"
+ {% if IsCentered %} data-centered="" {% endif %}
+ {% if IsLooped %} data-loop="" {% endif %}
+ {% if MobileOnly %} data-mobileonly="" {% endif %}
+ {% if GroupSwipe %} data-group-slides="{{ GroupSwipe }}" {% endif %}
+ {% if Autoplay %} data-autoplay="" {% endif %}
+ {% if MobileCentered %} data-mobile-centered="" {% endif %}>
+
+        <div class="swiper-wrapper">
+            {{ Slides }}
+        </div>
+        
+        {%- if HasPagination -%}
+            <div class="swiper-pagination" data-swiper-pagination="{{ Id }}"></div>
+        {%- endif -%}
+
+        {%- if HasControls -%}
+            <div class="swiper-control swiper-button-prev" data-swiper-prev="{{ Id }}"></div>
+            <div class="swiper-control swiper-button-next" data-swiper-next="{{ Id }}"></div>
+        {%- endif -%}
+
+</wdn-swiper>
+{%- else -%}
+<script>
+    WDN.MissingParams("swiper")
+</script>
+{%- endif -%}

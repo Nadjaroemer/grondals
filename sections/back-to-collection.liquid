@@ -1,0 +1,34 @@
+{% if collection %}
+  <div class="pw">
+    <div class="container md-up:pt pt md-up:pt:mg pt:xl">
+
+      <div class="tx:center my">
+        <a href="{{collection.url}}" class="button button--secondary">
+          {{ 'product.back_to_collection' | t }}
+        </a>
+      </div>
+
+    </div>
+  </div>
+{% endif %}
+
+
+{% schema %}
+
+{
+  "name": "Back to collection",
+  "templates": ["product"],
+  "settings": [{
+  "type": "paragraph",
+  "content": "Knappen er kun synlig hvis man kommer fra en collection siden"
+}
+],
+  "presets": [
+    {
+      "name": "Back to collection",
+      "settings": {}
+    }
+  ]
+}
+
+{% endschema %}

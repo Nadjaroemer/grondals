@@ -1,0 +1,79 @@
+{%- comment -%}
+VIDEO RENDER EXAMPLE:
+{%- for media in product.media -%}
+    {%- if media.media_type == "video" -%}
+      {%- render "video", Src: media.sources -%}
+    {%- endif -%}
+{%- endfor -%}
+---------------------------------
+Vimeo/Yt render;
+
+{%- render "video", Src: "https://vimeo.com/[...]" -%}
+
+{%- endcomment -%}
+
+
+{%- unless NoValidate -%}
+   {%- if Src contains "youtube" -%}
+      {%- assign VideoSrc = Src | split: '?v=' -%}
+      {%- assign EmbedLink = "https://www.youtube.com/embed/" | append: VideoSrc[1] -%}
+   {%- elsif Src contains "vimeo"  -%}
+      {%- assign EmbedLink = Src | replace: 'vimeo.com/', 'player.vimeo.com/video/' -%}
+   {%- else -%}
+      {%- assign isVideo = true -%}
+      {%- assign VideoSources = Src -%}
+   {%- endif -%}
+{%- else -%}
+   {%- assign EmbedLink = Src -%}
+{%- endunless -%}
+
+
+<div class="VideoContainer">
+   <div class="ratio_container" {% if ratio %} style="padding-bottom:{{ ratio }}%;" {% endif %}>
+      {%- if isVideo -%}
+
+         <div class="showcase__video-con" data-mute-state="sound" data-video-state="default">
+            <button class="video__play-btn" data-when-video="default">
+               <img alt="" src="{{ 'video-play.svg' | asset_url }}">
+            </button>
+            <!-- play btn paused -->
+            <button class="video__play-btn play-paused" data-when-video="paused">
+               <img alt="paused" src="{{ 'video-play.svg' | asset_url }}">
+            </button>
+
+            <!-- when sound -->
+            <button class="video__mute-btn" data-when-mute="sound">
+               <!-- <img alt="paused" src="{{ 'video-mute.svg' | asset_url }}"> -->
+               <svg class="video__mute-btn__icon" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+               </svg>
+            </button>
+
+            <!-- when mute -->
+            <button class="video__mute-btn unmute-btn" data-when-mute="muted">
+               <!-- <img alt="paused" src="{{ 'video-unmute.svg' | asset_url }}"> -->
+               <svg class="video__mute-btn__icon" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path clip-rule="evenodd" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                  <path d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+               </svg>
+            </button>
+
+            <video class="showcase__video-con__video" loop playsinline preload="auto">
+
+               {%- if NoValidate -%}
+                  <source src="{{ EmbedLink }}" type="video/mp4">
+               {%- else -%}
+                  {%- for source in VideoSources -%}
+                     <source src="{{ source.url }}" type="{{ source.mime_type }}">
+                  {%- endfor -%}
+               {%- endif -%}
+
+            </video>
+         </div>
+
+
+      {%- else -%}
+         <iframe src="{{ EmbedLink }}{% if background %}?background=1{% endif %}" class="Video" frameborder="0" allow="autoplay; fullscreen"></iframe>
+      {%- endif -%}
+   </div>
+</div>

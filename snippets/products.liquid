@@ -1,0 +1,79 @@
+{%- assign amount = amount | default: 48 -%}
+{%- assign visibleAmountOfProducts = 4 -%}
+
+{%- capture GridClass -%}
+  {% if SwiperOnPhone %}hide md-up:fx{% else %}fx{% endif %} fx:wr gp:sm md-up:gp{% if justify %} jc:{{ justify }}{% endif %}
+{%- endcapture -%}
+
+{%- assign collectionCategory = collection.metafields.collection.category_name.value -%}
+{%- assign MadeDropdown = false -%}
+
+<div class="products__main">
+  <wdn-dropdown data-id="{{ collectionCategory }}">
+    <div class="{{ GridClass }}">
+        {%- for product in collection.products limit: amount -%}
+          {%- if product.id == product_ref.id -%}
+            {%- continue -%}
+          {%- endif -%}
+
+
+          {%- if hasDropdown and forloop.index > visibleAmountOfProducts -%}
+            {%- unless MadeDropdown -%}
+              <div class="fi fi:1/1" dropdown-container>
+                <div dropdown-content>
+                  <div class="{{ GridClass }}">
+                    {%- assign MadeDropdown = true -%}
+                  {%- endunless -%}
+
+                    
+                  <div class="width-for-flex fi fi:1/2 md-up:fi:1/{{ pr_row | default: 4 }}">
+                    {%- render 'product-card', Product: product, quickshop_modal: quickshop_modal, prefix_id: prefix_id, context: context -%}
+                  </div>
+
+                {%- else -%}
+                  <div class="width-for-flex fi fi:1/2 md-up:fi:1/{{ pr_row | default: 4 }}">
+                    {%- render 'product-card', Product: product, quickshop_modal: quickshop_modal, prefix_id: prefix_id, context: context -%}
+                  </div>
+                {%- endif -%}
+
+
+                {%- if forloop.last and MadeDropdown -%}
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+
+        {%- endfor -%}
+
+    </div>
+
+
+    {%- if hasDropdown and MadeDropdown -%}
+      <div class="tx:center my{% if SwiperOnPhone %} hide md-up:show{% endif %}">
+        <button type="button" dropdown-trigger class="button button--secondary" href="#">
+          <span data-label-when="default">{{ 'section.products.view_all' | t }}
+          </span>
+          <span data-label-when="active">{{ 'section.products.hide_all' | t }}
+          </span>
+        </button>
+      </div>
+    {%- endif -%}
+
+  </wdn-dropdown>
+</div>
+
+
+{%- if SwiperOnPhone -%}
+
+  {%- capture SwiperSlides -%}
+      {%- for product in collection.products limit: amount -%}
+        <div class="swiper-slide">
+          {%- render 'product-card', Product: product, quickshop_modal: quickshop_modal, prefix_id: prefix_id, context: context -%}
+        </div>
+      {%- endfor -%}
+  {%- endcapture -%}
+
+  <div class="md-up:hide">
+    {%- render "swiper", Id: collection.id, Slides: SwiperSlides, PerView: "1-1-2", HasControls: true -%}
+  </div>
+{%- endif -%}

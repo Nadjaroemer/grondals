@@ -1,0 +1,22 @@
+footer {
+  padding-bottom:0!important;
+}
+
+.footer__inner {
+  background-image:url("//cdn.shopify.com/s/files/1/1583/3197/files/grondals-fisker-footer_1400x.png?v=1541596130");
+  background-size: contain;
+  background-color:#F1F7FA;
+  padding-bottom: 10em;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+}
+
+@media (min-width:1024px) {
+  .footer__inner {
+ 	padding-bottom:25em;   
+  }
+}
+
+.footer__top-inner {
+  border-bottom: 1px solid #d0def2;
+}

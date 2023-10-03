@@ -1,0 +1,95 @@
+{%- comment -%}
+Params:
+@Item - [REQUIRED]
+@Modifier - [OPTIONAL]
+
+Rendering example:
+{%- for item in cart.items -%}
+{%- render "cart-item", Item: item -%}
+{%- endfor -%}
+{%- endcomment -%}
+
+{%- if Item -%}
+   {%- assign Product = Item.product -%}
+   {%- assign ProductImage = Product.featured_image -%}
+   {%- if Product.metafields.wdn.grid_image -%}
+      {%- assign ProductImage = Product.metafields.wdn.grid_image.value -%}
+   {%- endif -%}
+
+
+   <div class="cart__item{% if Modifier %} cart__item--{{ Modifier }}{% endif %} my">
+
+      <div class="cart__item-image pos:re">
+         <div class="card-image_bg">
+            <img class="lazyload" data-src="{{ ProductImage | img_url: '2x2', crop: 'center' }}">
+         </div>
+
+         {%- render "image", Image: ProductImage, Sizes: "200, 300, 450" -%}
+      </div>
+
+      {%- assign Product = Item.product -%}
+
+      <div class="cart__item-info">
+         <div class="mb">
+            <p class="cart__item-title">
+               <a class="hd hd:sm" href="{{ Item.url }}">
+                  {%- if Product.type.size > 0 -%}
+                     {{ Product.type }}
+                  {%- else -%}
+                     {% if Product.title contains '-' -%}
+                        {{ Product.title | split: '-' | last | strip | capitalize }}
+                     {%- else -%}
+                        {{ Product.title }}
+                     {%- endif -%}
+                  {%- endif -%}
+               </a>
+            </p>
+
+            <p class="cart__item-vendor mt:xs base:xs">
+               {%- if Product.type.size > 0 -%}
+                  {{ Product.title | remove: Product.type }}
+               {% else -%}
+                  {%- if Product.title contains '-' -%}
+                     {{ Product.title | split: '-' | first }}
+                  {%- else -%}
+                     {{ Product.vendor }}
+                  {%- endif -%}
+               {%- endif -%}
+            </p>
+         </div>
+
+         <wdn-cart-quantity id="{{ Item.id }}" class="quantity" data-disable-when-loading>
+            <button class="btn btn:qty" data-quantity-control="decrease" type="button">
+               <svg class="icon icon:xs" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 12H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+               </svg>
+            </button>
+            <input class="input input:qty" type="number" data-quantity-input min="0" value="{{ Item.quantity }}" data-blur-when-loading>
+            <button class="btn btn:qty" data-quantity-control="increase" type="button">
+               <svg class="icon icon:xs" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 6v6m0 0v6m0-6h6m-6 0H6" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+               </svg>
+            </button>
+         </wdn-cart-quantity>
+         <wdn-cart-remove id="{{ Item.id }}">
+            <svg class="icon icon:sm" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+               <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+            </svg>
+         </wdn-cart-remove>
+      </div>
+
+     <div class="fx fx:wr fx grow-1 as:end jc:end mt:md tx:right">
+       {%- if Product.compare_at_price > Product.price -%}
+       <p class="price:compare fi fi:1/1" data-blur-when-loading>{{- Product.compare_at_price | times: Item.quantity | money_without_trailing_zeros -}}</p>
+       {%- endif -%}
+
+       <p class="cart__item-price hd hd:sm fi fi:1/1 lh:xl" data-blur-when-loading>
+         {{- Item.final_line_price | money_without_trailing_zeros -}}
+       </p>
+      </div>
+   </div>
+{%- else -%}
+   <script>
+WDN.MissingParams("cart-item");
+</script>
+{%- endif -%}

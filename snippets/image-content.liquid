@@ -1,0 +1,42 @@
+{%- comment -%}
+Params:
+@Image - [REQUIRED]
+@Content - [REQUIRED]
+@Reverse - [OPTIONAL]
+@Modifier - [OPTIONAL]
+@NoRatio - [OPTIONAL]
+
+Rendering example:
+{%- capture content -%}
+<div>...Content</div>
+{%- endcapture -%}
+
+{%- render "image_content", Image: section.settings.image, Content: content -%}
+{%- endcomment -%}
+
+{%- assign ImageSizes = "150,300,500, 900, 1000" -%}
+
+{%- if Image and Content -%}
+    <div class="image-content section{% if Modifier %} image-content--{{ Modifier }}{% endif %}" {% if BlockAttribute %} {{ BlockAttribute }} {% endif %}>
+        <div class="image-content-inner">
+            <div class="grid wrap {% if Reverse %} grid--reverse{% endif %}">
+                <div class="grid-item fx-100 fx--lg-50">
+                    <div class="image-wrapper">
+                        {%- render "image", Image: Image, Sizes: ImageSizes, NoRatio: NoRatio -%}
+                    </div>
+                </div>
+                <div class="grid-item fx-100 fx--lg-50">
+                    <div class="container {% if Background %} theme-bg{% endif %}">
+                        <div class="content-wrapper content-wrapper--{% if Reverse %}left{% else %}right{% endif %}">
+                            {{ Content }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{%- else -%}
+    <script>
+    WDN.MissingParams("image-content")
+</script>
+{%- endif -%}

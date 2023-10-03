@@ -1,0 +1,175 @@
+{{ 'nav-drawer.css' | asset_url | stylesheet_tag }}
+
+{%- capture ChevronArrow -%}
+<svg class="icon icon:sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+{%- endcapture -%}
+
+{% liquid
+  assign config = section.settings
+  assign main_navigation = linklists[config.main_linklist].links
+  assign secondary_navigation = linklists[config.secondary_linklist].links
+
+  assign teaser_blocks = section.blocks | where: 'type', 'teaser'
+%}
+
+{%- capture Content -%}
+<span class="base:sm mt:tn">[Close]</span>
+
+<div class="slide slide--main sb:hide" data-active data-slide="mainmenu">
+
+  <div class="container">
+    <div class="linkGroup">
+      
+      {%- if main_navigation -%}
+      <div class="navdrawer__main font-heading">
+        {%- for link in main_navigation -%}
+          {% liquid
+
+            assign allow_dropdown = false
+          
+          	capture link_wrapper_properties
+            
+              if link.links.size > 0
+                  assign allow_dropdown = true
+                  echo 'data-hover-to="' | append: link.title | append: '"'
+              else
+                  echo  'data-hover-to="false"'
+              endif 
+            
+            endcapture
+          %}
+        <div class="link-item link-item__main base:lg pos:re" {{ link_wrapper_properties }}>          
+          <a class="link link--primary" href="{{ link.url }}">
+            {{ link.title }}
+            {%- if allow_dropdown -%}
+            <span class="link-arrow">
+              {{ ChevronArrow }}
+            </span>
+            {%- endif -%}
+          </a>
+        </div>
+        {%- endfor -%}
+      </div>
+     {%- endif -%}
+      
+      {%- if secondary_navigation -%}
+      <div class="navdrawer__secondary py base:xs">
+		{%- for link in secondary_navigation -%}
+        <div class="link-item link-item__secondary">
+          <a href="{{ link.url }}" class="link link--secondary">
+            {{ link.title }}
+          </a>
+        </div>
+        {%- endfor -%}
+      </div>
+      {%- endif -%}
+      
+      {%- if teaser_blocks.size > 0 -%}
+      <div class="navdrawer__teaser-list sb:hide">
+        {%- for teaser in teaser_blocks -%}
+        <div class="menu__teaser pt:md" {{ teaser.shopify_attributes }}>
+          <a href="{{ teaser.settings.url }}">
+            {%- render 'image', image: teaser.settings.image -%}
+            <div class="rte base:sm">
+              <p class="hd hd:md  pt:tn mb:cl">{{ teaser.settings.title }}</p>
+              <div class="base:sm mb:tn">{{ teaser.settings.content }}</div>
+              <p class="base:md hd hd:sm">{{ teaser.settings.cta }}</p>
+            </div>
+          </a>
+        </div>
+        {%- endfor -%}
+      </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{%- if main_navigation -%}
+<div class="slides">
+  {%- for link in main_navigation -%}
+  {%- if link.links.size == 0 -%}
+  	{%- continue -%}
+  {%- endif -%}
+  <div class="slide slide--sub sb:hide" data-slide="{{ link.title }}">
+    <div class="slide-inner">
+      {%- for sublink in link.links -%}
+      
+        {%- if forloop.first -%}
+        <div class="link-item show md-up:hide">
+          <a href="#" class="link--primary link--heading link--bold font-heading" data-click-to="false" data-hover-to="false">
+            <span class="link-arrow link-arrow--back">{{ ChevronArrow }}</span>
+            {{ link.title }}
+          </a>
+        </div>
+        {%- endif -%}
+      
+      <div class="link-item base:lg">
+        <a class="link base:sm" href="{{ sublink.url }}">
+          {{ sublink.title }}
+        </a>
+      </div>
+      {%- endfor -%}
+    </div>
+  </div>
+  {%- endfor -%}
+</div>
+{%- endif -%}
+
+{%- endcapture -%}
+
+{%- render 'drawer', Id: 'nav_drawer', Animation: 'left', Content: Content -%}
+
+<script src="{{ 'nav-drawer.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Navigation",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "main_linklist",
+      "label": "Main navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "secondary_linklist",
+      "label": "Secondary navigation",
+      "info": "Optional"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "teaser",
+      "name": "Teaser",
+      "limit": 5,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content"
+        },
+        {
+          "type": "text",
+          "id": "cta",
+          "label": "Call to action label"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "URL"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

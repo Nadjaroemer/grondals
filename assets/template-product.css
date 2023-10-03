@@ -1,0 +1,94 @@
+.width\:full {
+  width: 100%;
+}
+@media (min-width: 1025px) {
+  .productpage__gallery {
+    flex-basis: 50%;
+  }
+}
+
+@media (min-width: 1300px) {
+  .productpage__gallery {
+    flex-basis: 65%;
+  }
+}
+
+.productpage__header-wave {
+  width: 2.5em;
+}
+
+.product__details__head {
+  position: sticky;
+  top: 0;
+}
+
+.tx\:color-blue {
+  color: rgb(28, 28, 147);
+}
+
+.ingredients table {
+  margin-top: 1em;
+}
+
+.ingredients table tr td:first-child {
+  font-weight: 600;
+}
+.inline-block {
+  display: inline-block;
+}
+
+.ml\:cl {
+  margin-left: 0;
+}
+
+@media (min-width: 1220px) {
+  wdn-drawer[data-id="details"] {
+    max-width: 620px;
+  }
+
+  wdn-drawer[data-id="delivery_returns"] {
+    max-width: 720px;
+  }
+}
+
+/* Product description RTE */
+
+.product__details .rte h1 {
+  font-size: 1.9em;
+}
+.product__details .rte h2 {
+  font-size: 1.7em;
+}
+.product__details .rte h3 {
+  font-size: 1.5em;
+}
+.product__details .rte h4 {
+  font-size: 1.3em;
+}
+.product__details .rte h4 {
+  font-size: 1.2em;
+}
+.product__details .rte h6 {
+  font-size: 1.1em;
+}
+
+@media (min-width: 880px) {
+  .product__details .rte h1 {
+    font-size: 2.1em;
+  }
+  .product__details .rte h2 {
+    font-size: 1.8em;
+  }
+  .product__details .rte h3 {
+    font-size: 1.6em;
+  }
+  .product__details .rte h4 {
+    font-size: 1.4em;
+  }
+  .product__details .rte h4 {
+    font-size: 1.3em;
+  }
+  .product__details .rte h6 {
+    font-size: 1.2em;
+  }
+}

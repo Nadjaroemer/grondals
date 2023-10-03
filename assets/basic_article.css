@@ -1,0 +1,64 @@
+.article-image .ratio_container {
+  padding-bottom: 56.25%;
+}
+.article-image img {
+  object-fit: cover;
+}
+
+.content-wrapper {
+  max-width: 50em;
+  margin: 0 auto;
+}
+
+.author-wrapper {
+  color: #5b77a8;
+}
+
+.article-title {
+  font-size: 1.9em;
+}
+
+.article-content {
+  font-size: 1.2em;
+}
+
+.rte h2 {
+  font-size: 1.3em;
+}
+.rte h3 {
+  font-size: 1.2em;
+}
+.rte h4 {
+  font-size: 1.1em;
+}
+
+.rte h2,
+.rte h3,
+.rte h2 > *,
+.rte h3 > * {
+  font-weight: bold !important;
+}
+
+/* MD-UP */
+@media only screen and (min-width: 880px) {
+  .article-image .ratio_container {
+    padding-bottom: 28.25%;
+  }
+  .article-title {
+    font-size: 2.3em;
+  }
+
+  /* RTE MD-UP */
+  .article-content {
+    font-size: 1.1em;
+  }
+  .rte h2 {
+    font-size: 1.5em;
+  }
+  .rte h3 {
+    font-size: 1.3em;
+  }
+  .rte h4 {
+    font-size: 1.1em;
+  }
+}

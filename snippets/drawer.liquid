@@ -1,0 +1,40 @@
+{% comment%}
+Params:
+@Content - [REQUIRED]
+@Id - [REQUIRED]
+@Class - [OPTIONAL]
+@CloseColor - [OPTIONAL]
+@Animation - [OPTIONAL]
+
+Rendering example:
+
+{%- render "drawer", Id: "mobile_menu", Animation: "left",  Content: MenuContent -%}
+{% endcomment%}
+
+
+{%- if Content and Id -%}
+
+    {%- capture Close -%}
+        <wdn-drawer-close class="overlay__close {% unless controls_no_abs %}overlay__close--abs{% endunless %}" data-id="{{ Id }}">
+           <svg class="icon icon:xl icon--close" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="0.75" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </wdn-drawer-close>
+    {%- endcapture -%}
+
+    {%- capture OverlayContent -%}
+        <div class="overlay__content">
+            {{ Content | replace: '[Close]', Close }}
+        </div>
+    {%- endcapture -%}
+
+    <wdn-drawer class="overlay{% if Class %} {{ Class }}{% endif %}" data-animate="{{ Animation | default: 'right' }}" data-id="{{ Id }}">
+        <div class="overlay-inner">
+            {{ OverlayContent }}
+        </div>
+    </wdn-drawer>
+{%- else -%}
+    <script>
+  WDN.MissingParams("drawer")
+</script>
+{%- endif -%}

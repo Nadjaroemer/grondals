@@ -1,0 +1,43 @@
+{%- assign Config = section.settings -%}
+
+<div class="container">
+  <div class="background{% if Config.push_content %} article_content--push{% endif %}" style="background-color: {{ Config.background_color }};">
+    <div class="py:lg">
+      <div class="container md-up:px:cl">
+        <div class="article__content rte" style="color:{{ Config.text_color }};">
+          {{ article.content | replace: '<img src=', '<img class="lazyload" data-src='  }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Article Main Content",
+    "templates": ["article"],
+    "settings": [
+      {
+        "type": "color",
+        "id": "text_color",
+        "label": "Text color",
+        "default": "#000000"
+      }, {
+        "type": "color",
+        "id": "background_color",
+        "label": "Section background",
+        "default": "#f1f9fb"
+      }, {
+        "type": "checkbox",
+        "id": "push_content",
+        "label": "Push content down"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Article Main Content",
+        "settings": {}
+      }
+    ]
+  }
+{% endschema %}

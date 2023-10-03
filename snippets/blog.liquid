@@ -1,0 +1,51 @@
+{%- assign Paginate = Paginate | default: 50 -%}
+
+<div class="blog__main">
+  <div class="fx fx:wr gp md-up:gp{% if SwiperOnPhone %} hide md-up:fx{% endif %}">
+    {%- paginate blog.articles by Paginate -%}
+    {%- for _article in blog.articles -%}
+    {%- if article == _article -%}
+    {%- continue  -%}
+    {%- endif -%}
+
+    <div class="fi fi:1/2 md-up:fi:1/3">
+      {%- render 'article-card', Article: _article -%}
+
+      {%- if SwiperOnPhone -%}
+      {%- capture SwiperSlides -%}
+      {{ SwiperSlides }}
+      <div class="swiper-slide">
+        {%- render 'article-card', Article: _article -%}
+      </div>
+      {%- endcapture -%}
+      {%- endif -%}
+    </div>
+    {%- endfor -%}
+
+    <div class="fi fi:1/1">
+    <div class="pagination-wrapper">
+      <div class="pagination-grid fx ai:center jc:between">
+
+        <div class="pagination-item fi">
+          {%- if paginate.previous -%}
+          <wdn-blog-pagination class="pagination_button button button--secondary" data-url="{{ paginate.previous.url }}">{{ 'recipe.paginate_previous' | t }}</wdn-blog-pagination>
+          {%- endif -%}
+        </div>
+        
+        <div class="pagination-item fi">
+          {%- if paginate.next -%}
+          <wdn-blog-pagination class="pagination_button button button--secondary" data-url="{{ paginate.next.url }}">{{ 'recipe.paginate_next' | t }}</wdn-blog-pagination>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+    </div>
+    {%- endpaginate -%}
+  </div>
+
+  {%- if SwiperOnPhone -%}
+  <div class="md-up:hide">
+    {%- render "swiper", Id: blog.id, Slides: SwiperSlides, PerView: "1-1-1", HasControls: true -%}
+  </div>
+  {%- endif -%}
+</div>

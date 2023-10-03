@@ -1,0 +1,29 @@
+<div class="pw">
+  <div class="container pt">
+
+    {{ section.settings.html }}
+
+  </div>
+</div>
+
+
+{% schema %}
+
+{
+  "name": "STORE LOCATOR",
+  "settings": [
+    {
+      "type": "html",
+      "id": "html",
+      "label": "Custom HTML"
+    }
+  ],
+  "presets": [
+    {
+      "name": "STORE LOCATOR",
+      "settings": {}
+    }
+  ]
+}
+
+{% endschema %}

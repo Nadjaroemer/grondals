@@ -1,0 +1,24 @@
+.ml\:left,
+.ml\:cl {
+  margin-left: 0;
+}
+
+.rte\:slimmer p {
+  margin-bottom: 0.25em;
+}
+
+.collection__header-image {
+  width: 5em;
+  position: absolute;
+  bottom: 0;
+  right: 2em;
+}
+
+@media(min-width:1025px) {
+  .collection__header-image {
+    width: 100%;
+    margin-left: auto;
+    position: initial;
+    max-width: 14em;
+  }
+}

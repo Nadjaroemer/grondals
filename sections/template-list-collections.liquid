@@ -1,0 +1,394 @@
+{{ 'template-list-collections.css' | asset_url | stylesheet_tag }}
+
+{%- assign config = section.settings -%}
+
+<div class="collection_list">
+  <div class="collection_list-inner">
+    <div class="collection_list-navigation" data-collection-navigation>
+      <div class="collection_list-bg">
+        <div class="pw">
+          <div class="md-up:container">
+
+            <div class="collection_list-grid fx jc:start md-up:jc:center ai:center sb:hide container md-up:px:cl" data-collection-navigation-grid>
+              {%- for collection in config.collection_list -%}
+              {%- assign CollectionCategory = collection.metafields.collection.category_name.value -%}
+
+              <div class="collection_list-item">
+               <wdn-scroll-link class="collection_link" data-target="{{ CollectionCategory | downcase }}" data-collection-link="{{ CollectionCategory }}">{{ CollectionCategory }}</wdn-scroll-link> 
+              </div>
+              {%- endfor -%}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pw">
+      <div class="container">
+        <div class="collections">
+          {%- for collection in config.collection_list -%}
+            {%- render "section-products", config: config, collection: collection, hasDropdown: true, amount: amount -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{{ 'template-list-collections.js' | asset_url }}" defer></script>
+
+{%- schema -%}
+{
+
+"name": "List template",
+"settings": [
+
+{
+"type": "collection_list",
+"id": "collection_list",
+"limit": 10,
+"label": "Collection list"
+},
+{
+"type": "header",
+"content": "Collection settings"
+},
+{
+"type": "range",
+"id": "amount",
+"label": "Amount of products",
+"default": 4,
+"min": 1,
+"max": 48
+},{
+"type": "checkbox",
+"id": "view_all",
+"label": "Vis flere knap"
+},{
+"type": "header",
+"content": "------- General setting -------"
+}, {
+"type": "header",
+"content": "🔴🟠🔵 Colors"
+}, {
+"type": "checkbox",
+"id": "bg_inner",
+"label": "Apply background to inner"
+}, {
+"type": "select",
+"id": "bg_color",
+"label": "Background color",
+"default": "bg-none",
+"options": [
+{
+"value": "bg-none",
+"label": "None"
+}, {
+"value": "blue",
+"label": "Blue"
+}, {
+"value": "lightblue",
+"label": "Light blue"
+}, {
+"value": "softblue",
+"label": "Soft blue"
+},{
+"value": "lightgrey",
+"label": "Light grey"
+},{
+"value": "softgreen",
+"label": "Soft green"
+},{
+"value": "lightgreen",
+"label": "Light green"
+},{
+"value": "flashy",
+"label": "Flashy"
+}
+]
+}, {
+"type": "select",
+"id": "text_color",
+"label": "Text color",
+"options": [
+{
+"value": "text-dark",
+"label": "Dark"
+}, {
+"value": "text-dark--lighter",
+"label": "Dark light"
+}, {
+"value": "text-light",
+"label": "Light"
+}, {
+"value": "text--very-light",
+"label": "Very light"
+}
+]
+}, {
+"type": "header",
+"content": "🔤 🔠 Base size",
+"info": "Text size for pc & mobile"
+}, {
+"type": "select",
+"id": "base_pc",
+"label": "Pc",
+"default": "DEFAULT",
+"options": [
+{
+"value": "tn",
+"label": "Tiny"
+}, {
+"value": "xs",
+"label": "Extra small"
+}, {
+"value": "sm",
+"label": "Small"
+}, {
+"value": "DEFAULT",
+"label": "Normal"
+}, {
+"value": "lg",
+"label": "Large"
+}, {
+"value": "xl",
+"label": "Extra large"
+}, {
+"value": "hg",
+"label": "Huge"
+}, {
+"value": "mg",
+"label": "Mega"
+}
+]
+}, {
+"type": "select",
+"id": "base_mobile",
+"label": "Mobile",
+"default": "DEFAULT",
+"options": [
+{
+"value": "tn",
+"label": "Tiny"
+}, {
+"value": "xs",
+"label": "Extra small"
+}, {
+"value": "sm",
+"label": "Small"
+}, {
+"value": "DEFAULT",
+"label": "Normal"
+}, {
+"value": "lg",
+"label": "Large"
+}, {
+"value": "xl",
+"label": "Extra large"
+}, {
+"value": "hg",
+"label": "Huge"
+}, {
+"value": "mg",
+"label": "Mega"
+}
+]
+}, {
+"type": "header",
+"content": "📱💻 Content width",
+"info": "Content width for pc & mobile"
+}, {
+"type": "checkbox",
+"id": "full_w_mobile",
+"label": "Full width Mobile"
+}, {
+"type": "select",
+"id": "width_pc",
+"label": "Pc",
+"default": "DEFAULT",
+"options": [
+{
+"value": "tn",
+"label": "Tiny"
+}, {
+"value": "xs",
+"label": "Extra small"
+}, {
+"value": "sm",
+"label": "Small"
+}, {
+"value": "DEFAULT",
+"label": "Normal"
+}, {
+"value": "lg",
+"label": "Large"
+}, {
+"value": "xl",
+"label": "Extra large"
+}, {
+"value": "hg",
+"label": "Huge"
+}, {
+"value": "mg",
+"label": "Mega"
+}, {
+"value": "fl",
+"label": "Full"
+}
+]
+}, {
+"type": "header",
+"content": "⬆️ ⬇️ Content padding",
+"info": "Content padding for pc & mobile"
+}, {
+"type": "select",
+"id": "c_pad_pc",
+"label": "Pc",
+"default": "DEFAULT",
+"options": [
+{
+"value": "cl",
+"label": "None"
+}, {
+"value": "tn",
+"label": "Tiny"
+}, {
+"value": "xs",
+"label": "Extra small"
+}, {
+"value": "sm",
+"label": "Small"
+}, {
+"value": "DEFAULT",
+"label": "Normal"
+}, {
+"value": "lg",
+"label": "Large"
+}, {
+"value": "xl",
+"label": "Extra large"
+}, {
+"value": "hg",
+"label": "Huge"
+}, {
+"value": "mg",
+"label": "Mega"
+}
+]
+}, {
+"type": "select",
+"id": "c_pad_mobile",
+"label": "Mobile",
+"default": "DEFAULT",
+"options": [
+{
+"value": "cl",
+"label": "None"
+}, {
+"value": "tn",
+"label": "Tiny"
+}, {
+"value": "xs",
+"label": "Extra small"
+}, {
+"value": "sm",
+"label": "Small"
+}, {
+"value": "DEFAULT",
+"label": "Normal"
+}, {
+"value": "lg",
+"label": "Large"
+}, {
+"value": "xl",
+"label": "Extra large"
+}, {
+"value": "hg",
+"label": "Huge"
+}, {
+"value": "mg",
+"label": "Mega"
+}
+]
+}, {
+"type": "header",
+"content": "⏫ Section padding",
+"info": "Content padding for pc & mobile"
+}, {
+"type": "select",
+"id": "sec_pad_pc",
+"label": "Pc",
+"default": "DEFAULT",
+"options": [
+{
+"value": "cl",
+"label": "None"
+}, {
+"value": "tn",
+"label": "Tiny"
+}, {
+"value": "xs",
+"label": "Extra small"
+}, {
+"value": "sm",
+"label": "Small"
+}, {
+"value": "DEFAULT",
+"label": "Normal"
+}, {
+"value": "lg",
+"label": "Large"
+}, {
+"value": "xl",
+"label": "Extra large"
+}, {
+"value": "hg",
+"label": "Huge"
+}, {
+"value": "mg",
+"label": "Mega"
+}
+]
+}, {
+"type": "select",
+"id": "sec_pad_mobile",
+"label": "Mobile",
+"default": "DEFAULT",
+"options": [
+{
+"value": "cl",
+"label": "None"
+}, {
+"value": "tn",
+"label": "Tiny"
+}, {
+"value": "xs",
+"label": "Extra small"
+}, {
+"value": "sm",
+"label": "Small"
+}, {
+"value": "DEFAULT",
+"label": "Normal"
+}, {
+"value": "lg",
+"label": "Large"
+}, {
+"value": "xl",
+"label": "Extra large"
+}, {
+"value": "hg",
+"label": "Huge"
+}, {
+"value": "mg",
+"label": "Mega"
+}
+]
+}
+
+]
+
+
+}
+
+{%- endschema -%}

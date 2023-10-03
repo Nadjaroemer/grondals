@@ -1,0 +1,32 @@
+{%- comment -%}
+Params:
+@Modifier - [OPTIONAL]
+
+Rendering example:
+
+{%- render "social_media",  Modifier: "footer" -%}
+{%- endcomment -%}
+
+{%- assign IconList = "facebook,instagram,youtube" | split: ',' -%}
+
+<div class="social{% if Modifier %} social--{{ Modifier }}{% endif %}">
+  <div class="social-inner">
+    <div class="grid grid--align-center gap--xs">
+
+      {%- for Icon in IconList -%}
+      {%- assign SocialLink = Icon | append: '_link' -%}
+      {%- if settings[SocialLink] -%}
+      <div class="grid__item">
+        <div class="social__icon">
+          <a href="{{ settings[SocialLink] }}" target="_blank" class="social-icon">
+            {{ Icon }} icon
+          </a>
+        </div>
+      </div>
+      {%- endif -%}
+
+
+      {%- endfor -%}
+    </div>
+  </div>
+</div>

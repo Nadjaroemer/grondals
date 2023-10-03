@@ -1,0 +1,19 @@
+{%- comment -%}
+Params:
+@Modifier - [OPTIONAL]
+
+Rendering example:
+{%- render "payment-methods" -%}
+{%- endcomment -%}
+
+
+
+{%- assign ImageSizes = "80, 150, 200, 400" -%}
+
+{%- if settings.payment_icons -%}
+    <div class="payments{% if Modifier %} payments--{{ Modifier }}{% endif %}">
+        <div class="payments-inner">
+            {%- render "image", Image: settings.payment_icons, Sizes: "80, 150, 200, 400" -%}
+        </div>
+    </div>
+{%- endif -%}

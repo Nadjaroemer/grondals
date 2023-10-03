@@ -1,0 +1,333 @@
+{{ 'template-footer.css' | asset_url | stylesheet_tag }}
+
+{%- assign config = section.settings -%}
+{%- assign usp_blocks = section.blocks | where: 'type', 'usp' -%}
+
+<footer>
+  <div class="footer__inner">
+    <div class="pw">
+      <div class="py:md md-up:py:xl {% if usp_blocks.size == 0 -%}mt:mg{% endif %}">
+        <div class="container">
+          <div class="footer__main base-size:xs">
+            <div class="fx fx:wr md-up:fx:no-wr gp:lg jc:between">
+
+              {%- for block in section.blocks -%}
+
+              {%- assign conf = block.settings -%}
+
+              {%- case block.type -%}
+
+              {% when 'text' %}
+
+              <div class="fi fi:1/1 md-up:fi:1/3">
+                <p class="hd">
+                  {{ conf.title }}
+                </p>
+
+                <div class="pt:tn">
+                  {%- if conf.text -%}
+                  <div class="rte base:sm pb">
+                    {{ conf.text }}
+                  </div>
+                  {%- endif -%}
+                </div>
+
+                <p class="hd hd:sm">{{ 'footer.social.title' | t }}</p>
+
+                <div class="fx gp:sm pt:xs">
+
+                  {% if settings.facebook.size > 0 %}
+                  <div class="fi">
+                    <a href=" {{ settings.facebook }} " target="_blank">
+                      <svg height="30" viewbox="0 0 24 24" width="30" xmlns="http://www.w3.org/2000/svg"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+                    </a>
+                  </div>
+                  {% endif %}
+
+                  {% if settings.instagram.size > 0 %}
+                  <div class="fi">
+                    <a href=" {{ settings.instagram }} " target="_blank">
+                      <svg height="30" viewbox="0 0 24 24" width="30" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                    </a>
+                  </div>
+                  {% endif %}
+
+                  {% if settings.linkedin.size > 0 %}
+                  <div class="fi">
+                    <a href=" {{ settings.linkedin }} " target="_blank">
+                      <svg height="30" viewbox="0 0 24 24" width="30" xmlns="http://www.w3.org/2000/svg"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                    </a>
+                  </div>
+                  {% endif %}
+
+                  {% if settings.email.size > 0 %}
+                  <div class="fi">
+                    <a href=" {{ settings.email }} " target="_blank">
+                      <svg height="30" viewbox="0 0 24 24" width="30" xmlns="http://www.w3.org/2000/svg"><path d="M0 3v18h24v-18h-24zm21.518 2l-9.518 7.713-9.518-7.713h19.036zm-19.518 14v-11.817l10 8.104 10-8.104v11.817h-20z"/></svg>
+                    </a>
+                  </div>
+                  {% endif %}
+
+                </div>
+              </div>
+              {%- when 'Follow' -%}
+              <div class="fi fi:1/1 md-up:fi:1/3 pt:lg sm-up:pt:cl">
+                <p class="hd">
+                  {{ block.settings.follow_title }}
+                </p>
+
+                <div class="footer__dealer base:sm">
+                  <div class="pt:tn">
+                    <div class="rte base:sm pb:sm">
+                      <p>
+                        {{ block.settings.follow_text }}
+                      </p>
+                    </div>
+                  </div>
+
+                  <a href="{{ block.settings.link_one }}">
+                    <span class="fx gp:tn">
+                      <span class="fi ds:block">
+                        {{ block.settings.link_one_text }}
+                      </span>
+                      <span class="fi ds:block">
+                        <svg class="icon" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25"></path>
+                        </svg>
+                      </span>
+                    </span>
+                  </a>
+                  <a href="{{ block.settings.link_two }}">
+                    <span class="fx gp:tn">
+                      <span class="fi ds:block">{{ block.settings.link_two_text }}
+                      </span>
+                      <span class="fi ds:block">
+                        <svg class="icon" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M17 8l4 4m0 0l-4 4m4-4H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25"></path>
+                        </svg>
+                      </span>
+                    </span>
+                  </a>
+
+                </div>
+              </div>
+
+              {%- when 'newsletter' -%}
+
+              <div class="fi fi:1/1 md-up:fi:1/3 grow-1 pt:lg sm-up:pt:cl">
+                <p class="hd hd:sm">
+                  {{ conf.title }}
+                </p>
+
+                <div class="pt:tn">
+                  {%- render 'newsletter' -%}
+                </div>
+              </div>
+              {%- endcase -%}
+              {%- endfor -%}
+
+            </div>
+
+            {%- assign menus = section.blocks | where: 'type', 'menu' -%}
+
+            <div class="fx fx:wr md-up:fx:no-wr gp:sm md-up:gp:lg jc:between pt:sm md-up:pt:hg">
+              {%- for menu in menus -%}
+              {%- assign conf = menu.settings -%}
+
+              {%- assign menu_list = linklists[conf.menu].links -%}
+
+              <div class="fi fi:1/2 md-up:fi:1/4 pt:lg sm-up:pt:cl">
+                <p class="hd">
+                  {{ conf.title }}
+                </p>
+
+                <div class="py:xs">
+                  <ul>
+                    {%- for link in menu_list -%}
+                    <li class="lh:md pb:tn">
+                      <a href="{{ link.url }}">
+                        {{ link.title }}
+                      </a>
+                    </li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer__bottom pt:tn pw px:sm">
+      <div class="fx gp:xl jc:between ai:center dir:col md-up:dir:row">
+
+        <div class="fi footer__copyright pb md-up:pb:cl">
+          <div class="footer__copyright-inner">
+
+            <div class="footer__copyright-text base:xs">
+              <p>
+                {%- assign year_markup = 'now' | date: '%Y' -%}
+                &copy;
+                {{ 'footer.copyright_html' | t: year: year_markup }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="fi footer__payments">
+          <div class="footer__column footer__column--info">
+            <div class="footer__payment">
+              <ul class="fx gp:xs">
+                {%- for type in shop.enabled_payment_types -%}
+                <li class="fi base:md">
+                  {{ type | payment_type_svg_tag: class: 'icon icon:lg' }}
+                </li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</footer>
+
+
+<style>
+  .icon {
+    display:inline-block;
+  }
+
+  @media (min-width:1025px) {
+    .md-up\:fi\:auto {
+      flex-basis:auto;
+    }
+  }
+</style>
+
+{% schema %}
+{
+"name": "Footer",
+"settings": [
+{
+   "type": "color",
+   "id": "usp_color",
+   "label": "USP color"
+}
+],
+"blocks": [
+  {
+      "type": "usp",
+      "name": "USP",
+      "limit": 4,
+      "settings": [
+        {
+			"type": "html",
+			"id": "icon",
+			"label": "Icon HTML",
+			"info": "Use icons from [Here](https://heroicons.dev/)"
+		}, {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        }, {
+          "type": "text",
+          "id": "text",
+          "label": "Text"
+        }
+  ]
+ }, {
+      "type": "menu",
+      "name": "Menu",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        }, {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu"
+        }
+  ]
+ }, {
+      "type": "text",
+      "name": "Text",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },{
+          "type": "richtext",
+          "id": "text",
+          "label": "Text"
+        }
+  ]
+ }, {
+      "type": "Follow",
+      "name": "Follow",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "follow_title",
+          "label": "Title"
+        },{
+          "type": "richtext",
+          "id": "follow_text",
+          "label": "Text"
+        },{
+           "type": "url",
+           "id": "link_one",
+           "label": "Link"
+        },
+       {
+          "type": "text",
+          "id": "link_one_text",
+          "label": "Link one name"
+       },{
+           "type": "url",
+           "id": "link_two",
+           "label": "Link one"
+        },{
+          "type": "text",
+          "id": "link_two_text",
+          "label": "Link one name"
+       }
+  ]
+ }, {
+      "type": "newsletter",
+      "name": "Newsletter",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        }, {
+			"type": "header",
+			"content": "Dealer"
+		}, {
+          "type": "text",
+          "id": "dealer_title",
+          "label": "Title"
+        }, {
+          "type": "richtext",
+          "id": "dealer_text",
+          "label": "Text"
+        }, {
+          "type": "text",
+          "id": "dealer_url_label",
+          "label": "URL label"
+        }
+  ]
+ }
+]
+}
+{% endschema %}

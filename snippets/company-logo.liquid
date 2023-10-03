@@ -1,0 +1,20 @@
+{%- comment -%}
+Params:
+@Modifier - [OPTIONAL]
+@Sizes - [OPTIONAL]
+
+Rendering example:
+{%- render "company-logo" -%}
+{%- endcomment -%}
+
+{%- unless Sizes -%}
+{%- assign Sizes = "150,300,600" -%}
+{%- endunless-%}
+
+{%- if settings.company_logo -%}
+<div class="company-logo{% if Modifier %} company-logo--{{ Modifier }}{% endif %}">
+    <a href="{{ routes.root_url }}">
+    {%- render "image", Image: settings.company_logo, Sizes: Sizes -%}
+</a>
+</div>
+{%- endif -%}

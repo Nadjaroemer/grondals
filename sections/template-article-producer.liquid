@@ -1,0 +1,23 @@
+{{ 'template-article.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+
+	assign config = section.settings
+
+%}
+
+<div class="article">
+  <div class="article__header tx:center">
+    <div class="pw">
+      <h1 class="hd hd:xl">{{ article.title }}</h1>
+    </div>
+    
+    {%- if article.content -%}
+    <div class="pw pw:xs">
+      <div class="rte base:sm pt:sm">
+        <p>{{ article.content }}</p>
+      </div>
+    </div>
+    {%- endif -%}
+  </div>
+</div>

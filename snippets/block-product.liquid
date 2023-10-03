@@ -1,0 +1,19 @@
+{%- assign Product = block.settings.product -%}
+
+
+{%- assign Image = Product.featured_image -%}
+{%- if Product.metafields.wdn.grid_image -%}
+    {%- assign Image = Product.metafields.wdn.grid_image.value -%}
+{%- endif -%}
+
+
+<div class="product-container media--round:{{ block.settings.media_rounding }} pb:md sm-up:pb:cl pos:re">
+    <a href="{{ Product.url }}" class="absolute--fill"></a>
+    {%- render "image", Image: Image -%}
+</div>
+
+{% if block.settings.html != blank %}
+    <div class="product-container media--round:{{ block.settings.media_rounding }}">
+        {{ block.settings.html }}
+    </div>
+{% endif %}

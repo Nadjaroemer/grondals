@@ -1,0 +1,99 @@
+<style>
+
+.block_overlay > * {
+  margin-bottom: 1rem;
+}
+
+.media-overlay {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.image-nest .ratio_container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  padding-bottom: 0 !important;
+}
+
+.image-nest .ratio_container .lazyautosizes {
+  object-fit: cover;
+}
+
+.z-dex-5 {
+  z-index: 5;
+}
+
+.z-dex-10 {
+  z-index: 10;
+}
+
+.cw\:tn {
+  max-width: 5em;
+}
+
+.cw\:xs {
+  max-width: 10em;
+}
+
+.cw\:sm {
+  max-width: 15em;
+}
+
+.cw\:md {
+  max-width: 20em;
+}
+
+.cw\:lg {
+  max-width: 25em;
+}
+
+.cw\:xl {
+  max-width: 30em;
+}
+
+.cw\:hg {
+  max-width: 35em;
+}
+
+.cw\:mg {
+  max-width: 40em;
+}
+
+.fh\:small {
+  height: 30rem;
+}
+
+.fh\:medium {
+  height: 40rem;
+}
+
+.fh\:large {
+  height: 50rem;
+}
+
+@media only screen and (min-width: 880px) {
+
+  .md-up\:fh\:small {
+    height: 30rem;
+  }
+
+  .md-up\:fh\:medium {
+    height: 40rem;
+  }
+
+  .md-up\:fh\:large {
+    height: 50rem;
+  }
+
+  .md-up\:fh\:xl {
+    height: 60rem;
+  }
+
+}

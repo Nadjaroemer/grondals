@@ -1,0 +1,26 @@
+{% assign title = block.settings.title %}
+{%- if product.metafields.wdn.teaser_text.value.size > 0 -%}
+<div class="product__description rte lh:xl base:xs pt pb:sm">
+  {% if title.size > 0 %}
+  <p class="hd hd:lg">{{ title }}</p>
+  {% endif %}
+
+  <div class="base:sm">
+    <p class="base:md">
+      {{ product.metafields.wdn.teaser_text.value }}
+    </p>
+
+    <wdn-drawer-open data-id="details" class="fx ai:center gp:xs lh:xs">
+      <span class="fi">
+        <span class="base:md tx:bold tx:color-blue">{{ 'product.read_more' | t }}</span>
+      </span>
+      <span class="fi">
+        <svg class="icon icon:sm" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M14 5l7 7m0 0l-7 7m7-7H3">
+          </path>
+        </svg>
+      </span>
+    </wdn-drawer-open>
+  </div>
+</div>
+{%- endif -%}

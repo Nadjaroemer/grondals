@@ -1,0 +1,17 @@
+<div class="product__pricing pt:tn base:lg">
+  <div class="fx ai:center gp:tn">
+    <div class="fi">
+      <span class="price base:md tx:bold tx:color-blue" data-product-price>
+        {{ product.price | money_without_trailing_zeros }}
+      </span>
+    </div>
+
+    {%- if product.compare_at_price > product.price -%}
+    <div class="fi">
+      <span class="price price:compare base:tn" data-product-compareprice>
+        {{ product.compare_at_price | money_without_trailing_zeros }}
+      </span>
+    </div>
+    {%- endif -%}
+  </div>
+</div>

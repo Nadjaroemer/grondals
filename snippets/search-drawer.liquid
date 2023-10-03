@@ -1,0 +1,46 @@
+{%- if search.performed -%}
+   {%- assign InputValue = search.terms | escape -%}
+{%- endif -%}
+
+{%- capture DrawerContent -%}
+   <div class="search">
+      <div class="search-inner base:xs">
+        <div class="search__header px py:sm bg:lightblue">
+          <div class="fx ai:center jc:space-between">
+            <div class="fi grow-1">
+              <h6 class="hd hd:md">
+                {{ 'search.title' | t }}
+              </h6>
+            </div>
+
+            <div class="fi">
+              [Close]
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-wrapper px mt:md">
+          <div class="form-wrapper-inner pos:re">
+            <form class="search" action="{{ routes.search_url }}" spellcheck="false" data-search-form>
+              <input type="search" autocomplete="off" class="input input--search bg:white py search-input search-input--has-icon" name="q" {% if InputValue %} value="{{ InputValue }}" {% endif %} placeholder="{{ 'search.placeholder' | t }}" data-search-input/>
+              <input name="type" type="hidden" value="product"/>
+            </form>
+            <span class="search-icon pos:abs">
+              <svg class="icon icon--search" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+              </svg>
+            </span>
+          </div>
+        </div>
+
+         <div class="search-results px" data-search-results>
+            {%- if search.performed -%}
+               {%- render "search-results" -%}
+            {%- endif -%}
+            {%- render 'search-recommendations' -%}
+         </div>
+      </div>
+   </div>
+{%- endcapture -%}
+
+{%- render "drawer", Id: "search" , Content: DrawerContent, CloseColor: "#232323", controls_no_abs: true -%}

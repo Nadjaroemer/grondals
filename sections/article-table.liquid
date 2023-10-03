@@ -1,0 +1,118 @@
+{%- assign Config = section.settings -%}
+
+{%- capture SeparatorLine -%}
+
+  {% if section.settings.pc_svg.size > 0 %}
+     {{ section.settings.pc_svg }}
+  {% else %}
+     {%- render "svg-wave" -%}    
+  {% endif %}
+
+{%- endcapture -%}
+
+{%- if section.settings.ingredienser.size > 0 or section.settings.fremgangsmetode.size > 0 -%}
+<div class="container">
+  <div class="article_table pt:md" style="background-color:{{ Config.background_color }};">
+    <div class="article_table-inner container pw pw:sm">
+      <div class="article_table-grid relative fx jc:center fx:wr gp">
+
+        <div class="fi fi:1/1 md-up:fi:1/2">
+          <div class="title-wrapper pb:tn">
+            <h3 class="article_table-title hd hd:lg" style="color:{{ Config.text_color }};">{{ Config.title_left }}
+            </h3>
+          </div>
+                   
+          {%- if section.settings.ingredienser.size > 0 -%}
+            <div class="article_table-item">
+              <div class="rte rte--list">  
+                 {{ section.settings.ingredienser }}
+              </div>
+            </div>
+          {%- endif -%}
+        </div>
+
+        <span class="article_table-separator">
+          {{ SeparatorLine }}
+        </span>
+
+        <div class="fi fi:1/1 md-up:fi:1/2 mt md-up:mt:cl">
+          <div class="title-wrapper pb:tn">
+            <h3 class="article_table-title hd hd:lg" style="color:{{ Config.text_color }};">{{ Config.title_right }}
+            </h3>
+          </div>
+          
+
+          {%- if section.settings.fremgangsmetode.size > 0 -%}
+            <div class="article_table-item">
+              <div class="rte rte--list">
+                {{ section.settings.fremgangsmetode }}
+              </div>
+            </div>
+          {%- endif -%}          
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{%- endif -%}
+
+{% schema %}
+  {
+    "name": "Article Table",
+    "templates": ["article"],
+    "settings": [
+      {
+        "type": "color",
+        "id": "text_color",
+        "label": "Text color",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Section background",
+        "default": "#f1f9fb"
+      },
+      {
+        "type": "text",
+        "id": "title_left",
+        "label": "Title left"
+      },
+      {
+        "type": "text",
+        "id": "title_right",
+        "label": "Title right"
+      }, {
+        "type": "header",
+        "content": "Table settings"
+      },
+      {
+        "type": "html",
+        "id": "pc_svg",
+        "label": "SVG Pc"
+      },
+      {
+        "type": "html",
+        "id": "mobile_svg",
+        "label": "SVG mobile"
+      },{
+        "type": "richtext",
+        "id": "ingredienser",
+        "label": "Ingredienser"
+      },
+      {
+        "type": "richtext",
+        "id": "fremgangsmetode",
+        "label": "Fremgangsmetode"
+      }
+
+    ],
+    "presets": [
+      {
+        "name": "Article table",
+        "settings": {}
+      }
+    ]
+  }
+{% endschema %}

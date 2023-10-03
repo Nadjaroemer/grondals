@@ -1,0 +1,26 @@
+<div class="productpage__gallery fi fi:1/1 md-up:fi:1/2 hide md-up:show">
+
+  {%- assign CustomImage = product.images[1] -%}
+
+  {%- unless CustomImage -%}
+    {%- assign CustomImage = product.featured_image -%}
+  {%- endunless -%}
+
+  <div class="breadcrumbs-wrapper py:tn hide md-up:block">
+    {%- render "breadcrumbs" -%}
+  </div>
+
+  <div class="card-image pos:re">
+    <div class="card-image_bg">
+      <img class="lazyload" data-src="{{ CustomImage | img_url: '2x2', crop: 'center' }}">
+    </div>
+    {%- render "image", Image: CustomImage -%} 
+  </div>
+
+
+  {%- render "product-gallery", Product: product, CustomImage: CustomImage -%}
+</div>
+
+<div class="fi width:full md-up:hide">
+  {%- render "product-swiper", Product: product -%}
+</div>

@@ -1,0 +1,284 @@
+{{ 'template-product.css' | asset_url | stylesheet_tag }}
+
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+
+<div class="productpage">
+  <div class="productpage__inner">
+    <div class="pw pw:fl sm-up:pw sm-up:px">
+      <div class="fx fx:wr md-up:fx:no-wr md-up:gp:sm lg-up:gp:xl mt:cl gp:no-margin">
+        {%- render 'product-all-galleries' -%}
+
+        <div class="productpage__main-info fi fi:1/1 md-up:fi:1/2">
+          <div class="pt:sm" data-product-info>
+            <div class="px:sm md-up:px:cl" data-sticky-content>
+              {% for block in section.blocks %}
+                {% case block.type %}
+                  {%- when 'meta' -%}
+                    <div class="productpage__header base:lg">
+                      {% if block.settings.show_wave %}
+                        <div class="productpage__header-wave">
+                          {%- render 'svg-wave' -%}
+                        </div>
+                      {% endif %}
+
+                      {% if block.settings.show_vendor %}
+                        <p class="lh:md base:sm">
+                          {{ product.vendor }}
+                        </p>
+                      {% endif %}
+
+                      <h1 class="hd hd:lg" data-product-title>
+                        {{ product.title }}
+                      </h1>
+
+                      {%- render 'product-reviews' -%}
+                    </div>
+
+                  {%- when 'pricing' -%}
+                    {%- render 'product-pricing', block: block, product: current_variant -%}
+
+                  {%- when 'related-variant' -%}
+                    {%- render 'product-related-variants' -%}
+
+                  {%- when 'form' -%}
+                    {%- render 'product-form' -%}
+
+                  {%- when 'notice' -%}
+                    {%- render 'product-notice', config: block.settings -%}
+
+                    {%- if custom_description.size > 0 or page_ref.size > 0 or block.type == 'product-details-tab' -%}
+                      <wdn-drawer-open
+                        data-id="{{ id }}"
+                        class="tab__trigger pb:tn pt:xs fx ai:center jc:between"
+                        style="border-bottom:1px solid #ccc;"
+                      >
+                        <div class="tab__trigger-label fi grow-1">
+                          <p class="hd">{{ label }}</p>
+                        </div>
+
+                        <div class="tab__trigger-icon fi">
+                          <svg
+                            class="icon icon:sm"
+                            fill="none"
+                            stroke="currentColor"
+                            viewbox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path d="M14 5l7 7m0 0l-7 7m7-7H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                          </svg>
+                        </div>
+                      </wdn-drawer-open>
+                    {%- endif -%}
+
+                  {%- when 'product_description' -%}
+                    {%- render 'product-description' -%}
+
+                  {%- when 'bundle' -%}
+                    {%- render 'product-bundle', block: block -%}
+
+                  {%- when 'dropdown' -%}
+                    {%- unless block.settings.drop_text == blank -%}
+                      <div class="dropdown-wrapper">
+                        <wdn-dropdown group="b{{ block.id }}" data-id="{{ block.id }}">
+                          <div class="pb:tn pt:xs" dropdown-trigger>
+                            <span data-read-more>
+                              <div class="hd fx jc:between ai:center">
+                                <strong>
+                                  {{ block.settings.drop_open }}
+                                </strong>
+                                <div class="icon:sm fx">
+                                  {{ block.settings.dropdown_icon_defaut }}
+                                </div>
+                              </div>
+                            </span>
+
+                            <span data-read-less>
+                              <div class="hd fx jc:between ai:center">
+                                <strong>
+                                  {{ block.settings.drop_close }}
+                                </strong>
+                                <div class="fx icon:sm">
+                                  {{ block.settings.dropdown_icon_open }}
+                                </div>
+                              </div>
+                            </span>
+                          </div>
+
+                          <div dropdown-container style="border-bottom: 1px solid #ccc;">
+                            <div dropdown-content>
+                              <div class="rte pb:xs base:sm">
+                                {{ block.settings.drop_text }}
+                              </div>
+                            </div>
+                          </div>
+                        </wdn-dropdown>
+                      </div>
+                    {%- endunless -%}
+                {% endcase %}
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- render 'product-static-meta' -%}
+{%- render 'related-variant-drawer', section: section -%}
+
+{%- assign tab_drawers = section.blocks | where: 'type', 'tab' -%}
+
+{%- if tab_drawers.size > 0 -%}
+  {%- for tab_drawer in tab_drawers -%}
+    {%- render 'productpage_drawer', block: tab_drawer -%}
+  {%- endfor -%}
+{%- endif -%}
+
+{%- assign details_drawer = section.blocks | where: 'type', 'product-details-tab' | first -%}
+{%- render 'productpage-details-drawer', block: details_drawer -%}
+
+<style></style>
+
+{% schema %}
+{
+  "name": "Productpage",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "meta",
+      "name": "Meta",
+      "limit": 1
+    },
+    {
+      "type": "pricing",
+      "name": "Pricing",
+      "limit": 1
+    },
+
+    {
+      "type": "related-variant",
+      "limit": 1,
+      "name": "Related variant",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Variant"
+        }
+      ]
+    },
+    {
+      "type": "form",
+      "name": "Form",
+      "limit": 1
+    },
+    {
+      "type": "notice",
+      "name": "Message",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "message_title",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "message_content",
+          "label": "Content"
+        },
+        {
+          "type": "text",
+          "id": "message_tag",
+          "label": "Trigger tag",
+          "info": "Products tagged with this tag will have message. Leave blank to disable"
+        },
+        {
+          "type": "checkbox",
+          "id": "message_activate_global",
+          "label": "Show on all products?"
+        },
+        {
+          "type": "color",
+          "id": "message_bg_color",
+          "label": "Message background color",
+          "default": "#d9ebe8"
+        },
+        {
+          "type": "color",
+          "id": "message_tx_color",
+          "label": "Message background color",
+          "default": "#2a2a2a"
+        }
+      ]
+    },
+    {
+      "type": "product_description",
+      "name": "Product description",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "info": "Leave blank to disable"
+        }
+      ]
+    },
+    {
+      "type": "bundle",
+      "name": "Bundle",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "info": "Default title is used, if no custom title is given"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product to feature"
+        }
+      ]
+    },
+    {
+      "type": "dropdown",
+      "name": "Dropdown",
+      "settings": [
+        {
+          "type": "text",
+          "id": "drop_open",
+          "label": "Dropdown åben tekst"
+        },
+        {
+          "type": "text",
+          "id": "drop_close",
+          "label": "Dropdown luk tekst"
+        },
+        {
+          "type": "richtext",
+          "id": "drop_text",
+          "label": "Dropdown tekst"
+        },
+        {
+          "type": "html",
+          "id": "dropdown_icon_defaut",
+          "label": "Dropdown icon - default"
+        },
+        {
+          "type": "html",
+          "id": "dropdown_icon_open",
+          "label": "Dropdown icon - opened"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

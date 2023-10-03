@@ -1,0 +1,164 @@
+{%- liquid
+      assign body_font_bold = settings.type_body_font | font_modify: 'weight', 'bold'
+      assign body_font_bolder = settings.type_body_font | font_modify: 'weight', 'bolder'
+      assign body_font_italic = settings.type_body_font | font_modify: 'style', 'italic'
+      assign body_font_bold_italic = body_font_bold | font_modify: 'style', 'italic'
+    %}
+
+    {% style %}
+      {{ settings.type_body_font | font_face: font_display: 'swap' }}
+      {{ body_font_bold | font_face: font_display: 'swap' }}
+	  {{ body_font_bolder | font_face: font_display: 'swap' }}
+      {{ body_font_italic | font_face: font_display: 'swap' }}
+      {{ body_font_bold_italic | font_face: font_display: 'swap' }}
+
+      {{ settings.type_header_font | font_face: font_display: 'swap' }}
+
+      :root {
+        --font-body-family: {{ settings.type_body_font.family }}, {{ settings.type_body_font.fallback_families }};
+        --font-body-style: {{ settings.type_body_font.style }};
+        --font-body-weight: {{ settings.type_body_font.weight }};
+
+        --font-heading-family: {{ settings.type_header_font.family }}, {{ settings.type_header_font.fallback_families }};
+        --font-heading-style: {{ settings.type_header_font.style }};
+        --font-heading-weight: {{ settings.type_header_font.weight }};
+		--color-bg-white: {{ settings.color-bg-white }};
+        --color-bg-blue: {{ settings.color-bg-blue }};
+        --color-bg-lightblue: {{ settings.color-bg-lightblue }};
+        --color-bg-lightgrey: {{ settings.color-bg-lightgrey }};
+        --color-bg-softgreen: {{ settings.color-bg-softgreen }};
+        
+        --color-bg-lightgreen: {{ settings.color-bg-lightgreen }};
+		--color-bg-flashy: {{ settings.color-bg-flashy }};
+
+		--color-btn-primary-bg: {{ settings.color-btn-primary-bg }};
+        --color-btn-primary-txt: {{ settings.color-btn-primary-txt }};
+		--color-btn-primary-bg-hover: {{ settings.color-btn-primary-bg | color_darken: 10 }};
+
+		--color-btn-secondary-bg: {{ settings.color-btn-secondary-bg }};
+        --color-btn-secondary-txt: {{ settings.color-btn-secondary-txt }};
+		--color-btn-secondary-bg-hover: {{ settings.color-btn-secondary-bg | color_darken: 10 }};
+
+		--color-btn-outline-bg: {{ settings.color-btn-outline-bg }};
+        --color-btn-outline-txt: {{ settings.color-btn-outline-txt }};
+      }
+
+      *::before,
+      *::after {
+        box-sizing: inherit;
+      }
+
+      html {
+        box-sizing: border-box;
+        font-size: 13px;
+        height: 100%;
+      }
+
+      body {
+        margin: 0;
+        font-size: 1em;
+        letter-spacing: 0.06rem;
+        font-family: var(--font-body-family);
+        font-style: var(--font-body-style);
+        font-weight: var(--font-body-weight);
+      }
+
+      .bg\:white {
+         background-color:var(--color-bg-white);
+      }
+
+      .bg\:blue {
+         background-color:var(--color-bg-blue);
+      }
+
+      .bg\:lightblue,
+      .bg\:softblue{
+         background-color:var(--color-bg-lightblue);
+      }
+
+	  .bg\:lightgrey {
+         background-color:var(--color-bg-lightgrey);
+      }
+
+      .bg\:lightgreen {
+        background-color:var(--color-bg-lightgreen);
+      }
+      
+	  .bg\:flashy {
+          background-color:var(--color-bg-flashy);
+      }
+
+       .bg\:softgreen
+      {
+          background-color:var(--color-bg-softgreen);
+      }
+
+      .button {
+        background-color: var(--color-btn-primary-bg);
+        color: var(--color-btn-primary-txt);
+        border-color: var(--color-btn-primary-bg);
+      }
+
+	  .button:hover {
+		background-color: var(--color-btn-primary-bg-hover);
+      border-color: var(--color-btn-primary-bg-hover);
+	  }
+
+      .button--secondary {
+        background-color: var(--color-btn-secondary-bg);
+        color: var(--color-btn-secondary-txt);
+		border-color: var(--color-btn-secondary-bg);
+      }
+
+      .button--secondary:hover {
+         background-color: var(--color-btn-secondary-bg-hover);
+         border-color: var(--color-btn-secondary-bg-hover);
+      }
+
+      .button--outline {
+        background-color: transparent;
+        color: var(--color-btn-secondary-txt);
+        border-color: var(--color-btn-secondary-bg);
+      }
+
+      .button--outline:hover {
+        background-color:var(--color-btn-secondary-bg-hover);
+		border-color:var(--color-btn-secondary-bg-hover);
+        color: var(--color-btn-secondary-txt);
+      }
+
+      .button--invert {
+		background-color: transparent;
+        color: var(--color-btn-primary-bg);
+        border-color: var(--color-btn-primary-bg);
+      }
+
+      .button--invert:hover {
+        background-color:var(--color-btn-primary-bg-hover);
+		border-color:var(--color-btn-primary-bg-hover);
+        color: var(--color-btn-primary-txt);
+      }
+
+	  .hd,
+	  .font-heading {
+		font-family: var(--font-heading-family);
+        font-style: var(--font-heading-style);
+        font-weight: var(--font-heading-weight);
+	   }
+
+        strong {
+	        font-weight:var(--font-heading-weight); 
+        }
+
+        .font-heading-family,
+		.button {
+		  letter-spacing:-0.02em;
+		  font-family: var(--font-heading-family);
+        }
+
+	  @media (min-width:1024px) {
+		html {
+			font-size:16px;	
+        }
+      }
+{% endstyle %}

@@ -1,0 +1,22 @@
+<script>
+    var WDN = WDN || {};
+    if (typeof WDN.Routes === 'undefined') {
+    WDN.Routes = {
+      'root_url': {{ routes.root_url | json }},
+      'account_url': {{ routes.account_url | json }},
+      'account_login_url': {{ routes.account_login_url | json }},
+      'account_logout_url': {{ routes.account_logout_url | json }},
+      'account_register_url': {{ routes.account_register_url | json }},
+      'account_addresses_url': {{ routes.account_addresses_url | json }},
+      'collections_url': {{ routes.collections_url | json }},
+      'all_products_collection_url': {{ routes.all_products_collection_url | json }},
+      'search_url': {{ routes.search_url | json }},
+      'cart_url': {{ routes.cart_url | json }},
+      'cart_add_url': {{ routes.cart_add_url | json }},
+      'cart_change_url': {{ routes.cart_change_url | json }},
+      'cart_update_url': {{ routes.cart_update_url | json }},
+      'cart_clear_url': {{ routes.cart_clear_url | json }},
+      'product_recommendations_url': {{ routes.product_recommendations_url | json }}
+    }
+  }
+</script>

@@ -1,0 +1,91 @@
+{%- assign field_padding = 'pt' -%}
+{%- assign label_padding = 'display:block pb:tn hd' -%}
+
+<div class="contact field:whiten">
+  <div class="contact-inner">
+    <p class="hd hd:xl">
+      {{ 'contact.form.title' | t }}
+    </p>
+
+    {%- form 'contact', id: 'contact' -%}
+
+    {%- if form.posted_successfully? or form.errors -%}
+    {%- assign message_type = 'success' -%}
+    
+    {%- if form.errors -%}
+    	{%- assign message_type = 'error' -%}
+    {%- endif -%}
+    
+    <div class="form__message py form__message--{{ message_type }}">
+      <div class="form__message-inner p:md bg:lightblue">
+        <div class="rte">
+          {%- if message_type == 'success' -%}
+       	   	{{ 'contact.form.success' | t }}
+          {%- else -%}
+        	  {{ 'contact.form.error' | t }}
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+    {%- endif -%}
+    
+    <div class="contact__form-main py"{% if message_type == 'success' %} data-form-disabled{% endif %}>
+      <div class="contact__fields">
+        <div class="field">
+          <label class="field__label {{ label_padding }}" for="contact-name">{{ 'contact.form.name' | t }}</label>
+          <input class="field__input" autocomplete="name" type="text" id="contact-name" name="contact[navn]" placeholder="{{ 'contact.form_placeholders.name' | t }}">
+        </div>
+
+        <div class="field {{ field_padding }}">
+          <label class="field__label {{ label_padding }}" for="contact-email">
+            {{ 'contact.form.email' | t }}*
+          </label>
+          <input
+                 autocomplete="email"
+                 type="email"
+                 id="contact-email"
+                 class="field__input"
+                 name="contact[email]"
+                 spellcheck="false"
+                 autocapitalize="off"
+                 aria-required="true"
+                 placeholder="{{ 'contact.form_placeholders.email' | t }}">
+        </div>
+      </div>
+
+      <div class="field {{ field_padding }}">
+        <label class="field__label {{ label_padding }}" for="contact-phone">{{ 'contact.form.phone' | t }}</label>
+        <input type="tel" id="contact-phone" class="field__input" autocomplete="tel" name="contact[telefon]" pattern="[0-9\-]*" placeholder="{{ 'contact.form_placeholders.phone' | t }}">
+      </div>
+
+      <div class="field {{ field_padding }}">
+        <label class="form__label field__label {{ label_padding }}" for="contact-body">
+          {{ 'contact.form.comment' | t }}
+        </label>
+        <textarea
+                  rows="10"
+                  id="contact-body"
+                  class="text-area field__input"
+                  name="contact[besked]"
+                  placeholder="{{ 'contact.form_placeholders.comment' | t }}"
+                  >
+          {{- form.body -}}
+        </textarea>
+      </div>
+
+      <div class="contact__button pt:sm">
+        <button type="submit" class="button">
+          {{ 'contact.form.send' | t }}
+        </button>
+      </div>
+    </div>
+    {%- endform -%}
+  </div>
+</div>
+
+<style>
+  .field\:whiten input,
+  .field\:whiten textarea {
+    background-color:#fff!important;
+  }
+</style>

@@ -1,0 +1,22 @@
+{% liquid
+   
+    capture outer
+
+      echo " section"  
+      echo " md-up:pt"  
+      echo " pt"
+
+      unless config.sec_pad_pc == "DEFAULT"  
+         echo " md-up:pt:" | append: config.sec_pad_pc
+      endunless 
+
+      unless config.sec_pad_mobile == "DEFAULT"  
+         echo " pt:" | append: config.sec_pad_mobile
+         else 
+         
+      endunless 
+      
+   endcapture
+
+%}
+{{ outer }}

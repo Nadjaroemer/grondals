@@ -1,0 +1,139 @@
+html {
+
+}
+
+@media print {
+  .no-print,
+  .no-print * {
+    display: none !important;
+  }
+}
+
+/* Dropdown attribute logic */
+
+wdn-dropdown {
+  display: block;
+}
+wdn-dropdown [data-label-when="active"] {
+  display: none;
+}
+
+wdn-dropdown[dropdown-active] [data-label-when="active"] {
+  display: block;
+}
+wdn-dropdown[dropdown-active] [data-label-when="default"] {
+  display: none;
+}
+
+.svg-wave {
+  width: 110em;
+}
+
+.overflow--hidden {
+  overflow: hidden;
+}
+
+[data-product-card],
+.card--product,
+.card--product .card-content--product,
+.card--product .product__cardcontent,
+.card--product .product__cardcontent-inner {
+  height: 100%;
+}
+
+.card--product .card-inner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1em;
+}
+
+.card--product .card-content {
+  flex: 1;
+}
+
+.card--product.product--soldout .card-image {
+  opacity: 0.5;
+}
+
+.product__cardcontent-inner {
+  display: flex;
+  flex-direction: column;
+}
+.product__card-type {
+  flex: 1;
+}
+
+.image-fit--cover img {
+  object-fit: cover;
+}
+.image-fit--contain img {
+  object-fit: contain;
+}
+
+.product__bundle-product-image .image-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product__bundle-image {
+  width: 6.5em;
+  height: 6.5em;
+}
+
+/* md up  breakpoint */
+@media only screen and (min-width: 880px) {
+  .svg-wave {
+    width: 100%;
+  }
+
+  .md-up\:block {
+    display: block;
+  }
+}
+
+.product__bundle-product-content .hd {
+  padding-bottom: 4px;
+}
+
+/* Product reviews */
+.product-top__reviews {
+  display: flex;
+  align-items: center;
+}
+
+.product_top__reviews-count {
+  margin-left: 7.5px;
+  font-size: 13px;
+}
+
+.product-top__reviews__stars {
+  display: flex;
+  align-items: center;
+}
+
+.product-top__reviews__stars .stamped-fa {
+  width: 1em;
+  text-align: center;
+}
+
+.product-top__reviews__count {
+  font-size: 0.6em;
+  margin-left: 0.4em;
+}
+
+[data-product-rating] {
+  cursor: pointer;
+}
+.product__reviews.section {
+  margin-top: calc(var(--header-height-no-announcement) * -1);
+  padding-top: var(--header-height-no-announcement);
+}
+
+/* md up  breakpoint */
+@media only screen and (min-width: 880px) {
+  .product-top__reviews__count {
+    margin-left: 0.2em;
+  }
+}

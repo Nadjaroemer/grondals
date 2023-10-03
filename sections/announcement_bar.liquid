@@ -1,0 +1,76 @@
+{% if section.settings.toggle %}
+  {% assign PageUrl = request.path | downcase %}
+  {% for block in section.blocks %}
+    {% assign Keywords = block.settings.key | replace: ' ,',',' | replace: ', ',',' |  split: ',' %}
+    {% assign KeyFound = false %}
+
+    {% for Keyword in Keywords %}
+      {% if KeyFound %}
+        {% break %}
+      {% endif %}
+      {% assign Key = Keyword | downcase %}
+      {% if PageUrl contains Key %}
+        {% render "announcement", Content: block.settings.content, Config: section.settings %}
+        {% assign KeyFound = true %}
+      {% endif %}
+    {% endfor %}
+    {% if KeyFound %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+
+{% schema %}
+
+{
+    "name": "Announcement bar",
+    "settings": [
+        {
+            "type": "checkbox",
+            "label": "Turn on announcement",
+            "id": "toggle"
+        },
+        {
+            "type": "checkbox",
+            "label": "Show close option",
+            "id": "closable"
+        },{
+            "type": "checkbox",
+            "label": "Fixed bar",
+            "id": "fixed"
+        },
+        {
+            "type": "color",
+            "label": "Background color",
+            "id": "background_color",
+            "default": "#2a2a2a"
+        },
+        {
+            "type": "color",
+            "label": "Font color",
+            "id": "font_color",
+            "default": "#ffffff"
+        }
+    ],
+    "blocks": [
+        {
+            "name": "Announcement",
+            "type": "text",
+            "settings": [
+               {
+                  "id": "key",
+                  "type": "text",
+                  "label": "Keywords",
+                  "info": "Comma separated list of keywords to be matched in resource path"
+               },
+               {
+                  "id": "content",
+                  "type": "richtext",
+                  "label": "Content"
+               }
+            ]
+        }
+    ]
+}
+
+{% endschema %}

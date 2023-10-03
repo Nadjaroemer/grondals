@@ -1,0 +1,45 @@
+{%- if blog.all_tags.size > 0 -%}
+<div class="blog_filter pw">
+  <div class="blog_filter-inner pb">
+    <div class="blog_filter-grid fx gp:sm ai:center md-up:jc:center sb:hide">
+      {%- for tag in blog.all_tags -%}
+
+      {%- if forloop.first -%}
+      <div class="blog_filter-item fi">
+          <div class="filter-wrapper">
+            <div class="filter_button filter_button--active fx ai:center" data-blog-filter="all">
+              {{ 'recipe.filter_all' | t  }}
+            </div>
+          </div>
+      </div>
+      {%- endif -%}
+
+      <div class="blog_filter-item fi">
+        <div class="filter-wrapper">
+          <div class="filter_button fx ai:center" data-blog-filter="{{ tag }}">
+            {{ tag | capitalize }}
+          </div>
+        </div>
+      </div>
+
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+var WDN = WDN || {};
+
+if(typeof WDN.BlogFilterConfig === 'undefined'){
+WDN.BlogFilterConfig = (function(){
+  return {
+    url: "{{ routes.root_url }}blogs/{{ blog.handle }}"
+  }
+})();
+}
+
+
+</script>
+{%- endif -%}

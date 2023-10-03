@@ -1,0 +1,52 @@
+{%- liquid
+  assign review_count = product.metafields.reviews.rating_count | times: 1.0 | round
+  assign average_rating = product.metafields.stamped.reviews_average | times: 1.0 | round: 2
+-%}
+
+
+{%- if review_count > 0 -%}
+  {%- comment -%}
+    3.7 | floor => 3
+  {%- endcomment -%}
+  {%- assign SolidStars = average_rating | floor -%}
+  {%- assign HalfStars = 0 -%}
+  {%- assign BlankStars = 0 -%}
+  {%- assign DecimalRating = average_rating | minus: SolidStars | times: 100 | round -%}
+
+{%- if SolidStars < 5 -%}
+  {%- if DecimalRating < 40 -%}
+    {%- assign BlankStars = BlankStars | plus: 1 -%}
+
+  {%- elsif DecimalRating >= 40 and DecimalRating <= 70 -%}
+    {%- assign HalfStars = HalfStars | plus: 1 -%}
+
+  {%- elsif DecimalRating > 70 -%}
+    {%- assign SolidStars = SolidStars | plus: 1 -%}
+  {%- endif -%}
+{%- endif -%}
+  
+{%- assign TotalAmountOfStars = SolidStars | plus: HalfStars   -%}
+{%- if TotalAmountOfStars < 5 -%}
+  {%- assign BlankStars = 5 | minus: TotalAmountOfStars -%}
+{%- endif -%}
+  
+
+
+  <div class="inline-block pos:re">
+    <a href="#product_reviews" class="absolute--fill"></a>
+    <div class="product-top__reviews">
+      <div class="product-top__reviews__stars">
+        {%- for i in (1..SolidStars) -%}
+          <i class="stamped-fa stamped-fa-star" aria-hidden="true"></i>
+        {%- endfor -%}
+        {%- for i in (1..HalfStars) -%}
+          <i class="stamped-fa stamped-fa-star-half-o" aria-hidden="true"></i>
+        {%- endfor -%}
+        {%- for i in (1..BlankStars) -%}
+          <i class="stamped-fa stamped-fa-star-o" aria-hidden="true"></i>
+        {%- endfor -%}
+      </div>
+      <p class="product-top__reviews__count">{{ 'product.review_count' | t: count: review_count }}</p> 
+    </div>
+  </div>
+{%- endif -%}

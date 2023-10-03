@@ -1,0 +1,39 @@
+{%- assign PaginateOffset = 30 -%}
+
+{%- if PaginateOffset > search.results_count  -%}
+    {%- assign ResultsLessThanOffset = true -%}
+{%- endif -%}
+
+{%- assign TemplateSuffix = "request" -%}
+
+{%- comment -%}
+<div class="search__header">
+<p class="base:sm">{{ 'search.result_count' | t: count: search.results_count }}</p>
+</div>
+{%- endcomment -%}
+
+<div class="search__main pt:md base:md">
+  <div class="search-grid fx fx:wr gp:md">
+    {%- paginate search.results by PaginateOffset -%}
+    {%- for result in search.results -%}
+    {% if result.featured_image %}
+    <div class="fi fi:1/2 search-item base:sm">
+      {%- render 'product-card', Product: result, hide_quickshop: true -%}
+    </div>
+    {% endif %}
+    {%- endfor -%}
+  </div>
+  <div class="search-pagination{% if ResultsLessThanOffset %} clear-shadow{% endif %}">
+    <div class="paginate-control paginate-control--previous">
+      {%- if paginate.previous.is_link -%}
+      <a href="{{ paginate.previous.url | append: '&view=' | append: TemplateSuffix }}" class="pagination-link pagination-link--previous" data-pagination-previous>{{ 'search.prev' | t  }}</a>
+      {%- endif -%}
+    </div>
+    <div class="paginate-control paginate-control--next">
+      {%- if paginate.next.is_link -%}
+      <a href="{{ paginate.next.url | append: '&view=' | append: TemplateSuffix }}" class="pagination-link pagination-link--next" data-pagination-next>{{ 'search.next' | t  }}</a>
+      {%- endif -%}
+    </div>
+    {%- endpaginate -%}
+  </div>
+</div>

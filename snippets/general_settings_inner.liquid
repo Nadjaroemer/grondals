@@ -1,0 +1,26 @@
+{% liquid
+   
+    capture inner
+      unless config.bg_inner
+	     unless config.c_pad_pc == "DEFAULT"    
+            echo " md-up:py:" | append: config.c_pad_pc 
+          else 
+            echo " md-up:py"
+         endunless 
+      endunless 
+      
+	  unless config.bg_inner
+        unless config.c_pad_mobile == "DEFAULT"  
+          echo " py:" | append: config.c_pad_mobile
+         else
+           echo " py"
+        endunless    
+      endunless 
+
+      if config.bg_inner
+         echo " p:" | append: config.c_pad_pc 
+       endif 
+   
+   endcapture
+%}
+{{ inner }}

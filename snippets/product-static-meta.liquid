@@ -1,0 +1,52 @@
+{%- assign SelectedVariant = product.selected_or_first_available_variant -%}
+{%- assign CurrentPrice = SelectedVariant.price | times: 1.0 -%}
+{%- assign ComparePrice = SelectedVariant.compare_at_price | times: 1.0 -%}
+{%- assign Difference = CurrentPrice | divided_by: ComparePrice | times: 100 -%}
+{%- assign Percentage = 100 | minus: Difference | round -%}
+
+{%- assign SavingsCalc = SelectedVariant.compare_at_price | times:  Percentage -%}
+{%- assign SavingsCalc = SavingsCalc | divided_by: 100 -%}
+{%- assign Savings =  SelectedVariant.compare_at_price | minus:  SavingsCalc -%}
+{%- assign Savings = SelectedVariant.compare_at_price | minus: Savings -%}
+
+
+{%- assign InventoryQuantity = SelectedVariant.inventory_quantity -%}
+{%- assign StockTrackingAllowed = false-%}
+{%- assign StockLowLimit = 3 -%}
+{%- assign StockStatus = "high" -%}
+
+{%- unless SelectedVariant.inventory_policy == "continue" -%}
+    {%- assign StockTrackingAllowed = true-%}
+    {%- if InventoryQuantity <= StockLowLimit -%}
+        {%- assign StockStatus = "low" -%}
+    {%- endif -%}
+    {%- if InventoryQuantity == 0 -%}
+        {%- assign StockStatus = "unavailable" -%}
+    {%- endif -%}
+{%- endunless -%}
+
+
+<script>
+  var WDN = WDN || {};
+  if(typeof WDN.ProductPageConfig === "undefined"){
+    WDN.ProductPageConfig = (function(){
+      var config = {
+        selectedVariantId: '{{ SelectedVariant.id }}',
+        discount:{
+        percentage: "{{ Percentage }}",
+        savings: "{{ Savings }}"
+      },
+          stock:{
+            hasTracking: {{ StockTrackingAllowed }},
+              lowLimit: {{ StockLowLimit }}
+
+          }
+          }
+      return config
+    }())
+  }
+</script>
+
+<script data-product-script type="application/json">
+    {{ product | json }}
+</script>

@@ -1,0 +1,54 @@
+{%- comment -%}
+Params:
+@Image - [REQUIRED]
+@Sizes - [REQUIRED]
+@Modifier - [OPTIONAL]
+@ImageRatio - [OPTIONAL]
+@NoRatio - [OPTIONAL]
+@Darken - [OPTIONAL]
+
+Rendering example:
+
+{%- render "image", Image: product.featured_image, Sizes: "160, 450, 680, 900, 1200" -%}
+{%- endcomment -%}
+
+{%- unless Image -%}
+	{%- assign Image = image -%}
+{%- endunless -%}
+
+{%- unless Sizes -%}
+	{%- assign Sizes = size -%}
+{%- endunless -%}
+
+{%- unless Sizes -%}
+	{%- assign Sizes = "150,240,300,480,600,720,900,1080" -%}
+{%- endunless -%}
+
+{%- if Image and Sizes -%}
+  {%- unless ImageRatio -%}
+  {%- assign ImageRatio = 100.0 | divided_by: Image.aspect_ratio -%}
+{%- endunless -%}
+
+{%- assign ImageSrc = Image | img_url: '1x' | replace: '_1x', '_{width}x' -%}
+
+{%- if Darken -%}
+<div class="darken"></div>
+{%- endif -%}
+
+{%- capture ImgTag -%}
+<img class="lazyload" data-src="{{ ImageSrc }}" data-widths="[{{ Sizes }}]" data-aspectratio="{{ Image.aspect_ratio }}" data-sizes="auto" {% if Image.alt.size > 0 %} alt="{{ Image.alt | escape }}"{% endif %}>
+{%- endcapture -%}
+
+{%- unless NoRatio -%}
+<div class="ratio_container{% if Modifier %} ratio_container--{{ Modifier }}{% endif %}" style="padding-bottom:{{ ImageRatio }}%;">
+    {{ ImgTag }}
+</div>
+{%- else -%}
+{{ ImgTag }}
+{%- endunless -%}
+
+{%- else -%}
+<script>
+    WDN.MissingParams("image");
+</script>
+{%- endif -%}

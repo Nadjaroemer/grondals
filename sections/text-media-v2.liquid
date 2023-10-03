@@ -1,0 +1,753 @@
+{% liquid
+
+        assign config = section.settings
+
+        capture sectionClasses
+          echo "section-content fx fx:wr md-up:fx:nowrap"
+
+          echo " ai:" | append: config.align
+
+          echo " jc:" | append: config.justify
+
+          echo " gp:" | append: config.gap
+
+          if config.reverse_on_large
+            echo " md-up:dir:row-rev"
+          endif
+
+        endcapture 
+        
+%}
+
+{% liquid
+
+   assign config = section.settings
+   
+   assign padding_top = 'pt-' | append: config.pt
+
+   assign bg_color = " bg:" | append: config.bg_color
+   
+   capture text_props
+     render 'general_settings_text_props', config: section.settings
+   endcapture
+
+   capture pc_width
+      render 'general_settings_pc_width', config: section.settings  
+   endcapture
+
+   capture outer
+      render 'general_settings_outer', config: section.settings 
+   endcapture
+
+   capture inner
+      render 'general_settings_inner', config: section.settings 
+   endcapture
+
+%}
+
+<div class="section {{ outer }}" data-name="text-media-{{ section.id }}">
+
+    <div class="section-bg {% unless section.settings.bg_inner %} {{ bg_color }} {% endunless %} ">
+
+        <div class="container {{ pc_width }}">
+
+            <div class="section-inner {{ inner }} {{ text_props }} {% if section.settings.bg_inner %} {{ bg_color }} {% endif %} ">
+
+                <div class="section-header"></div>
+
+                <div class="{{ sectionClasses }}">
+
+                    {%- assign block_widths = ',' -%}
+
+                    {%- for block in section.blocks -%}
+
+                        {% liquid
+           
+                     capture blockClasses
+                     
+                        echo "fi fi:1/1 block block-" | append: block.type
+                        
+                        if block.settings.grow
+                           echo " grow-1"
+                        endif
+                        
+                     endcapture
+                     
+                   %}
+
+                        <div class="{{ blockClasses }}" data-block-id="{{ block.id }}" {{ block.shopify_attributes }}>
+                            {%- case block.type -%}
+
+                                {% when 'text' %}
+                                    {%- render 'block-rte', block: block -%}
+
+                                {% when 'media' %}
+                                    {%- render 'block-media', block: block -%}
+
+                                {%- when "product" -%}
+                                    {%- render 'block-product', block: block -%}
+                            {%- endcase -%}
+                        </div>
+                    {%- endfor -%}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+  @media (min-width:1024px) {
+    {%- for block in section.blocks -%}
+    [data-name="text-media-{{ section.id }}"] [data-block-id="{{ block.id }}"] {
+    flex-basis:{{ block.settings.width }}%;
+  }
+  {%- endfor -%}
+  }
+ </style>
+
+
+{% schema %}
+
+{
+    "name": "Text / media v2",
+    "max_blocks": 3,
+    "settings": [
+        {
+            "type": "header",
+            "content": "Content behavior"
+        }, {
+            "type": "select",
+            "id": "align",
+            "label": "Vertical alignment of content",
+            "default": "center",
+            "options": [
+                {
+                    "value": "start",
+                    "label": "Start"
+                }, {
+                    "value": "center",
+                    "label": "Center"
+                }, {
+                    "value": "end",
+                    "label": "End"
+                }
+            ]
+        }, {
+            "type": "select",
+            "id": "justify",
+            "label": "Horizontal alignment of content",
+            "default": "center",
+            "options": [
+                {
+                    "value": "start",
+                    "label": "Start"
+                }, {
+                    "value": "center",
+                    "label": "Center"
+                }, {
+                    "value": "end",
+                    "label": "End"
+                }, {
+                    "value": "between",
+                    "label": "Spread"
+                }
+            ]
+        }, {
+            "type": "checkbox",
+            "id": "reverse_on_large",
+            "label": "Reverse order on large screen"
+        }, {
+            "type": "header",
+            "content": "Styling"
+        }, {
+            "type": "select",
+            "id": "gap",
+            "label": "Gutters",
+            "default": "md",
+            "options": [
+                {
+                    "value": "none",
+                    "label": "None"
+                }, {
+                    "value": "sm",
+                    "label": "Small"
+                }, {
+                    "value": "md",
+                    "label": "Medium"
+                }, {
+                    "value": "la",
+                    "label": "Large"
+                }, {
+                    "value": "xl",
+                    "label": "XLarge"
+                }, {
+                    "value": "mg",
+                    "label": "XXLarge"
+                }
+            ]
+        }, {
+            "type": "header",
+            "content": "------- General setting -------"
+        }, {
+            "type": "header",
+            "content": "🔴🟠🔵 Colors"
+        }, {
+            "type": "checkbox",
+            "id": "bg_inner",
+            "label": "Apply background to inner"
+        }, {
+            "type": "select",
+            "id": "bg_color",
+            "label": "Background color",
+            "default": "bg-none",
+            "options": [
+                {
+                    "value": "bg-none",
+                    "label": "None"
+                }, {
+                    "value": "blue",
+                    "label": "Blue"
+                }, {
+                    "value": "lightblue",
+                    "label": "Light blue"
+                }, {
+                    "value": "softblue",
+                    "label": "Soft blue"
+                }, {
+                    "value": "lightgrey",
+                    "label": "Light grey"
+                }, {
+                    "value": "softgreen",
+                    "label": "Soft green"
+                }, {
+                    "value": "lightgreen",
+                    "label": "Light green"
+                }, {
+                    "value": "flashy",
+                    "label": "Flashy"
+                }
+            ]
+        }, {
+            "type": "select",
+            "id": "text_color",
+            "label": "Text color",
+            "options": [
+                {
+                    "value": "text-dark",
+                    "label": "Dark"
+                }, {
+                    "value": "text-dark--lighter",
+                    "label": "Dark light"
+                }, {
+                    "value": "text-light",
+                    "label": "Light"
+                }, {
+                    "value": "text--very-light",
+                    "label": "Very light"
+                }
+            ]
+        }, {
+            "type": "header",
+            "content": "🔤 🔠 Base size",
+            "info": "Text size for pc & mobile"
+        }, {
+            "type": "select",
+            "id": "base_pc",
+            "label": "Pc",
+            "default": "DEFAULT",
+            "options": [
+                {
+                    "value": "tn",
+                    "label": "Tiny"
+                }, {
+                    "value": "xs",
+                    "label": "Extra small"
+                }, {
+                    "value": "sm",
+                    "label": "Small"
+                }, {
+                    "value": "DEFAULT",
+                    "label": "Normal"
+                }, {
+                    "value": "lg",
+                    "label": "Large"
+                }, {
+                    "value": "xl",
+                    "label": "Extra large"
+                }, {
+                    "value": "hg",
+                    "label": "Huge"
+                }, {
+                    "value": "mg",
+                    "label": "Mega"
+                }
+            ]
+        }, {
+            "type": "select",
+            "id": "base_mobile",
+            "label": "Mobile",
+            "default": "DEFAULT",
+            "options": [
+                {
+                    "value": "tn",
+                    "label": "Tiny"
+                }, {
+                    "value": "xs",
+                    "label": "Extra small"
+                }, {
+                    "value": "sm",
+                    "label": "Small"
+                }, {
+                    "value": "DEFAULT",
+                    "label": "Normal"
+                }, {
+                    "value": "lg",
+                    "label": "Large"
+                }, {
+                    "value": "xl",
+                    "label": "Extra large"
+                }, {
+                    "value": "hg",
+                    "label": "Huge"
+                }, {
+                    "value": "mg",
+                    "label": "Mega"
+                }
+            ]
+        }, {
+            "type": "header",
+            "content": "📱💻 Content width",
+            "info": "Content width for pc & mobile"
+        }, {
+            "type": "checkbox",
+            "id": "full_w_mobile",
+            "label": "Full width Mobile"
+        }, {
+            "type": "select",
+            "id": "width_pc",
+            "label": "Pc",
+            "default": "DEFAULT",
+            "options": [
+                {
+                    "value": "tn",
+                    "label": "Tiny"
+                }, {
+                    "value": "xs",
+                    "label": "Extra small"
+                }, {
+                    "value": "sm",
+                    "label": "Small"
+                }, {
+                    "value": "DEFAULT",
+                    "label": "Normal"
+                }, {
+                    "value": "lg",
+                    "label": "Large"
+                }, {
+                    "value": "xl",
+                    "label": "Extra large"
+                }, {
+                    "value": "hg",
+                    "label": "Huge"
+                }, {
+                    "value": "mg",
+                    "label": "Mega"
+                }, {
+                    "value": "fl",
+                    "label": "Full"
+                }
+            ]
+        }, {
+            "type": "header",
+            "content": "⬆️ ⬇️ Content padding",
+            "info": "Content padding for pc & mobile"
+        }, {
+            "type": "select",
+            "id": "c_pad_pc",
+            "label": "Pc",
+            "default": "DEFAULT",
+            "options": [
+                {
+                    "value": "cl",
+                    "label": "None"
+                }, {
+                    "value": "tn",
+                    "label": "Tiny"
+                }, {
+                    "value": "xs",
+                    "label": "Extra small"
+                }, {
+                    "value": "sm",
+                    "label": "Small"
+                }, {
+                    "value": "DEFAULT",
+                    "label": "Normal"
+                }, {
+                    "value": "lg",
+                    "label": "Large"
+                }, {
+                    "value": "xl",
+                    "label": "Extra large"
+                }, {
+                    "value": "hg",
+                    "label": "Huge"
+                }, {
+                    "value": "mg",
+                    "label": "Mega"
+                }
+            ]
+        }, {
+            "type": "select",
+            "id": "c_pad_mobile",
+            "label": "Mobile",
+            "default": "DEFAULT",
+            "options": [
+                {
+                    "value": "cl",
+                    "label": "None"
+                }, {
+                    "value": "tn",
+                    "label": "Tiny"
+                }, {
+                    "value": "xs",
+                    "label": "Extra small"
+                }, {
+                    "value": "sm",
+                    "label": "Small"
+                }, {
+                    "value": "DEFAULT",
+                    "label": "Normal"
+                }, {
+                    "value": "lg",
+                    "label": "Large"
+                }, {
+                    "value": "xl",
+                    "label": "Extra large"
+                }, {
+                    "value": "hg",
+                    "label": "Huge"
+                }, {
+                    "value": "mg",
+                    "label": "Mega"
+                }
+            ]
+        }, {
+            "type": "header",
+            "content": "⏫ Section padding",
+            "info": "Content padding for pc & mobile"
+        }, {
+            "type": "select",
+            "id": "sec_pad_pc",
+            "label": "Pc",
+            "default": "DEFAULT",
+            "options": [
+                {
+                    "value": "cl",
+                    "label": "None"
+                }, {
+                    "value": "tn",
+                    "label": "Tiny"
+                }, {
+                    "value": "xs",
+                    "label": "Extra small"
+                }, {
+                    "value": "sm",
+                    "label": "Small"
+                }, {
+                    "value": "DEFAULT",
+                    "label": "Normal"
+                }, {
+                    "value": "lg",
+                    "label": "Large"
+                }, {
+                    "value": "xl",
+                    "label": "Extra large"
+                }, {
+                    "value": "hg",
+                    "label": "Huge"
+                }, {
+                    "value": "mg",
+                    "label": "Mega"
+                }
+            ]
+        }, {
+            "type": "select",
+            "id": "sec_pad_mobile",
+            "label": "Mobile",
+            "default": "DEFAULT",
+            "options": [
+                {
+                    "value": "cl",
+                    "label": "None"
+                }, {
+                    "value": "tn",
+                    "label": "Tiny"
+                }, {
+                    "value": "xs",
+                    "label": "Extra small"
+                }, {
+                    "value": "sm",
+                    "label": "Small"
+                }, {
+                    "value": "DEFAULT",
+                    "label": "Normal"
+                }, {
+                    "value": "lg",
+                    "label": "Large"
+                }, {
+                    "value": "xl",
+                    "label": "Extra large"
+                }, {
+                    "value": "hg",
+                    "label": "Huge"
+                }, {
+                    "value": "mg",
+                    "label": "Mega"
+                }
+            ]
+        }
+    ],
+    "blocks": [
+        {
+            "type": "text",
+            "name": "Text",
+            "settings": [
+                {
+                    "type": "checkbox",
+                    "id": "grow",
+                    "label": "Let block grow and take up any available space",
+                    "info": "NOTE: Block width config is ignored"
+                }, {
+                    "type": "number",
+                    "id": "width",
+                    "label": "Block width",
+                    "default": 50,
+                    "info": "Applies only to larger screens"
+                }, {
+                    "type": "header",
+                    "content": "Content behavior"
+                }, {
+                    "type": "select",
+                    "id": "text-align",
+                    "label": "Mobile - text alignment",
+                    "default": "center",
+                    "options": [
+                        {
+                            "value": "left",
+                            "label": "Start"
+                        }, {
+                            "value": "center",
+                            "label": "Center"
+                        }, {
+                            "value": "right",
+                            "label": "End"
+                        }
+                    ]
+                }, {
+                    "type": "select",
+                    "id": "lg-text-align",
+                    "label": "PC - text alignment",
+                    "default": "left",
+                    "options": [
+                        {
+                            "value": "left",
+                            "label": "Start"
+                        }, {
+                            "value": "center",
+                            "label": "Center"
+                        }, {
+                            "value": "right",
+                            "label": "End"
+                        }
+                    ]
+                }, {
+                    "type": "header",
+                    "content": "Content"
+                }, {
+                    "type": "richtext",
+                    "id": "heading",
+                    "label": "Heading"
+                }, {
+                    "type": "richtext",
+                    "id": "text",
+                    "label": "Text"
+                }, {
+                    "type": "richtext",
+                    "id": "dropdown_text",
+                    "label": "Fold out text"
+                }, {
+                    "type": "header",
+                    "content": "Button"
+                }, {
+                    "type": "select",
+                    "id": "button_style",
+                    "label": "Button style",
+                    "default": "default",
+                    "options": [
+                        {
+                            "value": "default",
+                            "label": "Default"
+                        }, {
+                            "value": "round",
+                            "label": "Round"
+                        }, {
+                            "value": "round-slim",
+                            "label": "Round slim"
+                        }, {
+                            "value": "outline",
+                            "label": "Outline"
+                        }, {
+                            "value": "tall",
+                            "label": "Tall"
+                        }
+                    ]
+                }, {
+                    "type": "select",
+                    "id": "button_sizing",
+                    "label": "Sizing",
+                    "default": "default",
+                    "options": [
+                        {
+                            "value": "small",
+                            "label": "Smaller"
+                        }, {
+                            "value": "default",
+                            "label": "Default"
+                        }, {
+                            "value": "larger",
+                            "label": "Larger"
+                        }
+                    ]
+                }, {
+                    "type": "text",
+                    "id": "btn_label",
+                    "label": "Label"
+                }, {
+                    "type": "url",
+                    "id": "btn_url",
+                    "label": "Url"
+                }
+            ]
+        }, {
+            "type": "media",
+            "name": "Media",
+            "settings": [
+                {
+                    "type": "checkbox",
+                    "id": "grow",
+                    "label": "Let block grow and take up any available space",
+                    "info": "NOTE: Block width config is ignored"
+                }, {
+                    "type": "number",
+                    "id": "width",
+                    "label": "Block width",
+                    "default": 50,
+                    "info": "Applies only to larger screens"
+                }, {
+                    "type": "select",
+                    "id": "media_rounding",
+                    "label": "Media rounding",
+                    "default": "none",
+                    "options": [
+                        {
+                            "value": "none",
+                            "label": "None"
+                        }, {
+                            "value": "soft",
+                            "label": "Soft"
+                        }, {
+                            "value": "full",
+                            "label": "Full"
+                        }
+                    ]
+                }, {
+                    "type": "header",
+                    "content": "Image"
+                }, {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                }, {
+                    "type": "header",
+                    "content": "Video embed"
+                }, {
+                    "type": "header",
+                    "content": "Custom HTML"
+                }, {
+                    "type": "html",
+                    "id": "html",
+                    "label": "HTML",
+                    "info": "Can also be used to paste Vimeo embed"
+                }
+            ]
+        }, {
+            "type": "product",
+            "name": "Product",
+            "settings": [
+                {
+                    "type": "checkbox",
+                    "id": "grow",
+                    "label": "Let block grow and take up any available space",
+                    "info": "NOTE: Block width config is ignored"
+                }, {
+                    "type": "number",
+                    "id": "width",
+                    "label": "Block width",
+                    "default": 50,
+                    "info": "Applies only to larger screens"
+                }, {
+                    "type": "select",
+                    "id": "media_rounding",
+                    "label": "Media rounding",
+                    "default": "soft",
+                    "options": [
+                        {
+                            "value": "none",
+                            "label": "None"
+                        }, {
+                            "value": "soft",
+                            "label": "Soft"
+                        }, {
+                            "value": "full",
+                            "label": "Full"
+                        }
+                    ]
+                }, {
+                    "type": "header",
+                    "content": "Product"
+                }, {
+                    "type": "product",
+                    "id": "product",
+                    "label": "Product"
+                }, {
+                    "type": "header",
+                    "content": "Video embed"
+                }, {
+                    "type": "header",
+                    "content": "Custom HTML"
+                }, {
+                    "type": "html",
+                    "id": "html",
+                    "label": "HTML",
+                    "info": "Can also be used to paste Vimeo embed"
+                }, {
+                    "type": "header",
+                    "content": "Video src"
+                }, {
+                    "type": "url",
+                    "id": "video_src",
+                    "label": "Video src",
+                    "info": "Upload video to files, and paste URL to file here"
+                }
+            ]
+        }
+    ],
+    "presets": [
+        {
+            "name": "Text / Media v2"
+        }
+    ]
+}
+
+{% endschema %}

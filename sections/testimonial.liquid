@@ -1,0 +1,96 @@
+<div>
+  <div class="pw">
+    <div class="container md-up:pt pt md-up:pt:mg pt:xl">
+
+      <div class="tx:center mb:sm">
+        <h2 class="hd hd:hg">Testimonial</h2>
+      </div>
+
+      <div class="testimonial-con fx md-up:fx:wr gp:sm">
+        {% for block in section.blocks %}
+
+          <div class="fi fi:1/1 md-up:fi:1/3">
+
+            <div class="testimonial-single p fx dir:col md-up:mb:sm">
+              <div>
+                {{ block.settings.testimonial }}
+              </div>
+              <span class="pt:xs tx:bold">
+                {{ block.settings.name }}
+              </span>
+              <span class="base:xs">
+                {{ block.settings.from }}
+              </span>
+            </div>
+
+          </div>
+
+        {% endfor %}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+
+.testimonial-con {
+  overflow-x: scroll;
+}
+
+@media (max-width: 880px) {
+  .testimonial-con .fi {
+   min-width: 94vw;
+  }
+}
+
+.testimonial-single {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  
+}
+
+</style>
+
+
+{% schema %}
+
+{
+  "name": "Testimonial section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Testimonial",
+      "type": "text",
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "testimonial",
+          "label": "Testimonial text"
+        }, {
+          "type": "text",
+          "id": "name",
+          "label": "Navn"
+        }, {
+          "type": "text",
+          "id": "from",
+          "label": "From"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonial",
+      "settings": {}
+    }
+  ]
+}
+
+{% endschema %}

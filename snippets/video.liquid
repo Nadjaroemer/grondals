@@ -1,0 +1,31 @@
+{%- comment -%}
+Params:
+@Video - [Required]
+@Modifier - [OPTIONAL]
+
+Rendering example:
+
+{%- assign videos = product.media | where: "media_type", "video" -%}
+{%- for video in videos %}
+{%- render "video", Video: video -%}
+{%- endfor -%}
+
+{%- endcomment -%}
+
+{%- if Video -%}
+{%- assign VideoRatio = 100.0 | divided_by: Video.aspect_ratio -%}
+
+<div class="video-wrapper{% if Modifier %} video-wrapper--{{ Modifier }}{% endif %}">
+    <div class="ratio_container" style="padding-bottom:{{ VideoRatio }}%;">
+        <video controls preload="metadata" muted="muted" alt="{{ Video.alt }}" playsinline="true" class="video lazyload" frameborder="0">
+            {%- for source in Video.sources -%}
+            <source src="{{ source.url }}" type="{{ source.mime_type }}" />
+            {%- endfor -%}
+        </video>
+    </div>
+</div>
+{%- else -%}
+<script>
+    WDN.MissingParams("video");
+</script>
+{%- endif -%}

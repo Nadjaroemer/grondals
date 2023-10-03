@@ -1,0 +1,73 @@
+{%- assign SelectedVariant = product.selected_or_first_available_variant -%}
+{%- assign CurrentPrice = SelectedVariant.price | times: 1.0 -%}
+{%- assign ComparePrice = SelectedVariant.compare_at_price | times: 1.0 -%}
+{%- assign Difference = CurrentPrice | divided_by: ComparePrice | times: 100 -%}
+{%- assign Percentage = 100 | minus: Difference | round -%}
+
+{%- assign SavingsCalc = SelectedVariant.compare_at_price | times: Percentage -%}
+{%- assign SavingsCalc = SavingsCalc | divided_by: 100 -%}
+{%- assign Savings = SelectedVariant.compare_at_price | minus: SavingsCalc -%}
+{%- assign Savings = SelectedVariant.compare_at_price | minus: Savings -%}
+
+{%- assign InventoryQuantity = SelectedVariant.inventory_quantity -%}
+{%- assign StockTrackingAllowed = false -%}
+{%- assign StockLowLimit = 3 -%}
+{%- assign StockStatus = 'high' -%}
+
+{%- unless SelectedVariant.inventory_policy == 'continue' -%}
+  {%- assign StockTrackingAllowed = true -%}
+  {%- if InventoryQuantity <= StockLowLimit -%}
+    {%- assign StockStatus = 'low' -%}
+  {%- endif -%}
+  {%- if InventoryQuantity == 0 -%}
+    {%- assign StockStatus = 'unavailable' -%}
+  {%- endif -%}
+{%- endunless -%}
+
+<wdn-product-form>
+  <form class="pb:tn" method="post" action="{{ routes.cart_add_url }}" data-product-form data-open-drawer>
+    {%- render 'product-variant-select' -%}
+
+    <input name="id" value="{{ SelectedVariant.id }}" data-ghost-select type="hidden">
+
+    <div class="productpage__add pt:xs">
+      <div class="fx ai:stretch gp:sm jc:space-between">
+        <div class="fi" style="flex-basis:8em;">
+          <wdn-quantity class="quantity" id="product__{{ product.id }}">
+            <button class="btn btn:qty" data-quantity-control="decrease" type="button">-</button>
+            <input
+              class="input input:qty px:clear"
+              data-ghost-quantity
+              name="quantity"
+              data-product-quantity
+              type="number"
+              data-quantity-input
+              min="1"
+              value="1"
+            >
+            <button class="btn btn:qty" data-quantity-control="increase" type="button">+</button>
+          </wdn-quantity>
+        </div>
+
+        <div class="fi grow-1">
+          <button class="button button--full" data-product-add name="add" type="submit" {%  unless product.available %}disabled{% endunless %} %}>
+            <span data-label="add">{{ 'product.add_to_cart.label' | t }}</span>
+            <span data-label="loading">{{ 'product.add_to_cart.loading' | t }}</span>
+            <span data-label="soldout">{{ 'product.add_to_cart.sold_out' | t }}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </form>
+</wdn-product-form>
+
+
+<style>
+  [data-product-add][disabled] [data-label] {
+    display:none;
+  }
+
+  [data-product-add][disabled] [data-label="soldout"] {
+    display:inline-block;
+  }
+</style>

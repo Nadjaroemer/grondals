@@ -1,0 +1,20 @@
+{% liquid
+   
+   capture text_props
+
+      echo config.text_color | append: " " 
+
+      echo " md-up:base:"
+
+      unless config.base_pc == "DEFAULT"  
+         echo " md-up:base:" | append: config.base_pc 
+      endunless 
+
+      unless config.base_mobile == "DEFAULT"  
+         echo " base:" | append: config.base_mobile
+      endunless 
+      
+   endcapture
+
+%}
+{{ text_props }}

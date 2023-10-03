@@ -1,0 +1,171 @@
+{%- comment -%}
+{
+			"type": "text",
+			"name": "Text",
+			"settings": [
+              {
+				"type": "checkbox",
+				"id": "grow",
+				"label": "Let block grow and take up any available space",
+				"info": "NOTE: Block width config is ignored"
+			  }, {
+				"type": "number",
+				"id": "width",
+				"label": "Block width",
+				"default": 50,
+				"info": "Applies only to larger screens"
+			  },  {
+				"type": "header",
+				"content": "Content behavior"
+			  }, {
+              "type": "select",
+              "id": "text-align",
+              "label": "Mobile - text alignment",
+              "default": "center",
+              "options": [
+                { "value": "left", "label": "Start" },
+                { "value": "center", "label": "Center" },
+                { "value": "right", "label": "End" }
+               ]
+			  }, {
+              "type": "select",
+              "id": "lg-text-align",
+              "label": "PC - text alignment",
+              "default": "left",
+              "options": [
+                { "value": "left", "label": "Start" },
+                { "value": "center", "label": "Center" },
+                { "value": "right", "label": "End" }
+               ]
+			  }, {
+                "type": "select",
+                "id": "base-size",
+                "label": "Base size",
+				"info": "Applies only to larger screens",
+                "default": "md",
+                "options": [
+                  { "value": "sm", "label": "Small" },
+				  { "value": "sd", "label": "Default" },
+                  { "value": "md", "label": "Medium" },
+                  { "value": "la", "label": "Large" },
+                  { "value": "xl", "label": "Xlarge" },
+				  { "value": "mg", "label": "XXlarge" }
+                ]
+			  }, {
+				"type": "header",
+				"content": "Content"
+			  }, {
+                "type": "richtext",
+                "id": "heading",
+                "label": "Heading"
+              }, {
+                "type": "richtext",
+                "id": "text",
+                "label": "Text"
+              }, {
+				 "type": "header",
+				 "content": "Button"
+			  }, {
+				"type": "select",
+                "id": "button_style",
+                "label": "Button style",
+                "default": "default",
+                "options": [
+                  { "value": "default", "label": "Default" },
+				  { "value": "round", "label": "Round" },
+                  { "value": "round-slim", "label": "Round slim" },
+				  { "value": "outline", "label": "Outline" },
+				  { "value": "tall", "label": "Tall" }
+                ]
+			  }, {
+				"type": "select",
+                "id": "button_sizing",
+                "label": "Sizing",
+                "default": "default",
+                "options": [
+				  { "value": "small", "label": "Smaller" },
+                  { "value": "default", "label": "Default" },
+				  { "value": "larger", "label": "Larger" }
+                ]
+			  }, {
+                "type": "text",
+                "id": "btn_label",
+                "label": "Label"
+              }, {
+                "type": "url",
+                "id": "btn_url",
+                "label": "Url"
+              }
+			]
+		}
+{%- endcomment -%}
+
+
+{%- assign config = block.settings -%}
+
+{% liquid
+    
+    capture text_style
+    
+    echo " text--" | append: config.text-align
+    
+    echo " lg:text--" | append: config.lg-text-align
+    
+    endcapture
+    
+    capture button_style
+ 
+      echo "button"
+
+      echo " button--" | append: config.button_style
+
+      echo " button--" | append: config.button_sizing
+    
+    endcapture
+    
+%}
+
+<div class="base:{{ config.base-size }}{{ text_style }} sm-up:p:lg">
+
+
+   <div class="textmedia__title hd hd:xl">
+      {{ config.heading }}
+   </div>
+
+   <div class="textmedia__text pt:xs rte">
+      {{ config.text }}
+   </div>
+
+   {% if config.dropdown_text.size > 0 %}
+
+      <wdn-dropdown class="base:sm" group="b{{ block.id }}">
+         <div dropdown-container>
+            <div dropdown-content>
+
+               <div class="rte pt:xs">
+                  {{ config.dropdown_text }}
+               </div>
+            </div>
+         </div>
+
+         <div class="pt:xs" dropdown-trigger>
+            <span data-read-more>
+               <strong>{{ 'general.content_expander.expand' | t }}</strong>
+            </span>
+
+            <span data-read-less>
+               <strong>{{ 'general.content_expander.collapse' | t }}</strong>
+            </span>
+         </div>
+      </wdn-dropdown>
+
+   {% endif %}
+
+   {%- if config.btn_label != blank -%}
+      <div class="textmedia__action pt:xs">
+         <a href="{{ config.btn_url }}" class="{{ button_style }}">
+            {{ config.btn_label }}
+         </a>
+      </div>
+   {%- endif -%}
+</div>

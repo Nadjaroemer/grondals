@@ -1,0 +1,14 @@
+<span>
+   {% assign base = '<p class="hd hd:' %}
+
+   {% assign h1 = base | append: 'hg"' %}
+   {% assign h2 = base | append: 'xl"' %}
+   {% assign h3 = base | append: 'lg"' %}
+   {% assign h4 = base | append: 'md"' %}
+   {% assign h5 = base %}
+   {% assign h6 = base | append: 'sm"' %}
+
+
+   {{ text_to_parse | replace: '<h1', h1 | replace: '<h2', h2 | replace: '<h3', h3 | replace: '<h4', h4 | replace: '<h5', h5 | replace: '<h6', h6 | replace: 'h1>', 'p>' | replace: 'h2>', 'p>' | replace: 'h3>', 'p>' | replace: 'h4>', 'p>' | replace: 'h5>', 'p>' | replace: 'h6>', 'p>'}}
+
+</span>

@@ -1,0 +1,43 @@
+{%- unless product.has_only_default_variant -%}
+  {{ 'component-variant-select.css' | asset_url | stylesheet_tag }}
+
+  <div class="variant-select-wrapper">
+    {%- for Option in product.options_with_values -%}
+      <p class="variant-option-name">{{ Option.name }}</p>
+      {%- break -%}
+    {%- endfor -%}
+
+    <variant-select class="variant-options">
+      {%- for variant in product.variants -%}
+        <div class="variant-option-item">
+          <div
+            class="variant-option"
+            data-variant-id="{{ variant.id }}"
+            {% if variant == product.selected_variant %}
+              data-selected
+            {% endif %}
+          >
+            {{ variant.title }}
+          </div>
+        </div>
+      {%- endfor -%}
+    </variant-select>
+  </div>
+
+  <script type="application/json" data-variant-dump>
+    {
+      {%- for variant in product.variants -%}
+
+        "{{ variant.id }}":{
+            "price": {{ variant.price }},
+            "comparePrice": {{ variant.compare_at_price | default: 0 }}
+        }{%- unless forloop.last -%},{%- endunless -%}
+
+
+      {%- endfor -%}
+
+    }
+  </script>
+
+  <script src="{{ 'component-variant-select.js' | asset_url }}" defer></script>
+{%- endunless -%}

@@ -1,0 +1,77 @@
+{% liquid
+
+	assign config = section.settings
+    assign tracking_script_list = section.blocks
+    
+-%}
+
+<!-- Begin dynamic inserted HTML by merchant -->
+{%- liquid
+
+	if tracking_script_list.size > 0
+       for tracking_script in tracking_script_list
+          if tracking_script.settings.embed_code.size > 0
+            echo tracking_script.settings.embed_code
+          endif 
+       endfor
+	endif 
+
+-%}
+<!-- End dynamic inserted HTML by merchant -->
+
+{% schema %}
+  {
+    "name": "HTML / scripts",
+    "settings": [
+		{
+			"type": "header",
+			"content": "Advanced tracking code"
+		}, {
+			"type": "paragraph",
+			"content": "Only use this one, if you need to use Liquid objects. If you do not know what this means, do NOT use this block type."
+		}
+	],
+	"blocks": [
+		{
+			"name": "Standard tracking code",
+			"type": "html_embed",
+			"settings": [
+				{
+					"type": "html",
+					"id": "embed_code",
+					"label": "Your embed code"
+				}, {
+					"type": "text",
+					"id": "title",
+					"label": "Label/name",
+					"info": "Used in sidebar, for better overview"
+				}
+			]
+		},  {
+			"name": "Advanced tracking code",
+			"type": "liquid_embed",
+			"settings": [
+                {
+                  "type": "paragraph",
+                  "content": "Only use this one, if you need to use Liquid objects. If you do not know what this means, do NOT use this block type."
+                }, {
+					"type": "liquid",
+					"id": "embed_code",
+					"label": "Your embed code",
+					"info": "Has access to Liquid objects"
+				}, {
+					"type": "text",
+					"id": "title",
+					"label": "Label/name",
+					"info": "Used in sidebar, for better overview"
+				}
+			]
+		}
+	],
+	"presets": [
+		{
+			"name": "Custom HTML/Scripts"
+		}
+	]
+  }
+{% endschema %}

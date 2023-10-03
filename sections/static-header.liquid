@@ -1,0 +1,133 @@
+{%- liquid
+
+	assign main_menu = linklists[section.settings.main_menu].links
+
+%}
+
+<header>
+   <div class="pw container">
+      <div class="header-inner py:tn sm-up:py:sm fx jc:between ai:center gp:md">
+
+         <div class="fi fi:1/2">
+            <div class=" show md-up:hide">
+               <div class="fx ai:center gp:xs md-up:gp:lg">
+                  <div class="fi nav-trigger">
+                     <wdn-drawer-open data-id="nav_drawer">
+                        <svg class="icon icon:lg icon--burger" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                           <path d="M4 6h16M4 12h8m-8 6h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25"></path>
+                        </svg>
+                     </wdn-drawer-open>
+                  </div>
+
+                  <div class="fi">
+                     <wdn-drawer-open data-id="search">
+                        <svg class="icon icon:md icon-search" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                           <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25"></path>
+                        </svg>
+                     </wdn-drawer-open>
+                  </div>
+               </div>
+            </div>
+
+            <div class="main-nav hide md-up:show">
+
+               <ul class="main-nav-inner base:md fx gp:sm">
+                  {%- for link in main_menu -%}
+                     <span class="nav-link fi">
+                        {%- if forloop.first -%}
+                       <wdn-drawer-open data-id="nav_drawer" class="header__drawer-open">
+                         <div class="fx ai:center">
+                           <span class="fi fx ai:center gp:tn">
+                             <div class="fi">
+                               <svg class="icon icon:sm icon--burger header__drawer-open-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                 <path d="M4 6h16M4 12h8m-8 6h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25"></path>
+                               </svg>
+                             </div>
+                             <div class="fi">
+                               <span>{{ link.title }}</span>
+                             </div>
+                           </span>
+                           {%- comment -%}
+                                 <span class="fi">
+                                    <svg class="icon icon:xs display:block icon--chevron-down" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                       <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                                    </svg>
+                                 </span>
+                           {%- endcomment -%}
+                              </div>
+                           </wdn-drawer-open>
+                        {%- else -%}
+                           <a href="{{ link.url }}">
+                              {{ link.title }}
+                           </a>
+                        {%- endif -%}
+                     </span>
+                  {%- endfor -%}
+               </ul>
+
+            </div>
+         </div>
+
+         <div class="fi fi:1/1 md-up:fi:1/5 jc:center">
+            <a href="{{ routes.root_url }}">
+               <img src="https://cdn.shopify.com/s/files/1/1583/3197/files/Grondals-logo-blue_RGB_2021_410x.png?v=1618000560">
+            </a>
+         </div>
+
+         <div class="fi fi:1/2">
+            <div class="fx ai:center jc:end gp:md md-up:gp:sm">
+
+               <div class="fi hide md-up:show">
+                  <a href="{{ settings.page_dealer }}">
+                     <svg class="icon icon:md icon--page_dealer" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25"></path>
+                        <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25"></path>
+                     </svg>
+                  </a>
+               </div>
+
+
+               <div class="fi hide md-up:show">
+                  <a href="{{ settings.page_contact }}">
+                     <svg class="icon icon:md" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.25"></path>
+                     </svg>
+                  </a>
+               </div>
+
+               <div class="fi hide md-up:show">
+                  <wdn-drawer-open data-id="search">
+                     <svg class="icon icon:md icon-search" fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.35"></path>
+                     </svg>
+                  </wdn-drawer-open>
+               </div>
+
+               <div class="fi">
+                  <wdn-drawer-open class=" pos:re" data-id="cart_drawer">
+                     <img class="icon icon:lg md-up:icon:md icon--cart" src="https://cdn.shopify.com/s/files/1/1583/3197/t/17/assets/grondals-ikon.svg?v=1446137659055417429">
+                     <wdn-cart-count {% if cart.item_count == 0 %} data-hide {% endif %} class="cart-count fx ai:center jc:center">
+                        <span data-value="{{ cart.item_count }}" class="base:xs">{{ cart.item_count }}</span>
+                     </wdn-cart-count>
+                  </wdn-drawer-open>
+               </div>
+            </div>
+         </div>
+
+      </div>
+   </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "class": "overflow--hide",
+  "settings": [
+      {
+		"type": "link_list",
+		"id": "main_menu",
+		"label": "Main menu"
+      }
+	]
+}
+{% endschema %}

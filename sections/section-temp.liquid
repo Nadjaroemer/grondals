@@ -1,0 +1,455 @@
+{% liquid
+
+   assign config = section.settings
+   
+   assign padding_top = 'pt-' | append: config.pt
+
+   assign bg_color = config.bg_color
+
+   
+    capture text_size 
+   
+      echo " text--" | append: config.text_alignment
+      echo " lg:text--" | append: config.text_alignment_pc
+
+   endcapture
+
+
+   capture text_props
+
+      echo config.text_color | append: " " 
+
+      unless config.base_pc == "DEFAULT"  
+         echo " md-up:base:" | append: config.base_pc 
+      endunless 
+
+      unless config.base_mobile == "DEFAULT"  
+         echo " base:" | append: config.base_mobile
+      endunless 
+
+   endcapture
+
+
+   capture pc_width
+   
+      echo " pw"
+
+      if config.full_w_mobile 
+         echo " container-no-pad"
+      endif 
+   
+      echo " md-up:pw:" | append: config.width_pc
+      
+   endcapture
+
+
+   capture outer
+
+      echo "section"
+   
+      unless config.sec_pad_pc == "DEFAULT"  
+         echo " md-up:pt:" | append: config.sec_pad_pc
+      endunless 
+
+      unless config.sec_pad_mobile == "DEFAULT"  
+         echo " pt:" | append: config.sec_pad_mobile
+      endunless 
+      
+   endcapture
+
+
+   capture inner
+         
+      unless config.c_pad_pc == "DEFAULT"    
+         unless config.bg_inner
+            echo " md-up:py:" | append: config.c_pad_pc 
+         endunless 
+      endunless 
+
+      unless config.c_pad_mobile == "DEFAULT"  
+         unless config.bg_inner
+            echo " py:" | append: config.c_pad_mobile
+         endunless 
+      endunless 
+
+      if config.bg_inner
+         echo " p:" | append: config.c_pad_pc 
+       endif 
+      
+   endcapture
+
+%}
+
+<div class="{{ outer }}" data-name="temp">
+
+   <div class="section-bg {% unless section.settings.bg_inner %} {{ bg_color }} {% endunless %} ">
+
+      <div class="container {{ pc_width }}">
+
+         <div class="section-inner {{ inner }} {{ text_props }} {% if section.settings.bg_inner %} {{ bg_color }} {% endif %} ">
+
+            <div class="section-header">
+
+               {% if config.heading.size > 0 %}
+
+                  <div class="{{ text_size }} pb:lg">
+                     <h2 class="hd hd:xl">
+                        {{ config.heading }}
+                     </h2>
+                     <p class="">
+                        {{ config.paragraph }}
+                     </p>
+                  </div>
+               {% endif %}
+
+            </div>
+
+            <div class="section-content"></div>
+
+         </div>
+
+      </div>
+
+   </div>
+
+</div>
+
+{% schema %}
+
+{
+   "name": "temp",
+   "settings": [
+      {
+         "type": "header",
+         "content": "Section styling"
+      }, {
+         "type": "text",
+         "id": "heading",
+         "label": "Heading"
+      }, {
+         "type": "select",
+         "id": "text_alignment_pc",
+         "label": "Text alignment Pc",
+         "options": [
+            {
+               "value": "center",
+               "label": "Center"
+            }, {
+               "value": "left",
+               "label": "Left"
+            }, {
+               "value": "right",
+               "label": "Right"
+            }
+         ]
+      }, {
+         "type": "select",
+         "id": "text_alignment",
+         "label": "Text alignment Mobile",
+         "options": [
+            {
+               "value": "center",
+               "label": "Center"
+            }, {
+               "value": "left",
+               "label": "Left"
+            }, {
+               "value": "right",
+               "label": "Right"
+            }
+         ]
+      }, {
+         "type": "header",
+         "content": "Colors"
+      }, {
+         "type": "select",
+         "id": "bg_color",
+         "label": "Background color",
+         "default": "bg-none",
+         "options": [
+            {
+               "value": "bg-none",
+               "label": "None"
+            }, {
+               "value": "bg-blue",
+               "label": "Blue"
+            }, {
+               "value": "bg-light-blue",
+               "label": "Light blue"
+            }, {
+               "value": "bg-gray",
+               "label": "Gray"
+            }
+         ]
+      }, {
+         "type": "select",
+         "id": "text_color",
+         "label": "Text color",
+         "options": [
+            {
+               "value": "text-dark",
+               "label": "Dark"
+            }, {
+               "value": "text-dark--lighter",
+               "label": "Dark light"
+            }, {
+               "value": "text-light",
+               "label": "Light"
+            }, {
+               "value": "text--very-light",
+               "label": "Very light"
+            }
+         ]
+      }, {
+         "type": "checkbox",
+         "id": "bg_inner",
+         "label": "Apply background to inner"
+      }, {
+         "type": "header",
+         "content": "Base size",
+         "info": "Text size for pc & mobile"
+      }, {
+         "type": "select",
+         "id": "base_pc",
+         "label": "Pc",
+         "default": "DEFAULT",
+         "options": [
+            {
+               "value": "tn",
+               "label": "Tiny"
+            }, {
+               "value": "xs",
+               "label": "Extra small"
+            }, {
+               "value": "sm",
+               "label": "Small"
+            }, {
+               "value": "DEFAULT",
+               "label": "Normal"
+            }, {
+               "value": "lg",
+               "label": "Large"
+            }, {
+               "value": "xl",
+               "label": "Extra large"
+            }, {
+               "value": "hg",
+               "label": "Huge"
+            }, {
+               "value": "mg",
+               "label": "Mega"
+            }
+         ]
+      }, {
+         "type": "select",
+         "id": "base_mobile",
+         "label": "Mobile",
+         "default": "DEFAULT",
+         "options": [
+            {
+               "value": "tn",
+               "label": "Tiny"
+            }, {
+               "value": "xs",
+               "label": "Extra small"
+            }, {
+               "value": "sm",
+               "label": "Small"
+            }, {
+               "value": "DEFAULT",
+               "label": "Normal"
+            }, {
+               "value": "lg",
+               "label": "Large"
+            }, {
+               "value": "xl",
+               "label": "Extra large"
+            }, {
+               "value": "hg",
+               "label": "Huge"
+            }, {
+               "value": "mg",
+               "label": "Mega"
+            }
+         ]
+      }, {
+         "type": "header",
+         "content": "Content width",
+         "info": "Content width for pc & mobile"
+      }, {
+         "type": "select",
+         "id": "width_pc",
+         "label": "Pc",
+         "default": "DEFAULT",
+         "options": [
+            {
+               "value": "tn",
+               "label": "Tiny"
+            }, {
+               "value": "xs",
+               "label": "Extra small"
+            }, {
+               "value": "sm",
+               "label": "Small"
+            }, {
+               "value": "DEFAULT",
+               "label": "Normal"
+            }, {
+               "value": "lg",
+               "label": "Large"
+            }, {
+               "value": "xl",
+               "label": "Extra large"
+            }, {
+               "value": "hg",
+               "label": "Huge"
+            }, {
+               "value": "mg",
+               "label": "Mega"
+            }
+         ]
+      }, {
+         "type": "checkbox",
+         "id": "full_w_mobile",
+         "label": "Full width Mobile"
+      }, {
+         "type": "header",
+         "content": "Content padding",
+         "info": "Content padding for pc & mobile"
+      }, {
+         "type": "select",
+         "id": "c_pad_pc",
+         "label": "Pc",
+         "default": "DEFAULT",
+         "options": [
+            {
+               "value": "tn",
+               "label": "Tiny"
+            }, {
+               "value": "xs",
+               "label": "Extra small"
+            }, {
+               "value": "sm",
+               "label": "Small"
+            }, {
+               "value": "DEFAULT",
+               "label": "Normal"
+            }, {
+               "value": "lg",
+               "label": "Large"
+            }, {
+               "value": "xl",
+               "label": "Extra large"
+            }, {
+               "value": "hg",
+               "label": "Huge"
+            }, {
+               "value": "mg",
+               "label": "Mega"
+            }
+         ]
+      }, {
+         "type": "select",
+         "id": "c_pad_mobile",
+         "label": "Mobile",
+         "default": "DEFAULT",
+         "options": [
+            {
+               "value": "tn",
+               "label": "Tiny"
+            }, {
+               "value": "xs",
+               "label": "Extra small"
+            }, {
+               "value": "sm",
+               "label": "Small"
+            }, {
+               "value": "DEFAULT",
+               "label": "Normal"
+            }, {
+               "value": "lg",
+               "label": "Large"
+            }, {
+               "value": "xl",
+               "label": "Extra large"
+            }, {
+               "value": "hg",
+               "label": "Huge"
+            }, {
+               "value": "mg",
+               "label": "Mega"
+            }
+         ]
+      }, {
+         "type": "header",
+         "content": "Section padding",
+         "info": "Content padding for pc & mobile"
+      }, {
+         "type": "select",
+         "id": "sec_pad_pc",
+         "label": "Pc",
+         "default": "DEFAULT",
+         "options": [
+            {
+               "value": "tn",
+               "label": "Tiny"
+            }, {
+               "value": "xs",
+               "label": "Extra small"
+            }, {
+               "value": "sm",
+               "label": "Small"
+            }, {
+               "value": "DEFAULT",
+               "label": "Normal"
+            }, {
+               "value": "lg",
+               "label": "Large"
+            }, {
+               "value": "xl",
+               "label": "Extra large"
+            }, {
+               "value": "hg",
+               "label": "Huge"
+            }, {
+               "value": "mg",
+               "label": "Mega"
+            }
+         ]
+      }, {
+         "type": "select",
+         "id": "sec_pad_mobile",
+         "label": "Mobile",
+         "default": "DEFAULT",
+         "options": [
+            {
+               "value": "tn",
+               "label": "Tiny"
+            }, {
+               "value": "xs",
+               "label": "Extra small"
+            }, {
+               "value": "sm",
+               "label": "Small"
+            }, {
+               "value": "DEFAULT",
+               "label": "Normal"
+            }, {
+               "value": "lg",
+               "label": "Large"
+            }, {
+               "value": "xl",
+               "label": "Extra large"
+            }, {
+               "value": "hg",
+               "label": "Huge"
+            }, {
+               "value": "mg",
+               "label": "Mega"
+            }
+         ]
+      }
+   ]
+}
+
+{% endschema %}

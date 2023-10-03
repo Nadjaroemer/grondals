@@ -1,0 +1,9 @@
+<link rel="stylesheet" href="{{ 'swiper.min.css' | asset_url }}">
+<link rel="stylesheet" href="{{ 'base.css' | asset_url }}">
+<link rel="stylesheet" href="{{ 'main.css' | asset_url }}">
+
+{%- assign CSSTypes = "article,cart,collection,error,index,page,password,product,search" | split: ',' -%}
+{%- if CSSTypes contains request.page_type -%}
+{%- assign CSSFile = "template-" | append: request.page_type | append: '.css' -%}
+<link rel="stylesheet" href="{{ CSSFile | asset_url }}">
+{%- endif -%}

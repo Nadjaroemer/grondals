@@ -1,0 +1,166 @@
+{%- assign Shipping_price = settings.shipping_price | times: 100.0 -%}
+{%- assign Shipping_value = Shipping_price | money_without_trailing_zeros -%}
+{%- assign Shipping_limit = settings.shipping_limit | times: 100.0 -%}
+{%- assign ProgressCalc = cart.total_price | divided_by: Shipping_limit | times: 100.0 -%}
+
+{%- assign UntillFreeShipping = Shipping_limit | minus: cart.total_price | money_without_trailing_zeros -%}
+
+{%- assign ProgressLabel = 'cart.shipping_progress.counting_html' | t: amount: UntillFreeShipping -%}
+
+{%- if cart.total_price > Shipping_limit -%}
+  {%- assign Shipping_price = 0 -%}
+  {%- assign Shipping_value = 'cart.free_delivery' | t -%}
+  {%- assign ProgressCalc = 100 -%}
+  {%- assign ProgressLabel = 'cart.shipping_progress.free' | t -%}
+{%- endif -%}
+
+{{ 'template-cart.css' | asset_url | stylesheet_tag }}
+
+{%- capture ProgressIcon -%}
+<div class="icon-wrapper">
+  <img loading="lazy" src="{{ settings.cart_progress_icon | image_url: width: 100 }}">
+  
+</div>
+{%- endcapture -%}
+
+<style>
+  .progress--cart .progress-icon .icon-wrapper{
+    width: {{ settings.cart_progress_icon_size }}px;
+    height: {{ settings.cart_progress_icon_size }}px;
+  }
+
+  .progress--cart .progress-bar {
+    background-image: url('{{ settings.cart_progress_background | img_url: "500x" }}');
+    background-repeat: no-repeat;
+    background-repeat: repeat-x;
+  }
+</style>
+
+<div class="cart">
+  <div class="cart-inner base:sm">
+    <wdn-cart-form>
+      <form action="{{ routes.cart_url }}" method="post">
+        {%- if cart.item_count > 0 -%}
+          <div class="cart-grid">
+            {%- unless hide_header -%}
+              <div class="cart-header fx ai:center jc:between">
+                <p class="hd hd:lg lh:none">{{ 'cart.title' | t: count: cart.item_count }}</p>
+
+                <wdn-drawer-close class="overlay__close" data-id="cart_drawer">
+                  <svg
+                    class="icon icon:lg icon--close"
+                    fill="none"
+                    stroke="currentColor"
+                    viewbox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                  </svg>
+                </wdn-drawer-close>
+              </div>
+            {%- endunless -%}
+
+            <div class="cart-section sb:hide">
+              <div class="cart-items">
+                {%- for item in cart.items -%}
+                  {%- render 'cart-item', Item: item -%}
+                  {%- unless forloop.last -%}
+                    <div class="border my"></div>
+                  {%- endunless -%}
+                {%- endfor -%}
+              </div>
+            </div>
+
+            <div class="fx">
+              <wdn-progress class="progress progress--cart tx:center" data-blur-when-loading data-id="cart">
+                <span class="progress-label base:xs mb:sm">{{ ProgressLabel }}</span>
+                <div class="progress-bar fx jc:end ai:end" data-bar style="width: {{ ProgressCalc }}%;">
+                  <span class="progress-icon fx jc:end">
+                    {{ ProgressIcon }}
+                  </span>
+                </div>
+              </wdn-progress>
+            </div>
+
+            <div class="cart-footer">
+              <div class="fx jc:between">
+                <p class="hd">{{ 'cart.total' | t }}</p>
+                <p class="hd" data-blur-when-loading>
+                  {{ cart.total_price | plus: Shipping_price | money_without_trailing_zeros }}
+                </p>
+              </div>
+
+              <div class="fx jc:between mt:tn">
+                <span class="base:sm">{{ 'cart.shipping_label' | t }}</span>
+                <span class="base:sm" data-blur-when-loading>{{ Shipping_value }}</span>
+              </div>
+
+              <div class="terms__accept pt:sm base:tn" data-checkbox-accepted="false" data-checkbox="cart-summary">
+                <div class="terms__accept-inner jc:center tx:center p:tn">
+                  <span class="terms__accept-check fx jc:center">
+                    <span class="terms__accept-checkbox">
+                      <span class="terms__accept-iconbox" data-checkbox-handler>
+                        <span class="terms__accept-icon" data-if-checkbox-accepted>
+                          <span class="terms__accept-icon__line terms__accept-icon__line--left"></span>
+                          <span class="terms__accept-icon__line terms__accept-icon__line--right"></span>
+                        </span>
+                      </span>
+                    </span>
+
+                    {%- assign acceptLabel = 'general.terms.acceptance_html' | t: link: '' -%}
+                    {%- capture termsDrawerTrigger -%}
+                  <a class="terms__accept-link" data-drawer-open="terms">
+                    {{ 'general.terms.conditions_name' | t }}
+                  </a>
+                  {%- endcapture -%}
+
+                    {%- assign acceptTrigger = 'general.terms.acceptance_html' | t: link: termsDrawerTrigger -%}
+
+                    <span class="terms__accept-label">
+                      <span data-checkbox-handler>{{ acceptLabel }}</span>
+                      {{ acceptTrigger | remove: acceptLabel }}
+                    </span>
+                  </span>
+                </div>
+
+                <div class="mt:tn">
+                  <wdn-drawer-close class="overlay__close" data-id="cart_drawer">
+                    <button type="button" class="button button--full button--tall button--large button--invert">
+                      <span class="base:lg">{{ 'cart.empty.button' | t }}</span>
+                    </button>
+                  </wdn-drawer-close>
+                </div>
+
+                <div class="mt:tn">
+                  <button
+                    class="button button--full button--tall button--large button:checkout"
+                    data-checkout
+                    name="checkout"
+                    type="submit"
+                  >
+                    <span class="base:xl">{{ 'cart.form.submit' | t }}</span>
+                  </button>
+                </div>
+
+                <span class="terms__accept-message pt:tn ds:block tx:center base:sm">
+                  {{ 'general.terms.error_message' | t }}
+                </span>
+              </div>
+            </div>
+          </div>
+        {%- else -%}
+          <div class="cart__layout-empty fx ai:center jc:center">
+            <div class="py:xl tx:center">
+              <p class="hd hd:lg">{{ 'cart.empty.title' | t }}</p>
+              <div class="py:xl">
+                <wdn-drawer-close class="button button--round " data-id="cart_drawer">
+                  {{ 'cart.empty.button' | t }}
+                </wdn-drawer-close>
+              </div>
+            </div>
+          </div>
+        {%- endif -%}
+      </form>
+    </wdn-cart-form>
+  </div>
+</div>

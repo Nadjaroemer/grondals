@@ -1,0 +1,461 @@
+{% liquid
+  
+     assign config = section.settings
+     
+     assign padding_top = 'pt-' | append: config.pt
+  
+     assign bg_color = " bg:" | append: config.bg_color
+  
+     capture text_props
+       render 'general_settings_text_props', config: section.settings
+     endcapture
+  
+     capture pc_width
+        render 'general_settings_pc_width', config: section.settings  
+     endcapture
+  
+     capture outer
+        render 'general_settings_outer', config: section.settings 
+     endcapture
+  
+     capture inner
+        render 'general_settings_inner', config: section.settings 
+     endcapture
+  
+  %}
+
+{% liquid 
+  
+      capture text_size 
+     
+        echo " tx:" | append: config.text_alignment
+        echo " md-up:tx:" | append: config.text_alignment_pc
+  
+     endcapture
+  
+  %}
+
+{%- assign rp = recommendations.products | append: '' | handle -%}
+
+<div class="{{ outer }}" data-name="product-recommendations" data-product-id="{{ product.id }}">
+  <div class="section-bg {% unless config.bg_inner %} {{ bg_color }} {% endunless %} ">
+    <div class="container {{ pc_width }}">
+      <div class="section-inner {{ inner }} {{ text_props }} {% if config.bg_inner %} {{ bg_color }} {% endif %} ">
+
+        <div class="section__header tx:center">
+          <p class="hd hd:hg">
+            {{ 'product.recommendations.title' | t }}
+          </p>
+          <div class="tx:center pt:xs overflow--hidden">
+            {%- render 'svg-wave' -%}
+          </div>
+        </div>
+
+        <div class="section-content pt:lg">
+          <div class="fx fx:wr gp:md" data-recommendations-products>
+            {% for recommendation in recommendations.products %}
+              <div class="fi fi:1/2 md-up:fi:1/4">
+                {%- render 'product-card', Product: recommendation, prefix_id: section.id -%}
+              </div>
+            {%- endfor -%}
+
+            {% if rp == 'emptydrop' -%}
+              {%- for i in (1..4) -%}
+                <div class="fi fi:2/1 md-up:fi:1/4 blur:full">
+                  {%- render 'product-card', Product: product -%}
+                </div>
+              {%- endfor -%}
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{ 'section-recommendations.js' | asset_url | script_tag }}
+
+{% javascript %}
+  window.addEventListener('load', function() {
+    var ProductRecommendations = new WDN.ProductRecommendations({amount: 4, section_name: 'product-recommendations', section_id: 'product-recommendations', target: '[data-recommendations-products]'});
+
+    var product_id = document.querySelector('[data-product-id]').getAttribute('data-product-id');
+    ProductRecommendations.load(product_id);
+  });
+{% endjavascript %}
+
+<style>
+  .blur\:full {
+    filter:blur(12px) grayscale(100%);
+  }
+</style>
+
+{% schema %}
+
+  {
+    "name": "Product recommendations",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Content"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Section title"
+      },
+      {
+        "type": "header",
+        "content": "------- General setting -------"
+      },
+      {
+        "type": "header",
+        "content": "🔴🟠🔵 Colors"
+      }, {
+        "type": "checkbox",
+        "id": "bg_inner",
+        "label": "Apply background to inner"
+      }, {
+        "type": "select",
+        "id": "bg_color",
+        "label": "Background color",
+        "default": "bg-none",
+        "options": [
+          {
+            "value": "bg-none",
+            "label": "None"
+          },
+          {
+            "value": "blue",
+            "label": "Blue"
+          },
+          {
+            "value": "lightblue",
+            "label": "Light blue"
+          },
+          {
+            "value": "softblue",
+            "label": "Soft blue"
+          }, {
+            "value": "lightgrey",
+            "label": "Light grey"
+          }, {
+            "value": "softgreen",
+            "label": "Soft green"
+          }, {
+            "value": "lightgreen",
+            "label": "Light green"
+          }, {
+            "value": "flashy",
+            "label": "Flashy"
+          }
+        ]
+      }, {
+        "type": "select",
+        "id": "text_color",
+        "label": "Text color",
+        "options": [
+          {
+            "value": "text-dark",
+            "label": "Dark"
+          }, {
+            "value": "text-dark--lighter",
+            "label": "Dark light"
+          }, {
+            "value": "text-light",
+            "label": "Light"
+          }, {
+            "value": "text--very-light",
+            "label": "Very light"
+          }
+        ]
+      }, {
+        "type": "header",
+        "content": "🔤 🔠 Base size",
+        "info": "Text size for pc & mobile"
+      }, {
+        "type": "select",
+        "id": "base_pc",
+        "label": "Pc",
+        "default": "DEFAULT",
+        "options": [
+          {
+            "value": "tn",
+            "label": "Tiny"
+          },
+          {
+            "value": "xs",
+            "label": "Extra small"
+          },
+          {
+            "value": "sm",
+            "label": "Small"
+          },
+          {
+            "value": "DEFAULT",
+            "label": "Normal"
+          }, {
+            "value": "lg",
+            "label": "Large"
+          }, {
+            "value": "xl",
+            "label": "Extra large"
+          }, {
+            "value": "hg",
+            "label": "Huge"
+          }, {
+            "value": "mg",
+            "label": "Mega"
+          }
+        ]
+      }, {
+        "type": "select",
+        "id": "base_mobile",
+        "label": "Mobile",
+        "default": "DEFAULT",
+        "options": [
+          {
+            "value": "tn",
+            "label": "Tiny"
+          },
+          {
+            "value": "xs",
+            "label": "Extra small"
+          },
+          {
+            "value": "sm",
+            "label": "Small"
+          },
+          {
+            "value": "DEFAULT",
+            "label": "Normal"
+          }, {
+            "value": "lg",
+            "label": "Large"
+          }, {
+            "value": "xl",
+            "label": "Extra large"
+          }, {
+            "value": "hg",
+            "label": "Huge"
+          }, {
+            "value": "mg",
+            "label": "Mega"
+          }
+        ]
+      }, {
+        "type": "header",
+        "content": "📱💻 Content width",
+        "info": "Content width for pc & mobile"
+      }, {
+        "type": "checkbox",
+        "id": "full_w_mobile",
+        "label": "Full width Mobile"
+      }, {
+        "type": "select",
+        "id": "width_pc",
+        "label": "Pc",
+        "default": "DEFAULT",
+        "options": [
+          {
+            "value": "tn",
+            "label": "Tiny"
+          },
+          {
+            "value": "xs",
+            "label": "Extra small"
+          },
+          {
+            "value": "sm",
+            "label": "Small"
+          },
+          {
+            "value": "DEFAULT",
+            "label": "Normal"
+          }, {
+            "value": "lg",
+            "label": "Large"
+          }, {
+            "value": "xl",
+            "label": "Extra large"
+          }, {
+            "value": "hg",
+            "label": "Huge"
+          }, {
+            "value": "mg",
+            "label": "Mega"
+          }, {
+            "value": "fl",
+            "label": "Full"
+          }
+        ]
+      }, {
+        "type": "header",
+        "content": "⬆️ ⬇️ Content padding",
+        "info": "Content padding for pc & mobile"
+      }, {
+        "type": "select",
+        "id": "c_pad_pc",
+        "label": "Pc",
+        "default": "DEFAULT",
+        "options": [
+          {
+            "value": "cl",
+            "label": "None"
+          },
+          {
+            "value": "tn",
+            "label": "Tiny"
+          },
+          {
+            "value": "xs",
+            "label": "Extra small"
+          },
+          {
+            "value": "sm",
+            "label": "Small"
+          }, {
+            "value": "DEFAULT",
+            "label": "Normal"
+          }, {
+            "value": "lg",
+            "label": "Large"
+          }, {
+            "value": "xl",
+            "label": "Extra large"
+          }, {
+            "value": "hg",
+            "label": "Huge"
+          }, {
+            "value": "mg",
+            "label": "Mega"
+          }
+        ]
+      }, {
+        "type": "select",
+        "id": "c_pad_mobile",
+        "label": "Mobile",
+        "default": "DEFAULT",
+        "options": [
+          {
+            "value": "cl",
+            "label": "None"
+          },
+          {
+            "value": "tn",
+            "label": "Tiny"
+          },
+          {
+            "value": "xs",
+            "label": "Extra small"
+          },
+          {
+            "value": "sm",
+            "label": "Small"
+          }, {
+            "value": "DEFAULT",
+            "label": "Normal"
+          }, {
+            "value": "lg",
+            "label": "Large"
+          }, {
+            "value": "xl",
+            "label": "Extra large"
+          }, {
+            "value": "hg",
+            "label": "Huge"
+          }, {
+            "value": "mg",
+            "label": "Mega"
+          }
+        ]
+      }, {
+        "type": "header",
+        "content": "⏫ Section padding",
+        "info": "Content padding for pc & mobile"
+      }, {
+        "type": "select",
+        "id": "sec_pad_pc",
+        "label": "Pc",
+        "default": "DEFAULT",
+        "options": [
+          {
+            "value": "cl",
+            "label": "None"
+          },
+          {
+            "value": "tn",
+            "label": "Tiny"
+          },
+          {
+            "value": "xs",
+            "label": "Extra small"
+          },
+          {
+            "value": "sm",
+            "label": "Small"
+          }, {
+            "value": "DEFAULT",
+            "label": "Normal"
+          }, {
+            "value": "lg",
+            "label": "Large"
+          }, {
+            "value": "xl",
+            "label": "Extra large"
+          }, {
+            "value": "hg",
+            "label": "Huge"
+          }, {
+            "value": "mg",
+            "label": "Mega"
+          }
+        ]
+      }, {
+        "type": "select",
+        "id": "sec_pad_mobile",
+        "label": "Mobile",
+        "default": "DEFAULT",
+        "options": [
+          {
+            "value": "cl",
+            "label": "None"
+          },
+          {
+            "value": "tn",
+            "label": "Tiny"
+          },
+          {
+            "value": "xs",
+            "label": "Extra small"
+          },
+          {
+            "value": "sm",
+            "label": "Small"
+          }, {
+            "value": "DEFAULT",
+            "label": "Normal"
+          }, {
+            "value": "lg",
+            "label": "Large"
+          }, {
+            "value": "xl",
+            "label": "Extra large"
+          }, {
+            "value": "hg",
+            "label": "Huge"
+          }, {
+            "value": "mg",
+            "label": "Mega"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Product recommendations"
+      }
+    ],
+    "templates": ["product"]
+  }
+{% endschema %}

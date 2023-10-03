@@ -1,0 +1,84 @@
+
+{%- capture Content -%}
+
+  <div class="product__related-variants base:sm lh:lg fx dir:col height-full pb:md">
+  <div class="product__related-variants-inner px py:sm">
+    <div class="fx ai:center jc:space-between">
+      <div class="fi grow-1">
+        <h6 class="hd hd:lg">{{ 'quickshop.mobile.title' | t }}</h6>
+      </div>
+
+      <div class="fi">
+        [Close]
+      </div>
+    </div>
+  </div>
+
+
+  <div class="product__related-variants-products  grow-1 of:scroll base:md">
+    <div class="p">
+    <div class="fx gp:sm">
+
+      <div class="fi fi:1/5">
+        {%- if product.featured_image -%}
+        {%- render "image", image: product.featured_image -%}
+        {%- endif -%}
+      </div>
+
+      <div class="fi">
+        <p class="hd">{{ product.title }}</p>
+        <div class="pricing">
+
+          <span class="price tx:bold tx:color-blue">
+            {{ product.price | money_without_trailing_zeros }}
+          </span>
+          {%- if product.compare_at_price > product.price -%}
+          <span class="price price:compare base:sm">
+            {{ product.compare_at_price | money_without_trailing_zeros }}
+          </span>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+
+    <div class="mt:sm">
+      <div class="border"></div>
+      <p class="tx:bold my:sm">{{ 'product.quantity.label' | t  }}</p>
+
+      <wdn-product-form data-form-callback="quickshop__mobile">
+        <form method="post" action="{{ routes.cart_add_url }}" data-product-form>
+          <input name="id" value="{{ product.variants.first.id }}" data-ghost-select type="hidden">
+          <div class="fx gp:md  ai:stretch jc:between md-up:gp  md-up:fx:no-wr">
+            <div class="fi quantity-wrapper fx  mb:sm md-up:mb:cl">
+              <wdn-quantity class="quantity" id="quickadd-{{ product.id }}">
+                <button class="btn btn:qty" data-quantity-control="decrease" type="button">-</button>
+                <input class="input input:qty px:clear" data-ghost-quantity="" name="quantity" data-product-quantity="" type="number" data-quantity-input="" min="1" value="1">
+                <button class="btn btn:qty" data-quantity-control="increase" type="button">+</button>
+              </wdn-quantity>
+            </div>
+            <div class="fi fi:1/1 base:xs">
+              <button class="button button--full py:xs md-up:py:cl base:md" data-label-show="default" name="add" type="submit" data-product-add>
+                <span data-show-on="default">{{ 'product.add_to_cart.label' | t }}</span>
+                <span data-show-on="success">{{ 'product.add_to_cart.success' | t }}</span>
+                <span data-show-on="loading">{{ 'product.add_to_cart.loading' | t }}</span>
+                <span data-show-on="error">{{ 'product.add_to_cart.error' | t }}</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </wdn-product-form>
+  
+    </div>
+    </div>
+  </div>
+</div>
+{%- endcapture -%}
+
+{% liquid
+
+	assign prefix_id = prefix_id | default: ''
+	assign drawer_id = prefix_id | append: "drawer_" | append: product.id
+    
+%}
+
+{%- render "drawer", Id: drawer_id, Content: Content, controls_no_abs: true, Animation: 'bottom', Class: 'quickshop__modal drawer-fix-scroll' -%}

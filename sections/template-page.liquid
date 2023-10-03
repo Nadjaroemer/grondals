@@ -1,0 +1,40 @@
+{{ 'template-page.css' | asset_url | stylesheet_tag }}
+
+{% liquid
+
+	assign config = section.settings
+    assign show_page_content = config.show_page_content
+
+%}
+
+{%- if show_page_content -%}
+<div class="template__page">
+  <div class="template__page-inner py:lg">
+  <div class="pw container">
+
+    <div class="pw pw:xs">
+      <h1 class="hd hd:xl tx:left">{{ page.title }}</h1>
+
+      {%- if page.content.size > 0 -%}
+      <div class="rte tx:left">
+        {{ page.content }}
+      </div>
+      {%- endif -%}
+    </div>
+
+  </div>
+</div>
+{%- endif -%}
+
+{% schema %}
+{
+	"name": "Main template page",
+	"settings": [
+		{
+			"type": "checkbox",
+			"id": "show_page_content",
+			"label": "Show standard page content and title?"
+		}
+	]
+}
+{% endschema %}

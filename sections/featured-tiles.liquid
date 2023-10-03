@@ -1,0 +1,786 @@
+{% liquid
+
+	assign config = section.settings
+    
+    assign block_width = "fi:1/" | append: config.block_width
+    assign block_width_on_large = " md-up:fi:1/" | append: config.large_block_width
+
+%}
+
+{% liquid
+
+   assign config = section.settings
+   
+   assign padding_top = 'pt-' | append: config.pt
+
+   assign bg_color = " bg:" | append: config.bg_color
+
+   capture text_props
+     render 'general_settings_text_props', config: section.settings
+   endcapture
+
+   capture pc_width
+      render 'general_settings_pc_width', config: section.settings  
+   endcapture
+
+   capture outer
+      render 'general_settings_outer', config: section.settings 
+   endcapture
+
+   capture inner
+      render 'general_settings_inner', config: section.settings 
+   endcapture
+
+
+%}
+
+{% liquid 
+   
+   capture text_size 
+   
+      echo " fx dir:col"
+      echo " ai:" | append: config.text_alignment
+      echo " md-up:ai:" | append: config.text_alignment_pc
+
+      echo " tx:" | append: config.text_alignment
+      echo " md-up:tx:" | append: config.text_alignment_pc
+
+   endcapture
+   
+   assign read_more_default = 'general.content_expander.expand' | t -%}
+
+
+{%- capture paddingBottomClass -%}
+   {%- assign b_pad_mobile = "pb" -%}
+   {%- assign b_pad_pc = "md-up:pb" -%}
+
+   {%- unless config.b_pad_mobile == "DEFAULT" -%}
+   {%- assign b_pad_mobile = b_pad_mobile | append: ':' | append: config.b_pad_mobile -%}
+   {%- endunless -%}
+
+   {%- unless config.b_pad_pc == "DEFAULT" -%}
+   {%- assign b_pad_pc = b_pad_pc | append: ':' | append: config.b_pad_pc -%}
+   {%- endunless -%}
+
+{{ b_pad_mobile }} {{ b_pad_pc }}
+   {%- endcapture -%}
+
+
+<div class="{{ outer }}" data-name="temp">
+
+    <div class="section-bg {% unless section.settings.bg_inner %} {{ bg_color }} {% endunless %} ">
+
+        <div class="container {{ pc_width }}">
+
+            <div class="section-inner {{ inner }} {{ text_props }} {% if section.settings.bg_inner %} {{ bg_color }} {% endif %} ">
+
+                <div class="section-header">
+
+                    {% if config.heading.size > 0  %}
+
+                        <div class="{{ text_size }}">
+
+                            <h2 class="hd hd:xl" style="max-width: {{ config.range }}%;">
+                                {{ config.heading }}
+                            </h2>
+
+                            {% if config.sub_heading %}
+
+                                <h3 class="hd hd:lg" style="max-width: {{ config.range }}%;">
+                                    {{ config.sub_heading }}
+                                </h3>
+
+                            {% endif %}
+
+                            {% if config.richtext %}
+                                <span class=" {{ text_size }} " style="max-width: {{ config.range }}%;">
+                                    {{ config.richtext }}
+                                </span>
+                            {% endif %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+                <div class="section-content">
+
+                    <div class="card__tiles">
+                        <div class="pw">
+                            <div class="card__tiles-inner">
+
+                                <div class="{% if config.mobile_carousel %}hide md-up:fx{% else %} fx{% endif %} fx:wr gp:sm ai:start jc:center">
+                                    {%- for block in section.blocks -%}
+
+                                        {%- assign conf = block.settings -%}
+
+                                        {%- assign collection = conf.collection -%}
+                                        {%- assign url = conf.url | default: collection.url -%}
+                                        {%- assign title = conf.title | default: collection.title -%}
+                                        {%- assign text = conf.text -%}
+                                        {%- assign image = conf.image | default: collection.image -%}
+                                        {%- assign btn_label = conf.btn_label | default: read_more_default -%}
+
+                                        {% assign CardContent = '' %}
+
+                                        {%- if image -%}
+
+                                            {%- capture CardContent -%}
+                                            <div class="mb:lg tx:center p:tn {% if config.text_push %} push-text {% endif %} pos:re">
+                                              {%- if url -%}
+                                              <a class="link absolute--fill" href="{{ url }}"></a>
+                                              {%- endif -%}
+
+                                              <p class="hd">{{ title }}</p>
+
+                                              {% if text %}
+                                              <p class="text pt:tn">{{ text }}</p>
+                                              {% endif %}
+
+                                              {% if conf.show_btn %}
+                                              <div class="pt:lg tx:center">
+                                                <button class="button button--outline" type="button">
+                                                  {{ btn_label }}
+                                                </button>
+                                              </div>
+                                              {% endif %}
+
+                                            </div>
+                                            {%- endcapture -%}
+
+
+                                            {%- case block.type -%}
+                                                {% when 'advanced_tile' -%}
+                                                    {% liquid
+                                            		assign block_width = "fi:1/" | append: conf.block_width
+                                            		assign block_width_on_large = " md-up:fi:1/" | append: conf.large_block_width
+                                          		%}
+                                            {% endcase %}
+
+                                            <div class="card__tile fi {{ block_width }}{{ block_width_on_large }} {{ paddingBottomClass }}{% if config.text_push %} pt:xl sm-up:pt:cl{% endif %} ">
+                                                {%- capture Card -%}
+                                                {%- render "card",
+                                                Image: image,
+                                                Content: CardContent,
+                                                Modifier: block.type,
+                                                UseImageAsBg: true,
+                                                ImageLink: url
+                                                -%}
+                                                {%- endcapture -%}
+                                                {{ Card }}
+                                            </div>
+
+                                            {%- if config.mobile_carousel -%}
+                                                {%- capture SwiperSlides -%}
+                                            {{ SwiperSlides }}
+                                            <div class="swiper-slide">
+                                                {{ Card }}
+                                            </div>
+                                            {%- endcapture -%}
+                                            {%- endif -%}
+
+                                        {%- endif -%}
+
+                                        {% liquid
+                        	assign block_width = "fi:1/" | append: config.block_width
+						    assign block_width_on_large = " md-up:fi:1/" | append: config.large_block_width
+                          %}
+
+                                    {%- endfor -%}
+                                </div>
+
+                                {%- if config.mobile_carousel -%}
+
+                                    <div class="md-up:hide">
+                                        {%- render "swiper", Class: "ov:visible", Id: section.id, Slides: SwiperSlides, PerView: "1-1-1", HasControls: true -%}
+                                    </div>
+                                {%- endif -%}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+{%- comment -%}
+	plsfix
+
+   {% if config.fixed_height %} fixed_h {% endif %}
+
+{%- endcomment -%}
+<style>
+
+
+  .card-image{
+      position: relative;
+  }
+
+  .card-image_bg img{
+      height: 100%;
+  }
+
+  .absolute--fill {
+    z-index:5;
+  }
+
+  .push-text {
+    background-color: white;
+    width: 90%;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  }
+
+  .card--tile .push-text {
+    margin: -3em auto;
+    padding: 1.5em 1em;
+  }
+
+  .card--advanced_tile .push-text {
+    margin: -4em auto;
+    padding: 2em 1em;
+  }
+
+</style>
+
+
+{% schema %}
+{
+    "name": "Featured tiles",
+    "settings": [
+		{
+			"type": "range",
+			"id": "block_width",
+			"label": "Items pr. row",
+			"info": "Applies to mobile",
+			"default": 2,
+			"min": 1,
+			"max": 3
+		}, {
+			"type": "range",
+			"id": "large_block_width",
+			"label": "Items pr. row",
+			"info": "Applies to PC",
+			"default": 4,
+			"min": 1,
+			"max": 5
+		}, {
+         "type": "checkbox",
+         "id": "text_push",
+         "label": "push text up"
+      }, {
+        "type": "checkbox",
+        "id": "mobile_carousel",
+        "label": "Carousel on phone"
+    },{
+         "type": "header",
+         "content": "-------General setting-------"
+      }, {
+         "type": "header",
+         "content": "🔴🟠🔵 Colors"
+      }, {
+         "type": "checkbox",
+         "id": "bg_inner",
+         "label": "Apply background to inner"
+      }, {
+         "type": "select",
+         "id": "bg_color",
+         "label": "Background color",
+         "default": "bg-none",
+         "options": [
+             {
+               "value": "bg-none",
+               "label": "None"
+            }, {
+               "value": "blue",
+               "label": "Blue"
+            }, {
+               "value": "lightblue",
+               "label": "Light blue"
+            }, {
+               "value": "softblue",
+               "label": "Soft blue"
+            },{
+               "value": "lightgrey",
+               "label": "Light grey"
+            },{
+               "value": "softgreen",
+               "label": "Soft green"
+            },{
+               "value": "lightgreen",
+               "label": "Light green"
+            },{
+               "value": "flashy",
+               "label": "Flashy"
+            }
+         ]
+      }, {
+         "type": "select",
+         "id": "text_color",
+         "label": "Text color",
+         "options": [
+            {
+               "value": "text-dark",
+               "label": "Dark"
+            }, {
+               "value": "text-dark--lighter",
+               "label": "Dark light"
+            }, {
+               "value": "text-light",
+               "label": "Light"
+            }, {
+               "value": "text--very-light",
+               "label": "Very light"
+            }
+         ]
+      }, {
+         "type": "header",
+         "content": "🔤 🔠 Base size",
+         "info": "Text size for pc & mobile"
+      }, {
+         "type": "select",
+         "id": "base_pc",
+         "label": "Pc",
+         "default": "DEFAULT",
+         "options": [
+            {
+               "value": "tn",
+               "label": "Tiny"
+            }, {
+               "value": "xs",
+               "label": "Extra small"
+            }, {
+               "value": "sm",
+               "label": "Small"
+            }, {
+               "value": "DEFAULT",
+               "label": "Normal"
+            }, {
+               "value": "lg",
+               "label": "Large"
+            }, {
+               "value": "xl",
+               "label": "Extra large"
+            }, {
+               "value": "hg",
+               "label": "Huge"
+            }, {
+               "value": "mg",
+               "label": "Mega"
+            }
+         ]
+      }, {
+         "type": "select",
+         "id": "base_mobile",
+         "label": "Mobile",
+         "default": "DEFAULT",
+         "options": [
+            {
+               "value": "tn",
+               "label": "Tiny"
+            }, {
+               "value": "xs",
+               "label": "Extra small"
+            }, {
+               "value": "sm",
+               "label": "Small"
+            }, {
+               "value": "DEFAULT",
+               "label": "Normal"
+            }, {
+               "value": "lg",
+               "label": "Large"
+            }, {
+               "value": "xl",
+               "label": "Extra large"
+            }, {
+               "value": "hg",
+               "label": "Huge"
+            }, {
+               "value": "mg",
+               "label": "Mega"
+            }
+         ]
+      }, {
+         "type": "header",
+         "content": "📱💻 Content width",
+         "info": "Content width for pc & mobile"
+      }, {
+         "type": "checkbox",
+         "id": "full_w_mobile",
+         "label": "Full width Mobile"
+      }, {
+         "type": "select",
+         "id": "width_pc",
+         "label": "Pc",
+         "default": "DEFAULT",
+         "options": [
+            {
+               "value": "tn",
+               "label": "Tiny"
+            }, {
+               "value": "xs",
+               "label": "Extra small"
+            }, {
+               "value": "sm",
+               "label": "Small"
+            }, {
+               "value": "DEFAULT",
+               "label": "Normal"
+            }, {
+               "value": "lg",
+               "label": "Large"
+            }, {
+               "value": "xl",
+               "label": "Extra large"
+            }, {
+               "value": "hg",
+               "label": "Huge"
+            }, {
+               "value": "mg",
+               "label": "Mega"
+            }, {
+               "value": "fl",
+               "label": "Full"
+            }
+         ]
+      }, {
+         "type": "header",
+         "content": "⬆️ ⬇️ Content padding",
+         "info": "Content padding for pc & mobile"
+      }, {
+         "type": "select",
+         "id": "c_pad_pc",
+         "label": "Pc",
+         "default": "DEFAULT",
+         "options": [
+            {
+               "value": "cl",
+               "label": "None"
+            }, {
+               "value": "tn",
+               "label": "Tiny"
+            }, {
+               "value": "xs",
+               "label": "Extra small"
+            }, {
+               "value": "sm",
+               "label": "Small"
+            }, {
+               "value": "DEFAULT",
+               "label": "Normal"
+            }, {
+               "value": "lg",
+               "label": "Large"
+            }, {
+               "value": "xl",
+               "label": "Extra large"
+            }, {
+               "value": "hg",
+               "label": "Huge"
+            }, {
+               "value": "mg",
+               "label": "Mega"
+            }
+         ]
+      }, {
+         "type": "select",
+         "id": "c_pad_mobile",
+         "label": "Mobile",
+         "default": "DEFAULT",
+         "options": [
+            {
+               "value": "cl",
+               "label": "None"
+            }, {
+               "value": "tn",
+               "label": "Tiny"
+            }, {
+               "value": "xs",
+               "label": "Extra small"
+            }, {
+               "value": "sm",
+               "label": "Small"
+            }, {
+               "value": "DEFAULT",
+               "label": "Normal"
+            }, {
+               "value": "lg",
+               "label": "Large"
+            }, {
+               "value": "xl",
+               "label": "Extra large"
+            }, {
+               "value": "hg",
+               "label": "Huge"
+            }, {
+               "value": "mg",
+               "label": "Mega"
+            }
+         ]
+      }, {
+        "type": "header",
+        "content": "⬇️ Padding bottom",
+        "info": "Padding bottom for pc & mobile"
+     }, {
+        "type": "select",
+        "id": "b_pad_pc",
+        "label": "Pc",
+        "default": "DEFAULT",
+        "options": [
+           {
+              "value": "cl",
+              "label": "None"
+           }, {
+              "value": "tn",
+              "label": "Tiny"
+           }, {
+              "value": "xs",
+              "label": "Extra small"
+           }, {
+              "value": "sm",
+              "label": "Small"
+           }, {
+              "value": "DEFAULT",
+              "label": "Normal"
+           }, {
+              "value": "lg",
+              "label": "Large"
+           }, {
+              "value": "xl",
+              "label": "Extra large"
+           }, {
+              "value": "hg",
+              "label": "Huge"
+           }, {
+              "value": "mg",
+              "label": "Mega"
+           }
+        ]
+     }, {
+        "type": "select",
+        "id": "b_pad_mobile",
+        "label": "Mobile",
+        "default": "DEFAULT",
+        "options": [
+           {
+              "value": "cl",
+              "label": "None"
+           }, {
+              "value": "tn",
+              "label": "Tiny"
+           }, {
+              "value": "xs",
+              "label": "Extra small"
+           }, {
+              "value": "sm",
+              "label": "Small"
+           }, {
+              "value": "DEFAULT",
+              "label": "Normal"
+           }, {
+              "value": "lg",
+              "label": "Large"
+           }, {
+              "value": "xl",
+              "label": "Extra large"
+           }, {
+              "value": "hg",
+              "label": "Huge"
+           }, {
+              "value": "mg",
+              "label": "Mega"
+           }
+        ]
+     },{
+         "type": "header",
+         "content": "⏫ Section padding",
+         "info": "Content padding for pc & mobile"
+      }, {
+         "type": "select",
+         "id": "sec_pad_pc",
+         "label": "Pc",
+         "default": "DEFAULT",
+         "options": [
+            {
+               "value": "cl",
+               "label": "None"
+            }, {
+               "value": "tn",
+               "label": "Tiny"
+            }, {
+               "value": "xs",
+               "label": "Extra small"
+            }, {
+               "value": "sm",
+               "label": "Small"
+            }, {
+               "value": "DEFAULT",
+               "label": "Normal"
+            }, {
+               "value": "lg",
+               "label": "Large"
+            }, {
+               "value": "xl",
+               "label": "Extra large"
+            }, {
+               "value": "hg",
+               "label": "Huge"
+            }, {
+               "value": "mg",
+               "label": "Mega"
+            }
+         ]
+      }, {
+         "type": "select",
+         "id": "sec_pad_mobile",
+         "label": "Mobile",
+         "default": "DEFAULT",
+         "options": [
+            {
+               "value": "cl",
+               "label": "None"
+            }, {
+               "value": "tn",
+               "label": "Tiny"
+            }, {
+               "value": "xs",
+               "label": "Extra small"
+            }, {
+               "value": "sm",
+               "label": "Small"
+            }, {
+               "value": "DEFAULT",
+               "label": "Normal"
+            }, {
+               "value": "lg",
+               "label": "Large"
+            }, {
+               "value": "xl",
+               "label": "Extra large"
+            }, {
+               "value": "hg",
+               "label": "Huge"
+            }, {
+               "value": "mg",
+               "label": "Mega"
+            }
+         ]
+      }
+	],
+	"blocks": [
+		{
+			"type": "tile",
+			"name": "Minimal tile",
+			"settings": [
+				{
+					"type": "collection",
+					"id": "collection",
+					"label": "Collection",
+					"info": "Optional data-source"
+				}, {
+					"type": "header",
+					"content": "Content"
+				}, {
+					"type": "paragraph",
+					"content": "If no data is given, collection data will be used, if given"
+
+				}, {
+					"type": "image_picker",
+					"id": "image",
+					"label": "Image"
+				}, {
+					"type": "url",
+					"id": "url",
+					"label": "URL"
+				}, {
+					"type": "text",
+					"id": "title",
+					"label": "Title"
+				}, {
+					"type": "checkbox",
+					"id": "show_btn",
+					"label": "Show button?"
+				}, {
+					"type": "text",
+					"id": "btn_label",
+					"label": "Custom button label"	
+				}
+			]
+		}, {
+			"type": "advanced_tile",
+			"name": "Advanced tile",
+			"settings": [
+                {
+                    "type": "range",
+                    "id": "block_width",
+                    "label": "Item width",
+                    "info": "Applies to mobile",
+                    "default": 2,
+                    "min": 1,
+                    "max": 3
+                }, {
+                    "type": "range",
+                    "id": "large_block_width",
+                    "label": "Items width",
+                    "info": "Applies to PC",
+                    "default": 4,
+                    "min": 1,
+                    "max": 5
+                }, {
+					"type": "collection",
+					"id": "collection",
+					"label": "Collection",
+					"info": "Optional data-source"
+				}, {
+					"type": "header",
+					"content": "Content"
+				}, {
+					"type": "paragraph",
+					"content": "If no data is given, collection data will be used, if given"
+
+				}, {
+					"type": "image_picker",
+					"id": "image",
+					"label": "Image"
+				}, {
+					"type": "url",
+					"id": "url",
+					"label": "URL"
+				}, {
+					"type": "text",
+					"id": "title",
+					"label": "Title"
+				}, {
+					"type": "text",
+					"id": "text",
+					"label": "Text"
+				}, {
+					"type": "checkbox",
+					"id": "show_btn",
+					"label": "Show button?"
+				}, {
+					"type": "text",
+					"id": "btn_label",
+					"label": "Custom button label"	
+				}
+			]
+		}
+	],
+	"presets": [
+		{
+			"name": "Featured tiles",
+			"settings": {}
+		}
+	]
+  }
+{% endschema %}

@@ -1,0 +1,28 @@
+{%- if Video -%}
+
+{%- assign VideoRatio = 100.0 | divided_by: Video.aspect_ratio -%}
+
+{%- unless NoValidate -%}
+{%- if Video.host contains "youtube" -%}
+{%- assign VideoSrc = Src | split: '?v=' -%}
+{%- assign EmbedLink = "https://www.youtube.com/embed/" | append: Video.external_id -%}
+
+{%- elsif Video.host contains "vimeo" -%}
+{%- assign EmbedLink = 'https://player.vimeo.com/video/' | append: Video.external_id -%}
+{%- endif -%}
+{%- else -%}
+{%- assign EmbedLink = Src -%}
+{%- endunless -%}
+
+
+<div class="video-wrapper{% if Modifier %} video-wrapper--{{ Modifier }}{% endif %}">
+    <div class="ratio_container" style="padding-bottom:{{ VideoRatio }}%;">
+        <iframe data-src="{{ EmbedLink }}" alt="{{ Video.alt }}" class="Video lazyload" frameborder="0"
+            allow="autoplay; fullscreen"></iframe>
+    </div>
+</div>
+{%- else -%}
+<script>
+    WDN.MissingParams("iframe");
+</script>
+{%- endif -%}

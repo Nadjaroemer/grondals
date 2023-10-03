@@ -1,0 +1,581 @@
+{% liquid
+
+   assign config = section.settings
+   
+   assign padding_top = 'pt-' | append: config.pt
+
+   assign bg_color = " bg:" | append: config.bg_color
+
+  capture text_props
+     render 'general_settings_text_props', config: section.settings
+   endcapture
+
+   capture pc_width
+      render 'general_settings_pc_width', config: section.settings  
+   endcapture
+
+   capture outer
+      render 'general_settings_outer', config: section.settings 
+   endcapture
+
+   capture inner
+      render 'general_settings_inner', config: section.settings 
+   endcapture
+
+%}
+
+<!-- unique liquid -->
+
+{% liquid 
+
+    capture text_size 
+   
+      echo " tx:" | append: config.text_alignment
+      echo " md-up:tx:" | append: config.text_alignment_pc
+
+   endcapture
+
+   capture only_faq
+
+      echo " fi"
+
+      unless config.only_faq  
+         echo " fi:1/1"  
+      else  
+         echo " fi:1/1 m:auto md-up:fi:1/2" 
+      endunless 
+   
+   endcapture
+
+%}
+
+
+<div class="section {{ outer }}" data-name="media-faq-{{ section.id }}">
+
+   <div class="section-bg {% unless section.settings.bg_inner %} {{ bg_color }} {% endunless %} ">
+
+      <div class="container {{ pc_width }}">
+
+         <div class="section-inner {{ inner }} {{ text_props }} {% if section.settings.bg_inner %} {{ bg_color }} {% endif %} ">
+            <div class="section-header">
+            </div>
+
+            <div class="section-content">
+               <div class="fx fx:wr md-up:fx:no-wr gp:xl">
+
+                  {% unless config.only_faq %}
+                     <div class="fi fi:1/1">
+                        {%- render 'image', image: config.image -%}
+                     </div>
+                  {% endunless %}
+
+                  <div class="{{ only_faq }} pt:lg md-up:pt:cl {% if config.flip %} flip {% endif %}">
+
+
+                    {% if config.heading.size > 0 %}
+
+                    <div class="{{ text_size }} pb:sm md-up:pb:lg">
+
+                      <h2 class="hd hd:xl">
+                        {{ config.heading }}
+                      </h2>
+
+                      <p class="">
+                        {{ config.paragraph }}
+                      </p>
+
+                    </div>
+
+                    {% endif %}
+
+                     {% for block in section.blocks %}
+
+                        <wdn-dropdown class="question__card pw:xs" group="group-{{ section.id }}">
+
+                           <div class="question__card__question fx jc:between ai:center base:sm py:xs" dropdown-trigger>
+                              <span class="question-label base:lg">
+                                 {{ block.settings.question }}
+                              </span>
+
+                              <div class="question__card__icon">
+                                 <svg class="faq-arrow dropdown-arrow " fill="none" stroke="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path>
+                                 </svg>
+                              </div>
+
+                           </div>
+
+                           <div dropdown-container>
+                              <div dropdown-content>
+                                 <div class="question__card__answer rte pb:sm base:sm">
+
+                                    {% unless block.settings.answer == blank %}
+                                       {{ block.settings.answer }}
+                                    {% endunless %}
+
+                                 </div>
+                              </div>
+                           </div>
+
+                        </wdn-dropdown>
+
+                     {% endfor %}
+
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+
+<style>
+
+.flip {
+   order: 1;
+}
+  
+  .question__card {
+    padding-right:0;
+  }
+
+@media only screen and (min-width: 880px) {
+  .question__card {
+    padding-right:5em; 
+  }
+   .flip {
+      order: -1;
+   }
+}
+
+.question__card {
+  border-bottom: rgb(231, 231, 231) 1px solid;
+  display: block;
+  padding-top: 0.75em;
+}
+
+.question__card__question {
+	cursor: pointer;
+	font-weight: 400;
+}
+
+.question__card__icon {
+	height: 1.25em;
+	width: 1.25em;
+}
+
+.question__card__icon svg {
+	height: 1.25em;
+	width: 1.25em;
+}
+
+.faq-arrow {
+	transition: all 300ms ease-in-out;
+}
+
+</style>
+
+
+{% schema %}
+
+{
+   "name": "Media FAQ",
+   "max_blocks": 10,
+   "settings": [
+      {
+         "type": "checkbox",
+         "id": "only_faq",
+         "label": "Show only FAQ"
+      }, {
+         "type": "text",
+         "id": "heading",
+         "label": "Heading"
+      }, {
+         "type": "select",
+         "id": "text_alignment_pc",
+         "label": "Text alignment Pc",
+         "options": [
+            {
+               "value": "center",
+               "label": "Center"
+            }, {
+               "value": "left",
+               "label": "Left"
+            }, {
+               "value": "right",
+               "label": "Right"
+            }
+         ]
+      }, {
+         "type": "select",
+         "id": "text_alignment",
+         "label": "Text alignment Mobile",
+         "options": [
+            {
+               "value": "center",
+               "label": "Center"
+            }, {
+               "value": "left",
+               "label": "Left"
+            }, {
+               "value": "right",
+               "label": "Right"
+            }
+         ]
+      },{
+         "type": "image_picker",
+         "id": "image",
+         "label": "Image "
+      },{
+         "type": "checkbox",
+         "id": "flip",
+         "label": "Switch around content - pc"
+      },{
+         "type": "header",
+         "content": "------- General setting -------"
+      }, {
+         "type": "header",
+         "content": "🔴🟠🔵 Colors"
+      }, {
+         "type": "checkbox",
+         "id": "bg_inner",
+         "label": "Apply background to inner"
+      }, {
+         "type": "select",
+         "id": "bg_color",
+         "label": "Background color",
+         "default": "bg-none",
+         "options": [
+            {
+               "value": "bg-none",
+               "label": "None"
+            }, {
+               "value": "blue",
+               "label": "Blue"
+            }, {
+               "value": "lightblue",
+               "label": "Light blue"
+            }, {
+               "value": "softblue",
+               "label": "Soft blue"
+            },{
+               "value": "lightgrey",
+               "label": "Light grey"
+            },{
+               "value": "softgreen",
+               "label": "Soft green"
+            },{
+               "value": "lightgreen",
+               "label": "Light green"
+            },{
+               "value": "flashy",
+               "label": "Flashy"
+            }
+         ]
+      }, {
+         "type": "select",
+         "id": "text_color",
+         "label": "Text color",
+         "options": [
+            {
+               "value": "text-dark",
+               "label": "Dark"
+            }, {
+               "value": "text-dark--lighter",
+               "label": "Dark light"
+            }, {
+               "value": "text-light",
+               "label": "Light"
+            }, {
+               "value": "text--very-light",
+               "label": "Very light"
+            }
+         ]
+      }, {
+         "type": "header",
+         "content": "🔤 🔠 Base size",
+         "info": "Text size for pc & mobile"
+      }, {
+         "type": "select",
+         "id": "base_pc",
+         "label": "Pc",
+         "default": "DEFAULT",
+         "options": [
+            {
+               "value": "tn",
+               "label": "Tiny"
+            }, {
+               "value": "xs",
+               "label": "Extra small"
+            }, {
+               "value": "sm",
+               "label": "Small"
+            }, {
+               "value": "DEFAULT",
+               "label": "Normal"
+            }, {
+               "value": "lg",
+               "label": "Large"
+            }, {
+               "value": "xl",
+               "label": "Extra large"
+            }, {
+               "value": "hg",
+               "label": "Huge"
+            }, {
+               "value": "mg",
+               "label": "Mega"
+            }
+         ]
+      }, {
+         "type": "select",
+         "id": "base_mobile",
+         "label": "Mobile",
+         "default": "DEFAULT",
+         "options": [
+            {
+               "value": "tn",
+               "label": "Tiny"
+            }, {
+               "value": "xs",
+               "label": "Extra small"
+            }, {
+               "value": "sm",
+               "label": "Small"
+            }, {
+               "value": "DEFAULT",
+               "label": "Normal"
+            }, {
+               "value": "lg",
+               "label": "Large"
+            }, {
+               "value": "xl",
+               "label": "Extra large"
+            }, {
+               "value": "hg",
+               "label": "Huge"
+            }, {
+               "value": "mg",
+               "label": "Mega"
+            }
+         ]
+      }, {
+         "type": "header",
+         "content": "📱💻 Content width",
+         "info": "Content width for pc & mobile"
+      }, {
+         "type": "checkbox",
+         "id": "full_w_mobile",
+         "label": "Full width Mobile"
+      }, {
+         "type": "select",
+         "id": "width_pc",
+         "label": "Pc",
+         "default": "DEFAULT",
+         "options": [
+            {
+               "value": "tn",
+               "label": "Tiny"
+            }, {
+               "value": "xs",
+               "label": "Extra small"
+            }, {
+               "value": "sm",
+               "label": "Small"
+            }, {
+               "value": "DEFAULT",
+               "label": "Normal"
+            }, {
+               "value": "lg",
+               "label": "Large"
+            }, {
+               "value": "xl",
+               "label": "Extra large"
+            }, {
+               "value": "hg",
+               "label": "Huge"
+            }, {
+               "value": "mg",
+               "label": "Mega"
+            }, {
+               "value": "fl",
+               "label": "Full"
+            }
+         ]
+      }, {
+         "type": "header",
+         "content": "⬆️ ⬇️ Content padding",
+         "info": "Content padding for pc & mobile"
+      }, {
+         "type": "select",
+         "id": "c_pad_pc",
+         "label": "Pc",
+         "default": "DEFAULT",
+         "options": [
+            {
+               "value": "cl",
+               "label": "None"
+            }, {
+               "value": "tn",
+               "label": "Tiny"
+            }, {
+               "value": "xs",
+               "label": "Extra small"
+            }, {
+               "value": "sm",
+               "label": "Small"
+            }, {
+               "value": "DEFAULT",
+               "label": "Normal"
+            }, {
+               "value": "lg",
+               "label": "Large"
+            }, {
+               "value": "xl",
+               "label": "Extra large"
+            }, {
+               "value": "hg",
+               "label": "Huge"
+            }, {
+               "value": "mg",
+               "label": "Mega"
+            }
+         ]
+      }, {
+         "type": "select",
+         "id": "c_pad_mobile",
+         "label": "Mobile",
+         "default": "DEFAULT",
+         "options": [
+            {
+               "value": "cl",
+               "label": "None"
+            }, {
+               "value": "tn",
+               "label": "Tiny"
+            }, {
+               "value": "xs",
+               "label": "Extra small"
+            }, {
+               "value": "sm",
+               "label": "Small"
+            }, {
+               "value": "DEFAULT",
+               "label": "Normal"
+            }, {
+               "value": "lg",
+               "label": "Large"
+            }, {
+               "value": "xl",
+               "label": "Extra large"
+            }, {
+               "value": "hg",
+               "label": "Huge"
+            }, {
+               "value": "mg",
+               "label": "Mega"
+            }
+         ]
+      }, {
+         "type": "header",
+         "content": "⏫ Section padding",
+         "info": "Content padding for pc & mobile"
+      }, {
+         "type": "select",
+         "id": "sec_pad_pc",
+         "label": "Pc",
+         "default": "DEFAULT",
+         "options": [
+            {
+               "value": "cl",
+               "label": "None"
+            }, {
+               "value": "tn",
+               "label": "Tiny"
+            }, {
+               "value": "xs",
+               "label": "Extra small"
+            }, {
+               "value": "sm",
+               "label": "Small"
+            }, {
+               "value": "DEFAULT",
+               "label": "Normal"
+            }, {
+               "value": "lg",
+               "label": "Large"
+            }, {
+               "value": "xl",
+               "label": "Extra large"
+            }, {
+               "value": "hg",
+               "label": "Huge"
+            }, {
+               "value": "mg",
+               "label": "Mega"
+            }
+         ]
+      }, {
+         "type": "select",
+         "id": "sec_pad_mobile",
+         "label": "Mobile",
+         "default": "DEFAULT",
+         "options": [
+            {
+               "value": "cl",
+               "label": "None"
+            }, {
+               "value": "tn",
+               "label": "Tiny"
+            }, {
+               "value": "xs",
+               "label": "Extra small"
+            }, {
+               "value": "sm",
+               "label": "Small"
+            }, {
+               "value": "DEFAULT",
+               "label": "Normal"
+            }, {
+               "value": "lg",
+               "label": "Large"
+            }, {
+               "value": "xl",
+               "label": "Extra large"
+            }, {
+               "value": "hg",
+               "label": "Huge"
+            }, {
+               "value": "mg",
+               "label": "Mega"
+            }
+         ]
+      }
+   ],
+   "blocks": [
+      {
+         "type": "text",
+         "name": "FAQ",
+         "settings": [
+            {
+               "type": "text",
+               "id": "question",
+               "label": "Question",
+               "default": "Q"
+            }, 
+           {
+              "type": "richtext",
+              "id": "answer",
+              "label": "Answer"  
+           }
+         ]
+      }
+   ],
+   "presets": [
+      {
+         "name": "Media FAQ"
+      }
+   ]
+}
+
+{% endschema %}

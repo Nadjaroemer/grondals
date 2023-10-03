@@ -1,0 +1,81 @@
+{% liquid
+
+  capture email_attrs
+
+	echo 'type="email" name="contact[email]" class="field__input" autocorrect="off" autocapitalize="off" autocomplete="email" required'
+    
+  endcapture
+  
+%}
+
+{%- assign desc = 'newsletter.desc' | t -%}
+{%- assign field_name = 'newsletter.name' | t -%}
+{%- assign field_email = 'newsletter.email' | t -%}
+{%- assign field_submit = 'newsletter.submit' | t -%}
+{%- assign success = 'newsletter.success' | t -%}
+
+{%- form 'customer', class: 'newsletter' -%}
+<div class="newsletter-inner">
+<input type="hidden" name="contact[tags]" value="newsletter">
+
+  <label class="base:sm" for="newsletter">
+    {{ desc }}
+  </label>
+
+  <div class="newsletter__form pt:xs">
+    <div class="newsletter__form-inner">
+      
+      {%- if form.posted_successfully? -%}
+      <div class="newsletter__success pb:sm">
+        <p class="hd hd:sm">
+          {{ success }}
+        </p>
+      </div>
+      {%- endif -%}
+      
+      
+      {%- if form.errors -%}
+      <div class="newsletter__error pb:sm">
+        {{ form.errors.translated_fields['email'] | capitalize }}
+        {{ form.errors.messages['email'] }}
+      </div>
+      {%- endif -%}
+      
+      
+      {%- comment -%}
+      <div class="newsletter__form-group">
+        <input
+               id="newsletter"
+               type="text"
+               name="contact[first_name]"
+               value="{{ form.first_name }}" 
+               placeholder="{{ field_name }}" 
+               >
+      </div>
+      {%- endcomment -%}
+      
+      {%- unless form.posted_successfully? -%}
+
+      <div class="newsletter__form-group">
+        <div class="newsletter__formfield">
+          <input
+                 {{ email_attrs }}
+                 id="newsletter"
+                 value="{{ form.email }}" 
+                 placeholder="{{ field_email }}" 
+                 >
+        </div>
+        
+        <div class="newsletter__formfield mt:tn">
+          <button type="submit" class="button button--secondary button--round button--full">
+            {{ field_submit }}
+          </button>
+        </div>
+      </div>
+      
+      {%- endunless -%}
+
+    </div>
+  </div>
+</div>
+{%- endform -%}

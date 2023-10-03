@@ -1,0 +1,34 @@
+{%- assign Shipping_price = settings.shipping_price | times: 100.0 -%}
+{%- assign Shipping_value = Shipping_price | money -%}
+{%- assign Shipping_limit = settings.shipping_limit | times: 100.0 -%}
+
+{%- if cart.total_price > Shipping_limit -%}
+   {%- assign Shipping_price = 0 -%}
+   {%- assign Shipping_value = 'cart.free_delivery' | t -%}
+{%- endif -%}
+{%- comment -%}
+pls fix - delete file
+{%- endcomment -%}
+
+<div class="checkout theme-bg">
+   <div class="checkout-inner">
+      <p class="title title--h3 tx:center">{{ 'cart.overview_title' | t }}</p>
+      <div class="container container--checkout">
+         <div class="checkout__item">
+            <span class="checkout__item-label">{{ 'cart.subtotal' | t }}</span>
+            <span class="checkout__item-value">{{ cart.total_price | money }}</span>
+         </div>
+         <div class="checkout__item">
+            <span class="checkout__item-label">{{ 'cart.shipping_label' | t }}</span>
+            <span class="checkout__item-value">{{ Shipping_value }}</span>
+         </div>
+         <div class="checkout__item checkout__item--push">
+            <span class="checkout__item-label title">{{ 'cart.total' | t }}</span>
+            <span class="checkout__item-value title">{{ cart.total_price | plus: Shipping_price | money }}</span>
+         </div>
+         <div class="checkout__item">
+            <button class="button button--checkout" name="checkout" type="submit">{{ 'checkout.button' | t }}</button>
+         </div>
+      </div>
+   </div>
+</div>

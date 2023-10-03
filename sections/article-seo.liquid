@@ -1,0 +1,60 @@
+{%- assign Config = section.settings -%}
+
+<div class="article_content--seo{% if Config.pull_content %} article_content--pull{% endif %}">
+  <div class="inner container pw pw:sm">
+    <div class="background p" style="background-color: {{ Config.background_color }};color:{{ Config.text_color }};">
+      <div class="title-wrapper pb:tn">
+        <h4 class="article_seo-title title hd hd:lg" style="color:{{ Config.text_color }};">
+          {{ Config.title }}
+        </h4>
+      </div>
+
+      <div class="content-wrapper">
+        <div class="article_seo-content rte">
+          {{ Config.text }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Article SEO content",
+    "templates": ["article"],
+    "settings": [
+      {
+        "type": "color",
+        "id": "text_color",
+        "label": "Text color",
+        "default": "#000000"
+      },
+      {
+        "type": "color",
+        "id": "background_color",
+        "label": "Section background",
+        "default": "#ffffff"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title"
+      },
+      {
+        "type": "richtext",
+        "id": "text",
+        "label": "Content"
+      }, {
+        "type": "checkbox",
+        "id": "pull_content",
+        "label": "Pull content up"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Article SEO content",
+        "settings": {}
+      }
+    ]
+  }
+{% endschema %}

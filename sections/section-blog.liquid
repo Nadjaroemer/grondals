@@ -1,0 +1,462 @@
+{%- assign config = section.settings -%}
+{%- assign Blog = blogs[section.settings.blog] -%}
+
+{% liquid
+
+   assign config = section.settings
+   
+   assign padding_top = 'pt-' | append: config.pt
+
+   assign bg_color = " bg:" | append: config.bg_color
+   
+   capture text_props
+     render 'general_settings_text_props', config: section.settings
+   endcapture
+
+   capture pc_width
+      render 'general_settings_pc_width', config: section.settings  
+   endcapture
+
+   capture outer
+      render 'general_settings_outer', config: section.settings 
+   endcapture
+
+   capture inner
+      render 'general_settings_inner', config: section.settings 
+   endcapture
+
+%}
+
+<!-- unique liquid -->
+
+{% liquid 
+
+    capture text_size 
+   
+      echo " tx:" | append: config.text_alignment
+      echo " md-up:tx:" | append: config.text_alignment_pc
+
+   endcapture
+   
+%}
+
+<div class="{{ outer }}" data-name="section-blog">
+
+  <div class="section-bg {% unless section.settings.bg_inner %} {{ bg_color }} {% endunless %} ">
+
+    <div class="container {{ pc_width }}">
+
+      <div class="section-inner {{ inner }} {{ text_props }} {% if section.settings.bg_inner %} {{ bg_color }} {% endif %} ">
+
+        <div class="section-header">
+
+          {% if config.heading.size > 0 %}
+
+            <div class=" {{ text_size }} ">
+
+              <h2 class="hd hd:xl pb:md">
+                {{ config.heading }}
+              </h2>
+
+            </div>
+
+          {% endif %}
+
+        </div>
+
+        <div class="section-content">
+          {%- render 'blog', blog: Blog, SwiperOnPhone: config.mobile_carousel -%}
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+{% schema %}
+
+{
+  "name": "Featured blog",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    }, {
+      "type": "select",
+      "id": "text_alignment_pc",
+      "label": "Text alignment Pc",
+      "options": [
+        {
+          "value": "center",
+          "label": "Center"
+        }, {
+          "value": "left",
+          "label": "Left"
+        }, {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    }, {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment Mobile",
+      "options": [
+        {
+          "value": "center",
+          "label": "Center"
+        }, {
+          "value": "left",
+          "label": "Left"
+        }, {
+          "value": "right",
+          "label": "Right"
+        }
+      ]
+    }, {
+      "type": "blog",
+      "id": "blog",
+      "label": "Blog"
+    }, {
+      "type": "checkbox",
+      "id": "mobile_carousel",
+      "label": "Carousel on phone"
+    }, {
+      "type": "header",
+      "content": "------- General setting -------"
+    }, {
+      "type": "header",
+      "content": "🔴🟠🔵 Colors"
+    }, {
+      "type": "checkbox",
+      "id": "bg_inner",
+      "label": "Apply background to inner"
+    }, {
+      "type": "select",
+      "id": "bg_color",
+      "label": "Background color",
+      "default": "bg-none",
+      "options": [
+        {
+          "value": "bg-none",
+          "label": "None"
+        }, {
+          "value": "blue",
+          "label": "Blue"
+        }, {
+          "value": "lightblue",
+          "label": "Light blue"
+        }, {
+          "value": "softblue",
+          "label": "Soft blue"
+        }, {
+          "value": "lightgrey",
+          "label": "Light grey"
+        }, {
+          "value": "softgreen",
+          "label": "Soft green"
+        }, {
+          "value": "lightgreen",
+          "label": "Light green"
+        }, {
+          "value": "flashy",
+          "label": "Flashy"
+        }
+      ]
+    }, {
+      "type": "select",
+      "id": "text_color",
+      "label": "Text color",
+      "options": [
+        {
+          "value": "text-dark",
+          "label": "Dark"
+        }, {
+          "value": "text-dark--lighter",
+          "label": "Dark light"
+        }, {
+          "value": "text-light",
+          "label": "Light"
+        }, {
+          "value": "text--very-light",
+          "label": "Very light"
+        }
+      ]
+    }, {
+      "type": "header",
+      "content": "🔤 🔠 Base size",
+      "info": "Text size for pc & mobile"
+    }, {
+      "type": "select",
+      "id": "base_pc",
+      "label": "Pc",
+      "default": "DEFAULT",
+      "options": [
+        {
+          "value": "tn",
+          "label": "Tiny"
+        }, {
+          "value": "xs",
+          "label": "Extra small"
+        }, {
+          "value": "sm",
+          "label": "Small"
+        }, {
+          "value": "DEFAULT",
+          "label": "Normal"
+        }, {
+          "value": "lg",
+          "label": "Large"
+        }, {
+          "value": "xl",
+          "label": "Extra large"
+        }, {
+          "value": "hg",
+          "label": "Huge"
+        }, {
+          "value": "mg",
+          "label": "Mega"
+        }
+      ]
+    }, {
+      "type": "select",
+      "id": "base_mobile",
+      "label": "Mobile",
+      "default": "DEFAULT",
+      "options": [
+        {
+          "value": "tn",
+          "label": "Tiny"
+        }, {
+          "value": "xs",
+          "label": "Extra small"
+        }, {
+          "value": "sm",
+          "label": "Small"
+        }, {
+          "value": "DEFAULT",
+          "label": "Normal"
+        }, {
+          "value": "lg",
+          "label": "Large"
+        }, {
+          "value": "xl",
+          "label": "Extra large"
+        }, {
+          "value": "hg",
+          "label": "Huge"
+        }, {
+          "value": "mg",
+          "label": "Mega"
+        }
+      ]
+    }, {
+      "type": "header",
+      "content": "📱💻 Content width",
+      "info": "Content width for pc & mobile"
+    }, {
+      "type": "checkbox",
+      "id": "full_w_mobile",
+      "label": "Full width Mobile"
+    }, {
+      "type": "select",
+      "id": "width_pc",
+      "label": "Pc",
+      "default": "DEFAULT",
+      "options": [
+        {
+          "value": "tn",
+          "label": "Tiny"
+        }, {
+          "value": "xs",
+          "label": "Extra small"
+        }, {
+          "value": "sm",
+          "label": "Small"
+        }, {
+          "value": "DEFAULT",
+          "label": "Normal"
+        }, {
+          "value": "lg",
+          "label": "Large"
+        }, {
+          "value": "xl",
+          "label": "Extra large"
+        }, {
+          "value": "hg",
+          "label": "Huge"
+        }, {
+          "value": "mg",
+          "label": "Mega"
+        }, {
+          "value": "fl",
+          "label": "Full"
+        }
+      ]
+    }, {
+      "type": "header",
+      "content": "⬆️ ⬇️ Content padding",
+      "info": "Content padding for pc & mobile"
+    }, {
+      "type": "select",
+      "id": "c_pad_pc",
+      "label": "Pc",
+      "default": "DEFAULT",
+      "options": [
+        {
+          "value": "cl",
+          "label": "None"
+        }, {
+          "value": "tn",
+          "label": "Tiny"
+        }, {
+          "value": "xs",
+          "label": "Extra small"
+        }, {
+          "value": "sm",
+          "label": "Small"
+        }, {
+          "value": "DEFAULT",
+          "label": "Normal"
+        }, {
+          "value": "lg",
+          "label": "Large"
+        }, {
+          "value": "xl",
+          "label": "Extra large"
+        }, {
+          "value": "hg",
+          "label": "Huge"
+        }, {
+          "value": "mg",
+          "label": "Mega"
+        }
+      ]
+    }, {
+      "type": "select",
+      "id": "c_pad_mobile",
+      "label": "Mobile",
+      "default": "DEFAULT",
+      "options": [
+        {
+          "value": "cl",
+          "label": "None"
+        }, {
+          "value": "tn",
+          "label": "Tiny"
+        }, {
+          "value": "xs",
+          "label": "Extra small"
+        }, {
+          "value": "sm",
+          "label": "Small"
+        }, {
+          "value": "DEFAULT",
+          "label": "Normal"
+        }, {
+          "value": "lg",
+          "label": "Large"
+        }, {
+          "value": "xl",
+          "label": "Extra large"
+        }, {
+          "value": "hg",
+          "label": "Huge"
+        }, {
+          "value": "mg",
+          "label": "Mega"
+        }
+      ]
+    }, {
+      "type": "header",
+      "content": "⏫ Section padding",
+      "info": "Content padding for pc & mobile"
+    }, {
+      "type": "select",
+      "id": "sec_pad_pc",
+      "label": "Pc",
+      "default": "DEFAULT",
+      "options": [
+        {
+          "value": "cl",
+          "label": "None"
+        }, {
+          "value": "tn",
+          "label": "Tiny"
+        }, {
+          "value": "xs",
+          "label": "Extra small"
+        }, {
+          "value": "sm",
+          "label": "Small"
+        }, {
+          "value": "DEFAULT",
+          "label": "Normal"
+        }, {
+          "value": "lg",
+          "label": "Large"
+        }, {
+          "value": "xl",
+          "label": "Extra large"
+        }, {
+          "value": "hg",
+          "label": "Huge"
+        }, {
+          "value": "mg",
+          "label": "Mega"
+        }
+      ]
+    }, {
+      "type": "select",
+      "id": "sec_pad_mobile",
+      "label": "Mobile",
+      "default": "DEFAULT",
+      "options": [
+        {
+          "value": "cl",
+          "label": "None"
+        }, {
+          "value": "tn",
+          "label": "Tiny"
+        }, {
+          "value": "xs",
+          "label": "Extra small"
+        }, {
+          "value": "sm",
+          "label": "Small"
+        }, {
+          "value": "DEFAULT",
+          "label": "Normal"
+        }, {
+          "value": "lg",
+          "label": "Large"
+        }, {
+          "value": "xl",
+          "label": "Extra large"
+        }, {
+          "value": "hg",
+          "label": "Huge"
+        }, {
+          "value": "mg",
+          "label": "Mega"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured blog",
+      "settings": {}
+    }
+  ]
+}
+
+{% endschema %}
+
+<style></style>
